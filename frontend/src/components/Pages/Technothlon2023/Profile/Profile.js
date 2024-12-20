@@ -67,7 +67,7 @@ const Profile = () => {
               />
             </div>
           </form>
-          <button>Change Password</button>
+          <button className="pwd-change-btn">Change Password</button>
         </div>
       </div>
     </>

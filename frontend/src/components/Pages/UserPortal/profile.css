@@ -90,7 +90,18 @@
     font-size: calc( 1em + .5vw);
 }
 .pwd-change-wrapper{
+    border:2px solid rgb(9, 159, 209);
+    border-radius: 10px;
     position: relative;
+}
+.pwd-change-wrapper {
+    margin-top: 5%;
+    width: 100%; /* Update the width to 100% or desired value */
+    max-width: 800px; /* Optional: limit max width for larger screens */
+  }
+  .pwd-change-btn {
+    margin: 5% auto 0 auto; /* Top margin of 5%, horizontal auto, bottom 0 */
+    display: block; /* Ensures the button behaves like a block element */
 }
 input{
     /* display: block; */
@@ -119,10 +130,9 @@ form{
     border: none;
     border-radius: 5px;
 }
-.pwd-change-wrapper{
-    border:2px solid rgb(9, 159, 209);
-    border-radius: 10px;
-}
+/* .pwd-change-wrapper{
+    
+} */
 .pwd-change-form{
     margin: 20px 20px;
 }
