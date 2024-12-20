@@ -1,0 +1,126 @@
+General Styles
+
+/* Card Container for both login and lock components */
+.card-container {
+  display: flex;
+  width: 80%;
+  max-width: 1200px;
+  height: 80%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Left half: Login Form */
+.login-container {
+  width: 50%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login h2 {
+  color: #2c3e50;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  font-family: 'Rampart One', 'EB Garamond', 'PT Serif', serif;
+  text-align: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 2px solid #2980b9;
+  border-radius: 5px;
+  font-size: 1.1em;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #3498db;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.button-contai {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* button {
+  background-color: #2980b9;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.2em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #3498db;
+} */
+
+.lock-container {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.lock-svg {
+  position: absolute;
+  width: 200px;
+  height: auto;
+}
+
+.lock-handle {
+  transform-origin: center bottom;
+  transition: transform 1s ease-in-out;
+}
+
+.lock-handle.unlocked {
+  transform: rotate(45deg);
+}
+
+.dials-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 120px;
+  margin-top: 80px;
+}
+
+.lock-dial {
+  width: 35px;
+  height: 35px;
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 5px;
+}
+
+.lock-number {
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}

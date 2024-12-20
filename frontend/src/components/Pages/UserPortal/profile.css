@@ -1,0 +1,209 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.Profile-main{
+    height:100vh;
+    width:100vw;
+}
+.roll{
+    height:8%;
+    width:100%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    background-color: #03af65;
+}
+.roll img{
+    height:80%;
+    border-radius: 50%;
+
+}
+.profile-heading{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px 0px 20px 25px;
+}
+.profile{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+.user-details-wrapper , .school-details-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom:10px;
+    border: 2px solid rgb(9, 159, 209);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    
+}
+.school-details-wrapper{
+    border-radius: 10px;
+}
+.user-details-wrapper p , .school-details-wrapper p{
+    font-size: calc(.6em + .5vw);
+    padding: 8px 0px;
+}
+.school-details-heading , .pwd-change-heading{
+    width: 100%;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(9, 159, 209);
+}
+.part-1,.part-2{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.reg-details{
+    width:95%;
+    padding: 20px 0px;
+    /* border-top: 2px solid rgb(9, 159, 209); */
+    border-radius:10px;
+}
+.reg-head{
+    width:100%;
+    padding: 20px 0px;
+    background-color:rgb(9, 159, 209);
+    display: flex;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-weight: 600;
+    font-size: calc( 1em + .5vw);
+}
+.pwd-change-wrapper{
+    position: relative;
+}
+input{
+    /* display: block; */
+    width: 55vw;
+    text-align: center;
+    margin: 3px;
+    border-radius: 2px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.submit-btn-wrapper{
+    display: flex;
+    justify-content: right;
+    
+}
+.pwd-change-btn{
+    margin-top: 5%;
+    width: 200px;
+    background-color: rgb(9, 159, 209);
+    color: white;
+    font-size: calc(.6rem + .5vw);
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+.pwd-change-wrapper{
+    border:2px solid rgb(9, 159, 209);
+    border-radius: 10px;
+}
+.pwd-change-form{
+    margin: 20px 20px;
+}
+
+@media screen and (max-width:748px) {
+    .Profile-main{
+        height:100vh;
+        width:100vw;
+    }
+    .reg-details{
+        padding-top:20px;
+        width: 90%;
+    }
+    .roll{
+        height:8%;
+        width:100%;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        background-color: #03af65;
+    }
+    .roll img{
+        height:80%;
+        border-radius: 50%;
+    
+    }
+    .profile-heading{
+        width:90%;
+        font-size: calc( 1em + .5vw);
+        font-weight: bold;
+        margin: 10px 0px 0px 25px;
+    }
+    .reg-head{
+        width:100%;
+        padding: 20px 0px;
+        background-color:rgb(9, 159, 209);
+        display: flex;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color:white;
+        font-weight: 600;
+        font-size: calc( .7em + .5vw);
+    }
+    .user-details-wrapper , .school-details-wrapper{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items:flex-start;
+        margin-bottom:10px;
+        border: 2px solid rgb(9, 159, 209);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    
+        
+
+    }
+    .pwd-change-wrapper{
+        margin-top: 5%;
+        width:80%;
+    }
+    .part-1,.part-2{
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    .pwd-change-form form{
+        max-height:200px;
+        display: flex;
+        flex-direction: center;
+        align-items: center;
+        justify-content: center;
+    }
+    input{
+        max-height:30px;
+    }
+    .pwd-change-btn{
+        margin-top: 5%;
+        max-width:150px;
+        font-size: calc(.5em );
+    }
+    
+}

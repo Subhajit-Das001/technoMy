@@ -1,0 +1,214 @@
+import './home.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import  HeroImg  from "./HeroImgD.png"
+import Header from "../../Header/header"; 
+import Footer from "../../Footer/footer";
+import HautsTheme from "../../Assets/img/Hautstheme.png";
+import JuniorTheme from "../../Assets/img/Juniorstheme.png";
+import Invite1 from "../../Assets/img/prizes1.png";
+import Invite2 from "../../Assets/img/prizes2.png";
+import Prize from "../../Assets/img/prizes3.png";
+import Laptop from "../../Assets/img/laptop.png";
+import Results from "../../Assets/img/Results.png";
+import IITG from "../../Assets/img/iitg.png";
+import AboutUs from "../../Assets/img/AboutUs.png";
+import LED from "../../Assets/img/LED.png";
+import Mains from "../../Assets/img/Mains.png";
+import Pedia from "../../Assets/img/Pedia.png";
+
+import Logo from '../../Assets/technologo.png'
+import Text from "../../design/text"
+import Birb from '../../Assets/Birb.png'
+import Events from '../../design/events'
+import Stats from "../../design/stats/states"
+import Announcement from '../../Pages/Announcement/announcement';
+
+const stopMarquee = () => {
+      document.querySelector('.floating-notice marquee').stop();
+    };
+  
+    const startMarquee = () => {
+      document.querySelector('.floating-notice marquee').start();
+    };
+
+function Home() {
+  const prizeImages = document.querySelectorAll('.prize-img');
+
+prizeImages.forEach(img => {
+  img.addEventListener('click', () => {
+    prizeImages.forEach(otherImg => {
+      otherImg.classList.remove('active');
+    });
+    img.classList.add('active');
+  });
+});
+
+
+
+
+
+
+    return (
+    <div className="App">
+      <Header />
+      <div className="floating-notice" style={{backgroundColor: "yellow"}}>
+      <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
+  <p>The wait is over! Registration Portal for 2025 is live now.!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  
+
+</marquee>
+
+    </div>
+
+    <div className="splash-screen">
+      <div className="divbig">
+      <div className="Heading-Hero">
+        {/* The Ultimate Test of Logic */}
+        <Text/>
+      </div>
+      <div className="SubHeading-Hero">
+        Technothlon is an international school championship organized by the student fraternity of IIT Guwahati. Technothlon was started with a group of students in a small room in 2004 to inspire young minds.
+      </div>
+      <div className="center">
+          <div className="check-center">Click here for viewing Registered Centers
+          <Link  to='/registeredschool'><button className='btn1'>Centers</button></Link>
+          </div>
+          
+      </div> 
+      </div>
+      <div className="Hero-img">
+        <img src={HeroImg}  />
+      </div>
+    </div>
+
+    <div class="parent">
+      <div>
+        <Announcement/>
+      </div>
+  <div class="heading">
+    <div class="main-headss">Check out last year's Prizes!</div>
+  </div>
+  <div class="image-container">
+    <img class="prize-img active" src={Prize} alt="Prize-img" />
+    <img class="prize-img" src={Invite1} alt="Invite" />
+    <img class="prize-img" src={Invite2} alt="Invite" />
+  </div>
+</div>
+
+
+    <div className="parent">
+      <div className="heading">
+        <div className="main-headss">Check out This year's Themes!</div>
+    </div>
+
+    <div className="image-container">
+    <img class="prize-imgg" src={HautsTheme} alt="Invite" />
+    <img class="prize-imgg" src={JuniorTheme} alt="Invite" />
+</div>
+    </div>
+    <div className="separator"></div>
+    <div className="parent-slider">
+<div className='statsclass'>
+  <Stats/>
+</div>
+<div>
+<h2 class="event-heading">Last Year's Events</h2>
+
+</div>
+<div className='events'>
+          <Events/>
+          </div>
+
+
+
+      <h4 className="h4-updates">RECENT UPDATES</h4>
+      <div className="slick-update ">
+      <a href="/login" className="update-card">
+          <div className="update-card-icon">
+              <img src={IITG} alt="IIT Guwahati Icon" />
+          </div>
+          <div className="update-card-content">
+          Results are out! Check your ranks now!!
+          </div>
+        </a>
+        <a href="/login" className="update-card">
+          <div className="update-card-icon">
+              <img src={Laptop} alt="Registration Icon" />
+          </div>
+          <div className="update-card-content">
+          Online registration has now closed for 2025!
+          </div>
+        </a>
+
+         <a href="/registeredschool" className="update-card">
+          <div className="update-card-icon">
+              <img src={Results} alt="Results Icon" />
+          </div>
+          <div className="update-card-content">
+              Check the Registered Centers.
+          </div>
+        </a>
+
+        
+      </div>
+    </div>
+    <div className="parent-1">
+        
+          <div className="info-card">
+            <img src={AboutUs} alt="About Us Image" className="about-us-image"/>
+            <div className="info-card-heading">About Us</div>
+            <div className="info-card-content">
+              Over the past 20 years we have expanded our reach to over 450 cities all over India and various centers abroad.
+            </div>
+            <a href="/aboutus"> Learn More </a>
+          </div>
+      
+          <div className="info-card">
+            <img src={Pedia} alt="Technopedia Image" />
+            <div className="info-card-heading">Technopedia</div>
+            <div className="info-card-content">
+              Technopedia is the online module of Technothlon providing its students an ultimate experience of the prelims beforehand!
+            </div>
+            <a href="/technopedia"> Learn More </a>
+          </div>
+        
+          <div className="info-card">
+            <img src={Mains} alt="Mains Image" />
+            <div className="info-card-heading">PYQs</div>
+            <div className="info-card-content">
+            Look through our repository of past question papers to help you prepare for Technothlon 2024.
+            </div>
+            <a href="/pyp"> Learn More </a>
+          </div>
+         
+
+          {/* <div className="info-card">
+            <img src={Mains} alt="Mains Image" />
+            <div className="info-card-heading">Mains</div>
+            <div className="info-card-content">
+              Mains is an event based competition which is conducted at IIT Guwahati, where the top 25 teams from each squad compete.
+            </div>
+            <a href="/mains"> Learn More </a>
+          </div> */}
+       
+        
+          {/* <div className="info-card">
+            <img src={LED} alt="L.E.D. Image" />
+            <div className="info-card-heading">L.E.D.</div>
+            <div className="info-card-content">
+              “Learn.Experience.Discover”. Through this initiative, we demonstrate simple experiments to school students, to explain basic principles of science.
+            </div>
+            <a href="/leds"> Learn More </a>
+        </div>*/}
+        
+    </div>
+     <Footer /> 
+    </div>
+    );
+
+  }
+  
+  export default Home;
+
+

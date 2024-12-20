@@ -1,0 +1,271 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #000;
+  }
+  
+.registerdelay {
+    height: 60vh;
+    width: 100vw;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    font-size: calc(.7em + .5vw + .5vh);
+    text-align: center;
+    min-height: 200px;
+  }
+  
+span{
+    color: green;
+}
+.registrations {
+    width: 100vw;
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-registration-form {
+    width: 80%;
+    height:80%;
+    margin-top: calc(65px + 5vh) ;
+    margin-bottom: calc(50px + 5vh);
+    min-height:520px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    min-width: 600px;
+}
+
+.reg-instr {
+    width: 30%;
+
+    height:100%;
+
+    min-height:520px;
+    color: white;
+
+    background-color: #31363F;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    overflow: hidden;
+}
+.reg-instr h2{
+    font-size: calc(1vh + 2vw);
+   
+}
+.reg-instr ul{
+    display: none;
+
+}
+.reg-instr.expanded {
+    animation: expandWidth 0.5s forwards; 
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+.expanded.reg-instr ul{
+    display:block;
+    align-items: center;
+    text-align: left;
+    padding-bottom: 2vh;
+    padding-right: 3vw;
+    font-size: calc(.7em + .4vw);
+
+}
+.expanded.reg-instr p ul{
+    margin-top: 1vh;
+    margin-right: 3vh;
+    font-size: calc(.7em + .4vw);
+}
+.disclaimer{
+    padding-top: 3vh;
+}
+@keyframes expandWidth {
+    0% {
+        width: 40%;
+    }
+    100% {
+        width: 100%; 
+    }
+}
+
+.reg {
+    width: 70%;
+    height:100%;
+    min-height:520px;
+    padding-top: 25px;
+    padding-bottom: 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background-color: rgb(254, 254, 254); 
+}
+
+.reg.hidden {
+    width: 0;
+    display:none;
+    pointer-events: none; 
+}
+.reg h2{
+    
+    color:#31363F;
+    font-size: calc(1vh + 2vw);
+}
+.register-form {
+    width: 85%;
+    height:90%;
+    min-height:450px;
+    margin-top: 1vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5%;
+}
+.form-group{
+    width:85%;
+    height:5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1%;
+    
+}
+input {
+    width: 50%;
+    border-radius: 7px;
+    border: solid 1px rgb(97, 97, 97); 
+    padding: 8px;
+    font-size: calc(.5em + .5vw);
+    font-weight: 500;
+}
+
+label{
+    font-size: calc(.5em + .8vw);
+}
+#squad,
+#language{
+    width:50%;
+    border-radius: 7px;
+    padding-left: 4px;
+
+    font-size:calc(.5em + .5vw) ;
+    
+}
+.form-button{
+    margin-top: 5%;
+    height:10%;
+    width:25%;
+    min-height: 50px;
+    min-width: 100px;
+}
+.form-submit{
+    height:100%;
+    width:100%;
+    font-size: calc(.65em + .8vw);
+    font-weight: 700;
+    border-radius: 15px;
+    border:solid 2px #31363F;
+    background-color: #31363F;
+    color: white;
+}
+
+@media screen and (max-width: 658px) {
+    .registrations{
+        height:90vh;
+        width:100vw;
+        margin-top:12vh ;
+        min-height: 600px;
+    }
+    .team-registration-form{
+        height:90%;
+        min-height: 550px;
+        width:85%;
+        min-width: 200px;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 15px;
+        margin-top: 10px ;
+        margin-bottom: 10px;
+
+    }
+    .reg-instr  h2{
+        font-size: calc(.8em + 1vw);
+    }
+    .reg-instr{
+        height:8%;
+        width:100%;
+        min-height: 65px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-left-radius: 0;
+
+    }
+    .register-form{
+        width:95%;
+    }
+    .form-title{
+        font-size: calc(.8em + 1vw);
+    }
+    .reg{
+        height:92%;
+        min-height: 485px;
+        width:100%;
+        border-bottom-left-radius: 15px;
+    }
+    .reg-instr.expanded {
+        animation: expandWidth 0.5s forwards; 
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+    @keyframes expandWidth {
+        0% {
+            height: 8%; 
+        }
+        100% {
+            height: 100%; 
+        }
+    }
+    .form-button{
+        margin-top: 15%;
+        height:8%;
+        width:25%;
+        min-height: 40px;
+        min-width: 100px;
+    }
+    .form-submit{
+        height:100%;
+        width:100%;
+        font-size: calc(.7em + .5vw);
+        font-weight: 700;
+        border-radius: 15px;
+        border:solid 2px #31363F;
+        background-color: #31363F;
+        color: white;
+    }
+} */

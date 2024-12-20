@@ -1,0 +1,342 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.App-user {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+.side-main {
+  background-color: #223438;
+  min-width: 20%;
+  height: 100%;
+  overflow: hidden;
+}
+.main {
+  background-color: #eef2f5;
+  min-width: 80%;
+  height: 100%;
+}
+.image img {
+  width: 100%;
+  aspect-ratio: 21/4;
+  object-fit: contain;
+}
+.image {
+  width: 100%;
+  height: 8vh;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+.big-logo {
+  padding: 10px;
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+.big-logo img {
+  width: 85%;
+}
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #03af65;
+  color: white;
+  padding: 5px 20px;
+  width: 100%;
+  height: 8vh;
+}
+
+.bar i {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+.bar i:hover {
+  transform: scale(1.5);
+  color: rgb(3, 81, 3);
+}
+.roll {
+  text-align: center;
+  padding: 5px;
+  font-size: 2.5vmin;
+}
+.cred {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.cred img {
+  box-sizing: content-box;
+  width: 30px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+.links {
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  height: 5vh;
+  padding: 25px 15px;
+  cursor: pointer;
+}
+.link:hover {
+  border-left: 3px solid #03af65;
+}
+.rfont {
+  font-size: 2.5vmin;
+}
+.main-nav {
+  background-color: #1b2628;
+  color: #365557;
+  font-weight: 400;
+  font-size: 2.5vmin;
+}
+.link p {
+  padding-left: 5px;
+}
+.sidebarlink {
+  color: white;
+  text-decoration: none;
+}
+@media (max-width: 650px) {
+  .link {
+    padding: 25px 5px;
+  }
+  .link p {
+    padding-left: 2px;
+  }
+}
+@media (max-width: 500px) {
+  .link {
+    padding: 15px 5px;
+  }
+}
+h1 {
+  font-size: 2.5vmax;
+  font-weight: 600;
+  padding: 2%;
+}
+h2 {
+  font-size: 2vmax;
+  font-weight: 600;
+  padding: 1%;
+}
+p {
+  font-size: 1.5vmax;
+  padding: 1%;
+}
+.content-wrapper {
+  width: 100%;
+  padding: 20px;
+}
+.profile-container {
+  width: 100%;
+  display: flex;
+  gap: 2%;
+  justify-content: space-evenly;
+}
+.profile-cards {
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  background-color: whitesmoke;
+  border-top: #03af65 3px solid;
+  padding: 2%;
+}
+.profile-cards form,
+.profile-cards-pass form {
+  width: 100%;
+}
+.profile-cards form,
+.profile-cards-pass form {
+  font-size: 1.2vmax;
+}
+.profile-cards form div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  gap: 2%;
+}
+
+.profile-cards form div input {
+  width: 80%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 1vmax;
+}
+.profile-cards form div textarea {
+  width: 80%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 1vmax;
+}
+.profile-cards form div select {
+  width: 80%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 1vmax;
+}
+
+.profile-cards-pass form div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  gap: 2%;
+}
+.profile-cards-pass {
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  background-color: whitesmoke;
+  border-top: #03af65 3px solid;
+  padding: 2%;
+}
+.profile-cards-pass form div input {
+  width: 60%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 1vmax;
+}
+.profile-city {
+  font-weight: 600;
+  font-size: 1.5vmax;
+  padding: 2% 0;
+}
+
+.profile-container button {
+  width: fit-content;
+  font-size: 1.3vmax;
+  padding: 2%;
+  margin: 2% 0;
+  background-color: #03af65;
+  color: white;
+  border-radius: 7px;
+  border: none;
+}
+.profile-container button:hover {
+  background-color: #106f46;
+  color: white;
+  cursor: pointer;
+}
+.upload-container {
+  width: 100%;
+  display: flex;
+  gap: 2%;
+  justify-content: space-evenly;
+}
+.upload-cards {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  background-color: whitesmoke;
+  border-top: #03af65 3px solid;
+  padding: 2%;
+  margin: 2% 0;
+}
+.upload-cards div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 1.5vmax;
+}
+.upload-cards div input {
+  width: 80%;
+  padding: 2%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 1vmax;
+}
+.button-container {
+  margin-top: 3%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 2%;
+}
+.button-container button {
+  width: 40%;
+  padding: 2%;
+  margin: 1%;
+  background-color: #03af65;
+  font-size: 1.1vmax;
+  color: white;
+  border-radius: 7px;
+  border: 1px solid black;
+}
+.button-container button:hover {
+  background-color: #106f46;
+  color: white;
+  cursor: pointer;
+}
+.school-info {
+  width: 98%;
+  margin: 1%;
+  background-color: whitesmoke;
+  padding: 2%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 0px 5px 0px gray;
+}
+.school-info div {
+  font-size: 1.5vmax;
+  width: 60%;
+}
+.school-info button {
+  height: fit-content;
+  font-size: 1.2vmax;
+  padding: 1.5%;
+  background-color: #03af65;
+  color: white;
+  border-radius: 7px;
+  border: none;
+}
+.school-info button:hover {
+  background-color: #106f46;
+  color: white;
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .profile-container,
+  .upload-container {
+    flex-direction: column;
+  }
+  .profile-cards,
+  .profile-cards-pass {
+    width: 100%;
+    height: fit-content;
+  }
+}

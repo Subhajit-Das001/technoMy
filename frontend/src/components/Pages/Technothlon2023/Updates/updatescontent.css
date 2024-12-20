@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+* {
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+  }
+.first{
+    text-align: left;
+    color: black;
+    font-size: 24px;
+    padding-left: 10px;
+}
+.jumbotron .small-separator{
+    height: 40px;
+    background-color:rgb(249, 249, 249);
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 3px;; 
+    border-top-color:rgb(9, 159, 209);
+    border-left-color: aliceblue;
+    border-right-color:aliceblue;
+    border-bottom-color:aliceblue;
+}
+.gi{
+   text-align: center;
+   font-size: 20px;
+   font-weight:700;
+}
+
+.instruction{
+    background-color:rgb(249, 249, 249);
+    border-radius: 5px;
+    margin-top:20px;
+    border-width: 3px;
+    border-style: solid;
+    border-top-color:rgb(9, 159, 209);
+    border-left-color: aliceblue;
+    border-right-color:aliceblue;
+    border-bottom-color:aliceblue;
+    
+}
+.prelims24{
+    color: black;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.instruction li{
+    font-size: 18px;
+    color: #000;
+}
+.fluid{
+    height: 60px;
+    background-color: rgb(3, 3, 63);
+    width: 100%;
+    margin-top: -40px;
+}

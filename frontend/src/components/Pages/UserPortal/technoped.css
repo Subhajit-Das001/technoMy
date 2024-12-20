@@ -1,0 +1,201 @@
+                                                                                                                                                                                           *{
+    margin:0px;
+   
+}
+
+.Technoped-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:flex-start;
+    height: 100vh; /* Ensure the main div takes up the full height of the viewport */
+    
+    box-sizing: border-box;
+  }
+  
+  /* .roll {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 20px;
+    border: 2px solid rgb(9, 159, 209);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  } */
+  
+  .announcement {
+    /* flex-grow: 1; */
+    top:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center; /* Center the text within the div */
+  }
+  
+.technoped-banner-heading{
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 5px;
+}
+.technoped-banner-subHeading{
+    text-align: center;
+}
+.technopedo-instructions-wrapper{
+    border: 2px solid rgb(9, 159, 209);
+    background-color: rgb(255, 255, 255);
+    margin: 15px 15px;
+    height:60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.technopedo-instruction-heading{
+    text-align: center;
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    background-color: rgb(9, 159, 209);
+    padding: 10px 0px;
+}
+.technopedo-sub-instruc{
+    margin: 6px ;
+    
+    border-top: 4px solid rgb(255, 233, 32);
+    padding: 10px 15px 20px 15px;
+    background-color: white;
+}
+.techopedo-mini-heading{
+    margin:5px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+.technopedo-content{
+    color: rgb(57, 57, 57);
+    text-align: center;
+     font-size: 0.95rem; 
+    
+}
+.rules-ul{
+    text-align: left;
+}
+.level-ul{
+    text-align: center;
+}
+.technopedo-content ul li{
+    font-size: 0.95rem;
+    color: rgb(57, 57, 57);
+}
+.warn-li{
+    color: rgb(137, 0, 0);
+}
+.level-ul{
+    list-style: none;
+    margin: 30px 0px;
+text-align: center;
+}
+.level-ul li{
+    font-size: 1rem;
+    color: rgb(57, 57, 57);
+}
+.technopeds-btn-wrapper{
+    display: flex;
+    justify-content: center;
+}
+.technopeda-start-btn{
+    background-color: #03af65;
+    color: white;
+    border: none;
+    margin: 10px;
+    font-size: 1.3rem;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.performance{
+    color:green;
+    margin-bottom: 500px;
+}
+@media screen and (max-width:1200px) {
+    .technoped-banner-heading{
+        font-size: 1.2rem;
+    }
+    .technopedo-sub-instruc{
+        margin: 10px;
+        padding: 5px; 
+    }
+    .technopedo-content , .technopedo-content ul li{
+        font-size: 0.8rem;
+    }
+    .rules-ul{
+        padding-left: 5px;
+    }
+    .technopeda-start-btn{
+        font-size: 1rem;
+    }
+}
+@media screen and (max-width:1200px){
+    .technopeda-start-btn{margin-bottom:0px;
+      margin:6px;
+      font-size: 1.1rem;
+      padding:5px;
+    }}
+
+    @media screen and (max-width:680px){
+        .technoped-banner-heading{
+            font-size: 1.14rem;
+        }
+        .technopedo-sub-instruc{
+            margin:5px;
+            padding: 2px; 
+        }
+        .techopedo-mini-heading{
+            font-size:1rem;
+        }
+        .technopeda-start-btn{
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media screen and (max-width:568px){
+        .technoped-banner-heading{
+            font-size: 1.1rem;
+        }
+        .technopedo-sub-instruc{
+            margin:5px;
+            padding: 2px; 
+        }
+        .techopedo-mini-heading{
+            font-size:1rem;
+        }
+        .technopeda-start-btn{
+            font-size: 0.9rem;
+        }
+    }
+    @media screen and (max-width:400px){
+        .technoped-banner-heading{
+            font-size: 1rem;
+        }
+        .technoped-banner-sub-heading{
+            font-size: 0.9rem;
+        }
+
+
+        .technopedo-sub-instruc{
+            margin:5px;
+            padding: 2px; 
+        }
+        .techopedo-mini-heading{
+            font-size:1rem;
+            margin:2px;
+        }
+        .technopeda-start-btn{
+            font-size: 0.9rem;
+        }
+        .technopedo-content{
+            font-size:0.75rem;
+        }
+    }

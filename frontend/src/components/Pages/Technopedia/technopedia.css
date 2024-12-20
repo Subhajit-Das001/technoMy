@@ -1,0 +1,218 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  max-width: 100%;
+ 
+}
+
+.blue {
+  margin-top: 10vh;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #4e9fea;
+  color: white;
+  text-align: center;
+  border-bottom-right-radius: 5vh;
+  border-bottom-left-radius: 5vh;
+  animation: slideFromTop 1s ease forwards;
+}
+@keyframes slideFromTop {
+  from {
+    margin-top: -35vh; /* Initial position above the viewport */
+  }
+  to {
+    margin-top: 10vh; /* Final position with some margin from the top */
+  }
+}
+.blue h1 {
+  margin-top: 5vh;
+  font-size: calc(2em + 1.8vw);
+  font-weight: 600;
+  padding-top: 4vh;
+  padding-bottom: 1vh;
+  
+}
+.blue p{
+  font-size: calc(.8em + .4vw);
+  padding-bottom: 5vh;
+  margin-bottom: 5vh;
+ }
+.descriptionn{
+  margin-top:3%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  width: 100%;
+  padding-left: 3%;
+  padding-right: 3%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2%;
+}
+.descriptionn1{
+  margin-top:3%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  padding-left: 3%;
+  padding-right: 3%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2%;
+}
+.descriptionn p {
+  font-weight: 400;
+  font-size: calc(.8em + .4vw);
+  padding:3%;
+  
+}
+
+.descriptionn1 p {
+  font-weight: 400;
+  font-size: calc(.8em + .4vw);
+  padding:3%;
+  
+}
+
+.small-separator-container{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+.linkedpart{
+  
+  width: 100%;
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+ 
+}
+
+.linkedpart >a{
+    color: #060606;
+    font-size: calc(.6em + .5vw);
+    text-decoration: none;
+}
+.l-blue {
+    margin-top: 3%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #d5ebff; */
+    background-color: #86c1f8;
+    color: rgb(21, 21, 21);
+    text-align: center;
+   
+  }
+
+  .l-blue1 {
+    margin-top: 3%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #d5ebff;
+    /* background-color: #86c1f8; */
+    color: rgb(21, 21, 21);
+    text-align: center;
+   
+  }
+.l-blue h1 {
+  font-size: calc(1.2em + .7vw);
+  /* font-weight: 500; */
+  font-weight: bold;
+  margin-top: 2%;
+ 
+}
+.l-blue p {
+    font-size: calc(.8em + .5vw);
+    font-weight: 300;
+    padding-top: 2%;
+    padding-bottom:5%;
+  }
+  .btn-t{
+    width:100%;
+    height:15%;
+    background-color: white;
+    margin-bottom:1%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    
+  }
+  .btn-t Button{
+    
+    height:100%;
+    font-size: calc(.6em + .5vw);
+  }
+@media screen and (max-width: 768px){
+  .technopedia-main{
+    margin-top: 0vh;
+  }
+  .blue h1 {
+    font-size: 10vw;
+    font-weight: 600;
+  }
+  .blue p{
+    font-size: calc(.6em + 1vw);
+   padding: 2%;
+  }
+  
+  .btn-t {
+    background-color: white;
+    width:100%;
+    height:5%;
+    margin-bottom: 1vh;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+  }
+  .btn-t Button{
+    height:100%;
+    font-size: calc(.8em + .5vw);
+  }
+  .descriptionn p{
+   
+   font-weight: 400;
+    font-size: calc(.6em + 1vw);
+    padding: 3%;
+  }
+  .l-blue {
+     padding-bottom: 0%;
+     margin-top: 5%;
+     padding-top: 5%;
+    }
+    
+  .l-blue p {
+    font-size: calc(.6em + 1vw);
+      font-weight: 400;
+      padding-top: 0%;
+      padding-bottom:5%;
+    }
+    
+    .linkedpart{
+      margin-top: 15%;
+      margin-bottom: 3%;
+    }
+   
+}

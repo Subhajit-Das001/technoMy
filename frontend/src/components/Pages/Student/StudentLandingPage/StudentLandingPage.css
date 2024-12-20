@@ -1,0 +1,61 @@
+
+
+
+.first{
+    text-align: left;
+    color: black;
+    font-size: 30px;
+    padding-left: 10px;
+}
+.small-separator{
+    height: 40px;
+    background-color:rgb(249, 249, 249);
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 3px;; 
+    border-top-color:rgb(9, 159, 209);
+    border-left-color: aliceblue;
+    border-right-color:aliceblue;
+    border-bottom-color:aliceblue;
+}
+.gi{
+   text-align: center;
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.instruction{
+    
+    background-color:rgb(249, 249, 249);
+    border-radius: 5px;
+    margin-top:20px;
+    border-width: 3px;
+    border-style: solid;
+    border-top-color:rgb(9, 159, 209);
+    border-left-color: aliceblue;
+    border-right-color:aliceblue;
+    border-bottom-color:aliceblue;
+    
+}
+.prelims24{
+    color: black;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+li{
+    color: black;
+    font-size: 18px;
+}
+
+.fluid{
+    height: 60px;
+    background-color: rgb(3, 3, 63);
+    width: 100%;
+    margin-top: -40px;
+}
+.jumbotron{
+    height:750px;
+    
+}
