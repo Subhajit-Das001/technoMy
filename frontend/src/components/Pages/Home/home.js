@@ -137,7 +137,7 @@ prizeImages.forEach(img => {
               <img src={Laptop} alt="Registration Icon" />
           </div>
           <div className="update-card-content">
-          Online registration has now closed for 2025!
+          Online registration has now closed for 2024!
           </div>
         </a>
 
@@ -177,7 +177,7 @@ prizeImages.forEach(img => {
             <img src={Mains} alt="Mains Image" />
             <div className="info-card-heading">PYQs</div>
             <div className="info-card-content">
-            Look through our repository of past question papers to help you prepare for Technothlon 2024.
+            Look through our repository of past question papers to help you prepare for Technothlon 2025.
             </div>
             <a href="/pyp"> Learn More </a>
           </div>

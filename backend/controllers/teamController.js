@@ -63,7 +63,7 @@ const TeamController = {
             console.log(rollNumber)
             const redirectURL = redirectUrl + `/confirmPayment/&${rollNumber}`;
             // const paymentPortalURL = 'https://www.meraevents.com/ticketWidget?eventId=262719&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=https://technothlon.techniche.org.in/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"';
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262719&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=http://localhost:3000/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"`;
+            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262720&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&samepage=1" width="100%" height="600px" frameborder="0px"`;
 
 
 

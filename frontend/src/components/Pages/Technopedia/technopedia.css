@@ -127,7 +127,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #d5ebff;
+    background-color:#86c1f8;
     /* background-color: #86c1f8; */
     color: rgb(21, 21, 21);
     text-align: center;
@@ -138,6 +138,7 @@
   /* font-weight: 500; */
   font-weight: bold;
   margin-top: 2%;
+  
  
 }
 .l-blue p {
@@ -146,6 +147,18 @@
     padding-top: 2%;
     padding-bottom:5%;
   }
+.l-blue1 h1{
+  font-size: calc(1.2em + .7vw);
+  /* font-weight: 500; */
+  font-weight: bold;
+  margin-top: 2%;
+}
+.l-blue1 p {
+  font-size: calc(.8em + .5vw);
+  font-weight: 300;
+  padding-top: 2%;
+  padding-bottom:5%;
+}
   .btn-t{
     width:100%;
     height:15%;
