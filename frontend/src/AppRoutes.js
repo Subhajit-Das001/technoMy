@@ -8,17 +8,13 @@ import Technopedia from './components/Pages/Technopedia/technopedia';
 import AboutUs from './components/Pages/AboutUs/aboutus';
 import ContactUs from './components/Pages/ContactUs/contactus';
 
-import Ct from './components/Pages/ContactUs/ct.js';
+// import Ct from './components/Pages/ContactUs/ct.js';
 
 
 import Login from './components/Pages/Login/login';
-import Lg from './components/Pages/Login/lg';
-
-
 import Register from './components/Pages/Register/register';
 //import Technothlon23Updates from './components/Pages/Technothlon2023/Updates/updates';
 import SchoolReg from './components/Pages/SchoolRegister/SchoolReg';
-import TeamReg from './components/Pages/SchoolRegister/TeamReg';
 import Technothlon23Updates from './components/Pages/Technothlon2023/Updates/updates';
 import Feedback from './components/Pages/Feedback/feedback';
 import Faqs from './components/Pages/FAQs/FAQs';
@@ -34,17 +30,15 @@ import UserPortal from './components/Pages/UserPortal/mainside';
 import AdmitCard from './components/Pages/Admitcard';
 import Registration from './components/Pages/SchoolRegister/Registration'
 
-import ContestForm from './components/Pages/Contest/ContestForm.js'
-import Crew from './components/Pages/Crew/crew.js'
+// import ContestForm from './components/Pages/Contest/ContestForm.js'
+// import Crew from './components/Pages/Crew/crew.js'
 
-import Home2 from './components/Pages/Home/home2';
 
 
 const AppRoutes = () => {
   return (
     <Routes>
 
-<Route path="/Home" element={<Home2/>} />
 
 
       <Route path="/" element={<Home />} />
@@ -53,8 +47,6 @@ const AppRoutes = () => {
       <Route path="/technopedia" element={<Technopedia />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/Log" element={<Lg />} />
-
       <Route path="/videos" element={<Videos />} />
       <Route path="/kvjnv" element={<KV_JNV />} />
       <Route path="/faqs" element={<Faqs />} />
@@ -75,7 +67,6 @@ const AppRoutes = () => {
         path="/technothlon2023-registerations"
         element={<Technothlon23Updates />}
       />
-      <Route path="/teamregister" element={<TeamReg />} />
       <Route path="/TeamRegistration" element={<Registration />} />
 
        {/* <Route path="/schoolregister" element={<SchoolReg />} />  */}
@@ -86,10 +77,10 @@ const AppRoutes = () => {
      {/* <Route path="/dashboard24" element={<Technothlon23Updates />}/> */}
       <Route path="/userportal" element={<UserPortal/>}/>
       <Route path="/Admitcard" element={<AdmitCard/>}/>
-      <Route path="/ContestForm" element={<ContestForm/>}/>
-      <Route path="/Crew-Member" element={<Crew/>}/>
+      {/* <Route path="/ContestForm" element={<ContestForm/>}/>
+      <Route path="/Crew-Member" element={<Crew/>}/> */}
 
-      <Route path="/Ct" element={<Ct/>}/>
+      {/* <Route path="/Ct" element={<Ct/>}/> */}
 
 
     </Routes>

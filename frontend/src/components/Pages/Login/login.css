@@ -158,3 +158,31 @@
     height: 4vw;
   }
 }
+.forgot-password {
+  color: #484b49;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  /* text-decoration: underline; */
+  transition: text-decoration 0.3s;
+
+}
+
+
+.forgot-password.underline {
+  text-decoration: underline;
+}
+.success-message {
+  color: #00E86B;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
