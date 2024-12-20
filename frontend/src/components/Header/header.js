@@ -89,7 +89,7 @@ function Header() {
           <p>Register</p>
         </Link>
         <Link
-          to="/log"
+          to="/login"
           className={`hlinkss ${clickedLink === "login" ? "clicked" : ""}`}
           onClick={() => setClickedLink("login")}
         >

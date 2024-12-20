@@ -235,6 +235,8 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
                     <p>Your roll number is: <strong>${team.rollNumber}</strong></p>
+                     <p>Your roll number is: <strong>${team.password}</strong></p>
+
                     <p>If you have any queries, please feel free to contact us.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>
@@ -288,7 +290,69 @@ const TeamController = {
                 return res.status(401).send(closingScript5);
             }
         }
-    }
+    },
+
+
+    forgotPassword: async (req, res) => {
+        try {
+            const { rollNumber } = req.body;
+
+            // Find the user by roll number
+            const team = await Onlinereg.findOne({ rollNumber });
+
+            if (!team) {
+                return res.status(404).json({ error: "Roll number not found" });
+            }
+
+            const email = team.email1; // Assuming email1 is the primary email
+            const password = team.password; // Assuming `password` is stored securely
+
+            // Configure nodemailer
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                host: 'smtp.gmail.com',
+                auth: {
+                    user: 'technothlon@technicheiitg.in',
+                    pass: 'fjowuvpqbbtjrvsa'
+                },
+            });
+
+            // Send the email with the password
+            await transporter.sendMail({
+                from: '"Technothlon" <technothlon@technicheiitg.in>',
+                to: team.email1,
+                subject: "Your Technothlon Password",
+                html: `
+                    <p>Hey Champs!</p>
+                    <p>You requested to retrieve your password. Below are your login details:</p>
+                    <p><strong>Roll Number:</strong> ${rollNumber}</p>
+                    <p><strong>Password:</strong> ${password}</p>
+                    <p>If you did not request this, please ignore this email.</p>
+                    <p>Warm regards,</p>
+                    <p>Team Technothlon</p>
+                `,
+            });
+            await transporter.sendMail({
+                from: '"Technothlon" <technothlon@technicheiitg.in>',
+                to: team.email2,
+                subject: "Your Technothlon Password",
+                html: `
+                    <p>Hey Champs!</p>
+                    <p>You requested to retrieve your password. Below are your login details:</p>
+                    <p><strong>Roll Number:</strong> ${rollNumber}</p>
+                    <p><strong>Password:</strong> ${password}</p>
+                    <p>If you did not request this, please ignore this email.</p>
+                    <p>Warm regards,</p>
+                    <p>Team Technothlon</p>
+                `,
+            });
+
+            res.status(200).json({ message: "Password has been sent to your registered email." });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
 };
 
 async function sendVerificationEmail(email, token) {
