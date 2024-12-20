@@ -18,12 +18,12 @@ const TeamController = {
     createTeam: async (req, res) => {
         try {
             const { email1, email2 } = req.body;
-            // const teamExists = await Onlinereg.findOne({ $or: [{ email1 }, { email2 }] });
+            const teamExists = await Onlinereg.findOne({ $or: [{ email1 }, { email2 }] });
 
 
-            // if (teamExists) {
-            //     return res.status(400).json({ error: "One or the other members is already registered" });
-            // }
+            if (teamExists) {
+                return res.status(400).json({ error: "One or the other members is already registered" });
+            }
 
             const newTeam = new Onlinereg(req.body);
 
