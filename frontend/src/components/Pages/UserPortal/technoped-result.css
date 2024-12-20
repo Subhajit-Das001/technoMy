@@ -1,0 +1,141 @@
+                                                                                                                                                                                               .Congratulations{
+    width:60vw;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #03af65;
+    font-weight: bold;
+    background-color: rgb(154, 235, 154);
+    padding: 10px 0px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+  
+    
+}
+
+
+.content {
+    margin-top:0px;
+    width:62vw;
+    display:flex;
+    flex-direction:column;
+    background-color: white;
+   
+   margin-left:170px;
+}
+.statement p {
+    padding: 5px 25px;
+    font-size:16px;
+}
+
+@media (max-width:1237px) {
+    .content{
+        margin-left:120px;
+    }
+
+}
+@media (max-width:730px) {
+    .content{
+        margin-left:120px;
+        margin-top:30px;
+    }
+
+}
+@media (max-width:500px) {
+    .content{
+        margin-left:80px;
+        margin-top:30px;
+        width: 60vw;
+    }
+    .Congratulations{
+        padding:5px;
+        font-size:1.17rem;
+       
+    }}
+
+@media (max-width:420px){
+        .content{
+           
+            margin-top:30px;
+        }
+       
+        .Congratulations{
+            padding:5px;
+            font-size:1.15rem;
+           
+        }
+        .statement p {
+            padding: 5px 25px;
+            font-size:15px;
+        }
+    }
+
+    @media (max-width:380px){
+        .content{
+           
+            margin-top:40px;
+        }
+       
+        .Congratulations{
+            padding:5px;
+            font-size: 1.13rem;
+           
+        }
+        .statement p {
+            padding: 5px 25px;
+            font-size:14px;
+        }
+    }
+  
+    @media(max-width:350px){
+        .Congratulations{
+            padding:5px;
+            font-size:1.1rem;
+           
+        }
+        .content{
+          
+            margin-left:46px;
+            margin-top:40px;
+        }
+        
+        .statement p {
+            padding: 5px 25px;
+            font-size:14px;
+        }
+    }
+    @media(max-width:330px){
+        .Congratulations{
+            padding:5px;
+            font-size:1rem;
+          
+           
+        }
+        .content{
+            width:40vw;
+            margin-left:20px;
+            margin-top:50px;
+        }
+        .statement p {
+            padding: 5px 25px;
+            font-size:13.5px;
+        }
+    }
+    
+    
+    @media(max-width:280px){
+        .Congratulations{
+            padding:5px;
+            font-size:1rem;
+          
+           
+        }
+        .content{
+            width:40vw;
+            margin-left:20px;
+        }
+        .statement p {
+            padding: 5px 25px;
+            font-size:13px;
+        }
+    }

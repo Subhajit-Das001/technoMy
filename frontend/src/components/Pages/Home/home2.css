@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+.home-containe{
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+
+  background-color: #4810A8;; /* Adjust the path as needed */
+  
+}

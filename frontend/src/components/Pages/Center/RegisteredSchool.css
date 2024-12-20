@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.header{
+  height:10vh;
+}
+.center-main{
+
+  width:100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.center-head{
+  width:100%;
+  color:white;
+  background-color: rgb(0, 132, 255);
+  border-bottom-left-radius: 5vh;
+  border-bottom-right-radius: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(2em + 2vw);
+  font-weight:600;
+  margin-top: 10vh;
+  padding-top: 4%;
+  padding-bottom: 3%;
+}
+.center-content{
+  width:50%;
+  margin-top: 2%;
+  margin-bottom: 5%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* border:1px solid rgb(92, 91, 91);
+  border-radius: 35px;
+  background-color: rgb(237, 237, 237); */
+}
+.center-content ul {
+  padding: 0;
+  list-style-type: none; /* Remove default list style */
+}
+
+.center-content ul li {
+  font-size: calc(.4em + .5vh + .5vw);
+  font-weight: 500;
+  text-align: center;
+  position: relative;
+  padding-left: 20px; /* Add padding to make space for the arrow */
+  transition: color 0.1s ease; /* Add a transition for smooth color change */
+  padding-top: 5px;
+  padding-bottom: 5px;
+  
+}
+
+.center-content ul li::before {
+  
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: inherit; /* Make sure the arrow inherits the color */
+}
+
+.center-content ul li:hover {
+  color: #000000; /* Change this to your desired hover color */
+  transform: scale(1.1) translateX(10px); /* Adjust the translateX value to shift to the right */
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+@media (max-width: 768px) {
+  .center-content ul li{
+    font-size: calc(.2em + .5vh + .5vw);
+  }
+}
+

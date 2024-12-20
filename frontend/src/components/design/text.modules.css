@@ -1,0 +1,40 @@
+.bubble-text-wrapper {
+  /* Ensure isolation of this component */
+  text-align: center;
+  font-size: 3.5rem;
+  font-weight: bold;
+  /* color: rgb(255, 255, 255); */
+}
+
+
+.bubble-text .hover-text {
+  transition: 0.35s font-weight, 0.35s color;
+  color: rgb(255, 255, 255);
+}
+
+.bubble-text .hover-text:hover {
+  font-weight: 900;
+  color: #ADD8E6; /* Light blue hover color */
+}
+
+/* To the right */
+.bubble-text .hover-text:hover + .hover-text {
+  font-weight: 500;
+  color: #E6E6FA; /* Lavender for adjacent text */
+}
+
+.bubble-text .hover-text:hover + .hover-text + .hover-text {
+  font-weight: 300;
+  color: #FFFFE0; /* Pale yellow for further adjacent text */
+}
+
+/* To the left */
+.bubble-text .hover-text:has(+ .hover-text:hover) {
+  font-weight: 500;
+  color: #ADD8E6; /* Light blue for left-adjacent text */
+}
+
+.bubble-text .hover-text:has(+ .hover-text + .hover-text:hover) {
+  font-weight: 300;
+  color: #C0C0C0; /* Silver for farther left-adjacent text */
+}

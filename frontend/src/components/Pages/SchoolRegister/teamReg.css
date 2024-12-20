@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.registerdelay {
+    height: 60vh;
+    width: 100vw;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: calc(.7em + .5vw + .5vh);
+    text-align: center;
+    min-height: 200px;
+  }
+  
+span{
+    color: green;
+}
+.registrations {
+    width: 100vw;
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team-registration-form {
+    width: 80%;
+    height:80%;
+    margin-top: calc(65px + 5vh) ;
+    margin-bottom: calc(50px + 5vh);
+    min-height:500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.reg-instr {
+    width: 30%;
+
+    height:100%;
+
+    min-height:500px;
+    color: white;
+
+    background-color: #31363F;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    overflow: hidden; /* Hide overflow content during animation */
+}
+.reg-instr h2{
+    font-size: calc(1vh + 2vw);
+   
+}
+.reg-instr p{
+    display: none;
+
+}
+.reg-instr.expanded {
+    animation: expandWidth 0.5s forwards; /* Apply animation */
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+.expanded.reg-instr p{
+    display:block;
+    align-items: center;
+    text-align: left;
+    padding-bottom: 2vh;
+    padding-right: 3vw;
+    font-size: calc(.7em + .4vw);
+
+}
+.expanded.reg-instr p ul{
+    margin-top: 1vh;
+    margin-right: 3vh;
+    font-size: calc(.7em + .4vw);
+}
+.disclaimer{
+    padding-top: 3vh;
+}
+@keyframes expandWidth {
+    0% {
+        width: 40%; /* Start width */
+    }
+    100% {
+        width: 100%; /* End width */
+    }
+}
+
+.reg {
+    width: 70%;
+    height:100%;
+    min-height:500px;
+    padding-top: 5vh;
+    padding-bottom: 0vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background-color: rgb(254, 254, 254); 
+}
+
+.reg.hidden {
+    width: 0;
+    display:none;
+    pointer-events: none; 
+}
+.reg h2{
+    
+    color:#31363F;
+    font-size: calc(1vh + 2vw);
+}
+.register-form {
+    width: 85%;
+    height:90%;
+    min-height:90%;
+    margin-top: 1vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,65 @@
+
+  
+  
+  
+  .footer {
+    margin-top: auto;
+  }
+  
+
+
+
+
+  .team-verified-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f4f8; /* Light background for a clean look */
+  }
+  
+  
+  
+  .message {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .message h1 {
+    color: #4CAF50; /* Green color for success */
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .message p {
+    color: #333;
+    font-size: 1.5rem;
+  }
+  
+
+  
+  @media (max-width: 768px) {
+    .message {
+      padding: 15px;
+    }
+  
+    .message h1 {
+      font-size: 1.5rem;
+    }
+  
+    .message p {
+      font-size: 0.8rem;
+    }
+  }
+  

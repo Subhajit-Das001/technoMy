@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: #333;
+  margin: 0;
+}
+
+.updates-main {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f4f6f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 2rem;
+}
+
+.user-info img {
+  width: 80px;
+  height: auto;
+}
+
+.profile-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 20px 0;
+}
+
+.heading-banner {
+  width: 90%;
+  max-width: 800px;
+  font-size: 1.6rem;
+  background-color: #ffffff;
+  border-top: 3px solid #1e3a8a;
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
+}
+
+.updates-content-wrapper {
+  width: 90%;
+  max-width: 800px;
+  background-color: #ffffff;
+  border-top: 3px solid #1e3a8a;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.updates-content-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+}
+
+.updates-contents ul {
+  padding: 0;
+  list-style-type: disc;
+}
+
+.updates-contents li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.get-admitCard-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.get-admitCard-btn {
+  color: #ffffff;
+  background-color: #1e3a8a;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.get-admitCard-btn:hover {
+  background-color: #174294;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .heading-banner, .updates-content-wrapper {
+    width: 95%;
+  }
+
+  .updates-content-heading {
+    font-size: 1.2rem;
+  }
+
+  .updates-contents li {
+    font-size: 0.9rem;
+  }
+}

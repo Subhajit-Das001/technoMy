@@ -1,0 +1,128 @@
+.results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+  justify-content: center; /* Center children vertically */
+  height: 100vh; /* Height of the viewport */
+  width: 100vw; /* Width of the viewport */
+  background: linear-gradient(135deg, #fafafa, #c3cfe2);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Default styles for all screen sizes */
+.text {
+  font-size: 1.5rem; /* Default size equivalent to text-lg */
+  font-weight: bold; /* Bold font */
+  text-align: center; /* Center the text */
+  color: black; /* Corresponds to text-indigo-300 */
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .text {
+    font-size: 1.5rem; /* Adjusted for medium devices */
+  }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .text {
+    font-size: 2.5rem; /* Adjusted for large devices */
+  }
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1280px) {
+  .text {
+    font-size: 2.5rem; /* Further increase for extra large devices */
+  }
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.techno-logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.result-content {
+  background: #fff;
+  padding: 20px; /* Reduced padding for smaller devices */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 90%; /* Allow for some responsiveness */
+}
+
+.result-content h2 {
+  font-size: 1.3rem; /* Responsive font size */
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.congrats-message {
+  font-size: 1.2rem; /* Responsive font size */
+  color: #555;
+  margin: 10px 0;
+}
+
+.rank-display {
+  font-size: 1.5rem; /* Responsive font size */
+  font-weight: bold;
+  color: #007bff;
+}
+
+.rank-display span {
+  color: #28a745;
+}
+
+.btn-download {
+  display: inline-block;
+  padding: 12px 10px;
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-download:hover {
+  background-color: #0056b3;
+}
+
+.name-button {
+  border: 2px solid #007BFF; /* Default border color */
+  background-color: white;
+  color: #007BFF; /* Default text color */
+  padding: 10px 20px;
+  font-size: 16px; /* Font size */
+  cursor: pointer;
+  transition: border 0.3s, background-color 0.3s, color 0.3s; /* Add transition for smooth effect */
+  font-weight: bold;
+}
+
+/* Style for the clicked state */
+.name-button:active,
+.name-button.clicked {
+  border-color: #0056b3; /* Darker border color when clicked */
+  background-color: #e7f3ff; /* Light background when clicked */
+  color: #0056b3; /* Darker text color when clicked */
+  transform: scale(0.95); /* Optional: Slightly scale down the button */
+}
+
+/* Optional: Add focus outline for accessibility */
+.name-button:focus {
+  outline: 2px solid #0056b3; /* Outline when focused */
+}
