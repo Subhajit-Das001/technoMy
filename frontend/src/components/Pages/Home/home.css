@@ -216,6 +216,11 @@
   border: 1px solid #ddd;
   border-radius: 5px;
 }
+
+.info-card img {
+  object-fit: contain;
+}
+
 .info-card:hover{
   transform: scale(1.1);
   transition: transform 0.3s ease;
@@ -279,13 +284,13 @@
     min-height: 300px;
     max-height: 450px;
     width: 25vw;
-    min-width: 200px;
+    min-width: 300px;
     max-width: 450px;
     margin-left: 2vw;
     margin-right: 2vw;
+    margin-top: 2vh;
     border-radius: 10px;
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
-
 }
 
 .prize-img:hover{
@@ -295,8 +300,8 @@
 .prize-imgg {
   height: 45vh;
   min-height: 300px;
-  max-height: 400px;
-  width: 20vw;
+  max-height: 450px;
+  width: 13vw;
   min-width: 250px;
   max-width: 450px;
   margin-left: 2vw;
@@ -492,7 +497,7 @@ transition: transform 0.3s ease;
   @media only screen and (max-width: 768px) {
   
     .floating-notice {
-      width:max-content;
+      width:100vw;
       height: 8vh;
       z-index: 800;
       flex-direction: column;
@@ -506,6 +511,10 @@ transition: transform 0.3s ease;
       font-weight:600;
       font-size: calc(.5em + .5vh + .5vw) ;
       color: rgb(75, 75, 239);
+    }
+
+    .floating-notice {
+      width: 100%;
     }
     
     .floating-notice p{
@@ -527,7 +536,7 @@ transition: transform 0.3s ease;
     }
     .splash-screen {
         /* Add any common styles for the splash screen here */
-        width: max-content;
+        width: 100vw;
         /* padding-left: 10%; */
         display: flex;
         flex-direction: column;
@@ -538,7 +547,7 @@ transition: transform 0.3s ease;
     .Heading-Hero{
         /* width: 350px; */
         /* margin-top: 10%; */
-        width:100%;
+        width:100vw;
         margin-right: 7%;
         color: #fff;
         font-size: calc(2.5vh + 2.5vw);
@@ -599,10 +608,10 @@ transition: transform 0.3s ease;
       height:90%;
       max-width: 300px;
       display: flex;
-  flex-direction: column;
-  align-items: center; /* Align content horizontally at the center */
-  text-align: center;
-  margin:0 0 0 0;
+      flex-direction: column;
+      align-items: center; /* Align content horizontally at the center */
+      text-align: center;
+      margin:0 0 0 0;
       border: 1px solid #ddd;
       border-radius: 5px;
   
@@ -669,23 +678,22 @@ transition: transform 0.3s ease;
     .image-container {
       row-gap: 5vh;
       flex-direction: column;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        width:60%;
-        min-width: 230px;
-        max-width: 300px;
-        margin-right: 0vw;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      width:60%;
+      min-width: 250px;
+      max-width: 300px;
         
     }  
     
     .prize-img {
-        height: 100%;
         width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        
+        min-width: 250px;
+        max-width: 300px;
+        height: 100%;
     }
+
     .row {
         display: flex;
         flex-direction: row;
@@ -866,9 +874,10 @@ transition: transform 0.3s ease;
     }
     
 .statsclass{
-  background-color: #007bff;
-  padding: 10px 80px;
+  background-color: rgb(75, 75, 239);
+  padding: 0px 0px;
   justify-content: space-evenly;
+  width: 100%;
 }
 
 .events{

@@ -99,7 +99,7 @@ prizeImages.forEach(img => {
 
     <div className="parent">
       <div className="heading">
-        <div className="main-headss">Check out This year's Themes!</div>
+        <div className="main-headss">Check out Last year's Themes!</div>
     </div>
 
     <div className="image-container">

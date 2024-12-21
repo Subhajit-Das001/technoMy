@@ -60,15 +60,15 @@ const Stats = () => {
   ];
 
   return (
-    <div className="statsclass" ref={statsRef} style={{ textAlign: "center", padding: "20px" }}>
-      <h1 style={{ marginBottom: "20px", color: "#333" }}>Our Impact</h1>
+    <div className="statsclass" ref={statsRef} style={{ textAlign: "center", padding: "40px"}}>
+      <h1 style={{ marginBottom: "40px", marginTop: "-15px", color: "#333", fontSize: "3rem" }}>Our Impact</h1>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "80px",
-          marginTop: "20px",
-          flexWrap: "wrap",
+          gap: "100px",
+          marginTop: "0px",
+          flexWrap: "wrap"
         }}
       >
         {stats.map((stat, index) => (
@@ -80,6 +80,7 @@ const Stats = () => {
               borderRadius: "12px",
               padding: "20px",
               width: "250px",
+              height: "225px",
               textAlign: "center",
               boxShadow: "0 6px 10px rgba(0, 0, 0, 0.1)",
               transition: "transform 0.3s, box-shadow 0.3s",
@@ -93,11 +94,11 @@ const Stats = () => {
               e.currentTarget.style.boxShadow = "0 6px 10px rgba(0, 0, 0, 0.1)";
             }}
           >
-            <div style={{ marginBottom: "10px" }}>{stat.icon}</div>
-            <h3 style={{ margin: "0", color: "#555", fontSize: "1.2rem" }}>{stat.label}</h3>
+            <div style={{ marginBottom: "10px", marginLeft: "10px" }}>{stat.icon}</div>
+            <h3 style={{ margin: "0", color: "#555", fontSize: "1.5rem" }}>{stat.label}</h3>
             <p
               style={{
-                fontSize: "2.5rem",
+                fontSize: "2.7rem",
                 margin: "10px 0 0",
                 fontWeight: "bold",
                 color: "#34495e",
