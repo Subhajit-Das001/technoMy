@@ -77,7 +77,7 @@ const Panel = ({ open, setOpen, id, title, imgSrc, link }) => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="w-full h-full overflow-hidden relative bg-blue-300 flex flex-col items-start"
+            className="w-full h-full overflow-hidden relative bg-blue-100 flex flex-col items-start"
           >
             <img
               src={imgSrc}

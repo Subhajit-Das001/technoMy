@@ -83,7 +83,7 @@ router.post('/login', async (req, res) => {
           return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      const token = jwt.sign({ roll: User }, process.env.KEY, { expiresIn: '7h' });
+      const token = jwt.sign({ roll: User, source: user.source || 'Onlinereg' }, process.env.KEY, { expiresIn: '7h' });
       res.cookie('token', token, { maxAge: 3600000 });
       return res.json({ status: true, message: "Login successful" });
 

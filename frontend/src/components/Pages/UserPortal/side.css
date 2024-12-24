@@ -14,7 +14,7 @@
 .user-side{
   display: flex;
   flex-direction: column;
-  height:100vh;
+  height:105vh;
   color: black;
   background-color: #223438;
   transition: 0.5s;

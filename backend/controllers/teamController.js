@@ -62,8 +62,8 @@ const TeamController = {
             // const randomString = Math.random().toString(36).replace(/\//g,'_');
             console.log(rollNumber)
             const redirectURL = redirectUrl + `/confirmPayment/&${rollNumber}`;
-            // const paymentPortalURL = 'https://www.meraevents.com/ticketWidget?eventId=262719&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=https://technothlon.techniche.org.in/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"';
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262720&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&samepage=1" width="100%" height="600px" frameborder="0px"`;
+            const paymentPortalURL = 'https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=0&location=0&directDetails=0&redirectUrl=https://technothlon.techniche.org.in/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"';
+            //const paymentPortalURL = `"https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&samepage=1" width="100%" height="600px" frameborder="0px"`;
 
 
 
@@ -235,9 +235,7 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
                     <p>Your roll number is: <strong>${team.rollNumber}</strong></p>
-                     <p>Your roll number is: <strong>${team.password}</strong></p>
-
-                    <p>If you have any queries, please feel free to contact us.</p>
+                     <p>If you have any queries, please feel free to contact us.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>
                 `
@@ -305,7 +303,7 @@ const TeamController = {
             }
 
             const email = team.email1; // Assuming email1 is the primary email
-            const password = team.password; // Assuming `password` is stored securely
+          //  const password = team.password; // Assuming `password` is stored securely
 
             // Configure nodemailer
             const transporter = nodemailer.createTransport({
@@ -326,7 +324,6 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>You requested to retrieve your password. Below are your login details:</p>
                     <p><strong>Roll Number:</strong> ${rollNumber}</p>
-                    <p><strong>Password:</strong> ${password}</p>
                     <p>If you did not request this, please ignore this email.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>
@@ -340,7 +337,6 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>You requested to retrieve your password. Below are your login details:</p>
                     <p><strong>Roll Number:</strong> ${rollNumber}</p>
-                    <p><strong>Password:</strong> ${password}</p>
                     <p>If you did not request this, please ignore this email.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>

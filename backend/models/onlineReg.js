@@ -13,7 +13,7 @@ const OnlineteamModel = mongoose.Schema(
         name2: { type: String, require: true },
         contact2: { type: String, require: true },
         email2: { type: String, require: true },
-        school1:{type:String, require: true},
+        school2:{type:String, require: true},
         squad: { type: String, require: true },
         language: { type: String, require: true },
         mode: { type: String, require: true },

@@ -81,25 +81,6 @@ const Results = () => {
     fetchUserDetails();
   }, [baseURL]);
 
-  // Fetch results based on user roll
-  // useEffect(() => {
-  //   if (user && user.roll) {
-  //     const commonRoll = user.roll || user.rollNumber; // Create common variable
-
-  //     const fetchResults = async () => {
-  //       try {
-  //         // const response = await axios.get(`${baseURL}uploadcsv/results?Roll=${user.roll}`, { withCredentials: true });
-  //         // Using user.roll for the common roll and user.rollNumber for the specific number
-  //         const response = await axios.get(`${baseURL}uploadcsv/results?Roll=${user.roll}&RollNumber=${user.rollNumber}`, { withCredentials: true });
-  //         setResults(response.data.user || { Rank: 'NA' });
-  //       } catch (err) {
-  //         console.log('Error fetching results:', err);
-  //         setResults({ Rank: 'NA' });
-  //       }
-  //     };
-  //     fetchResults();
-  //   }
-  // }, [baseURL, user]);
 
   useEffect(() => {
     if (user) {
@@ -123,8 +104,8 @@ const Results = () => {
   useEffect(() => {
     if (results && user) {
       const { Rank } = results;
-      // const rollNumber = user.roll;
-      const rollNumber = user.roll || user.rollNumber; // Use the common roll here as well
+      //const rollNumber = user.roll;
+    const rollNumber = user.roll || user.rollNumber; // Use the common roll here as well
 
 
       if (rollNumber.startsWith('JRF')) {

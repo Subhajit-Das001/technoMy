@@ -16,7 +16,7 @@ function Footer() {
           <a href="/" className="flinks">
             Home
           </a>
-           <Link to="/teamregister" className="flinks">
+           <Link to="/TeamRegistration" className="flinks">
             Register
           </Link>
           

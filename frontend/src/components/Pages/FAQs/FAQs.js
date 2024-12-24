@@ -24,19 +24,54 @@ function FAQ() {
         });
     };
 
-    const faq=[
-      { question: 'What is Technothlon?', answer: 'Technothlon is an annual international school championship for classes 9th to 12th conducted and organized by the student fraternity of IIT Guwahati. It consists of two level prelims and mains. Prelims is an offline exam based on which teams are selected for the mains held at IIT Guwahati in which various events are held and prizes are given to the top three teams.' },
-      { question: 'What is the Registration Fee this year?', answer: 'You can register online for Technothlon 2024 Prelims for a fee of <strong>Rs.200/-</strong> through our registration portal <a href="https://technothlon.techniche.org.in/register">Register!</a>' },
-      { question: 'What is Techniche?', answer: 'Techniche is the annual techno-management festival of IIT Guwahati. It is one of the largest techno-management festivals in India. A large number of events are held during Techniche such as the Lecture Series in which lectures are delivered by various eminent personalities (Walter Bender, George Kourounis, Roger Hunter, Dr. Samuel Chand). Other events include Funniche, Industrial Conclave, Escalade, Rush Hour, Marathon. Various exhibitions and workshops are also held during the festival.' },
-      { question: 'How to register for Technothlon 2023?', answer: 'You can register online through technothlon’s website, or you can contact the Heads/City Representatives of your respective zone/city to register through offline mode.' },
-      { question: 'What are the requirements to give this exam?', answer: 'The participant must be studying in class 9th/10th in the session 2024-25 for appearing in the JUNIORS squad, and in class 11th/12th in the session 2024-25 for appearing in the HAUTS squad.No pre-requisite knowledge on definite topics in science or elsewhere is required.' },
-      { question: 'What is the syllabus for the prelims?', answer: 'Technothlon is an exam filled with intriguing questions that test your logical thinking and presence of mind. If you think your analytical abilities are sharp and your logic is clear, then just sit for the exam and you are sure to crack it!' },
-      { question: 'Where will the examination be held?', answer: 'The prelims will be conducted in schools which will be fixed as centres in 200+ cities all over India. To see the list of cities where the exam will be held, go to the centers page . You will be informed of the centres allocated for your city well in advance of the exam. For KVs, JNVs, APSs, the exam will be conducted in your schools itself.' },
-      { question: 'What kind of questions can I expect in the paper?', answer: 'No questions in the paper will require prior knowledge of facts, formulae, etc. Questions will be both objective and subjective and will demand basic common sense, logic and presence of mind. Previous years papers are here.' },
-      { question:"What will be the mode of conduction of Technothlon this year?" , answer:"This year, Prelims round of technothlon will be held on 14th July 2024 in offline mode, while the mains round will be held in Offline mode during the first week of September."},
-      { question:"My partner fell ill and can’t give the exam. Can I give the exam alone?", answer:"No, individual participation is not allowed."},
-      { question:"When will I get my result?" ,answer:"The results of the Technothlon prelims will be declared in the Last week of August to give the selected students ample time for booking their tickets."},  
-    ];
+    const faq = [
+        { question: 'What is Technothlon?', answer: 'Technothlon is an annual international school championship for classes 9th to 12th conducted and organized by the student fraternity of IIT Guwahati. It consists of two level prelims and mains. Prelims is an offline exam based on which teams are selected for the mains held at IIT Guwahati in which various events are held and prizes are given to the top three teams.' },
+        {
+            question: "What is Techniche?",
+            answer: "Techniche is the Annual Techno-Management Festival of IIT Guwahati. It is the largest of its kind in North-East India and one of the largest across India. Every year, Techniche hosts a variety of engaging events like Lecture Series, Workshops, RoboWars, Industrial Conclave, and many more, many of which are accessible to the Mains participants of Technothlon. Various eminent personalities visit IIT Guwahati and deliver lectures as a part of the Lecture Series event. Walter Bender, George Kourounis, Roger Hunter, and Dr. Samuel Chand have taken part in this event in the past. Various exhibitions are also held during the festival.",
+          },
+          {
+            question: "Who is eligible to write this exam?",
+            answer: "The students participating must be studying either in 9th/10th grade (Juniors Squad) or in 11th/12th grade (Hauts Squad) according to the academic year of 2025-26.",
+          },
+          {
+            question: "How do I register for Technothlon 2025?",
+            answer: "You can either register Online through our payment portal on this website  [Click <a href='https://technothlon.techniche.org.in/TeamRegistration'>Click here to register!</a> or Offline by contacting the City Representative of your city.",
+          },
+        
+          {
+            question: "What is the Registration Fee this year?",
+            answer: "It is <strong>200/-</strong> per team of two. You can register either Online through our website portal or Offline through our City representatives. <a href='https://technothlon.techniche.org.in/TeamRegistration'>Click here to register!</a>",
+          },
+       
+       
+        
+        {
+          question: "What is the syllabus of Prelims examination?",
+          answer: "No prerequisites are required as the exam is completely logic-based. However, if one feels the need for practice, PYQs are readily available on our website. We also have monthly quizzes and test modules to help you prepare.",
+        },
+        {
+          question: "Do we need any extra knowledge for coming to the Mains event at IIT Guwahati?",
+          answer: "No prerequisites are needed. Any extra knowledge required to participate in the events will be taught by us.",
+        },
+        {
+          question: "Where will the examination be held?",
+          answer: "The prelims will be conducted in schools designated as centers in 450+ cities all over India. To see the list of cities where the exam will be held, visit the Centers page. You will be notified of the centers allocated for your city well in advance of the exam. For KVs and JNVs, the exam will be conducted in your schools.",
+        },
+        {
+          question: "What kind of questions can I expect in the paper?",
+          answer: "No question in the paper will require prior knowledge of facts, formulae, etc. Questions will be both objective and subjective and will demand basic common sense, logic, and presence of mind. You can go through the previous papers for reference.",
+        },
+        {
+          question: "What will be the mode of conduction of Technothlon this year?",
+          answer: "This year, the Prelims round of Technothlon will be held on 13th July 2025 in offline mode, while the Mains round will be held in Offline mode during the last week of August.",
+        },
+        {
+          question: "When will I get my result?",
+          answer: "The results of the Technothlon Prelims will be declared in the first week of August. This gives the selected students ample time to book their tickets.",
+        },
+      ];
+      
 
     return (
         <div className="App">

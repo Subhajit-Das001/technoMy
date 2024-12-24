@@ -78,23 +78,23 @@ const Accordion = (prop) => {
 
 {(y.answerHauts || y.answerJunior) && (
 
-<div className="trow">
-            <div id="lft">
-              <b>Solutions:</b>
-            </div>
 
-            <div id="ctr">
-              <a target="blank" href={y.answerHauts}>
-                Hauts
-              </a>
-            </div>
-            <div id="rht">
-              <a target="blank" href={y.answerJunior}>
-                Juniors
-              </a>
-            </div> 
-           </div> 
-)}
+  <div className="trow">
+              <div id="lft">
+                <b>Answer Key:</b>
+              </div>
+              <div id="ctr">
+                <a target="blank" href={y.answerkeyHauts}>
+                  Hauts
+                </a>
+              </div>
+              <div id="rht">
+                <a target="blank" href={y.answerkeyJunior}>
+                  Juniors
+                </a>
+              </div> 
+             </div> 
+  )}
 
 
           {/* <div className="trow">

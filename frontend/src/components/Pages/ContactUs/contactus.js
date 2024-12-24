@@ -107,6 +107,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Varshini Sathineni</h2>
+              <h3>8106226713</h3>
               <p>West Zone Head</p>
             </div>
           </div>
@@ -117,6 +118,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Poojitha Reddy</h2>
+              <h3>9063910805</h3>
               <p>South Zone Head</p>
             </div>
           </div>
@@ -129,6 +131,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Lalithkumar Banglore Sreenivasan</h2>
+              <h3>6379749909</h3>
               <p>North Zone Head</p>
             </div>
           </div>
@@ -139,6 +142,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Jayant Kumar</h2>
+              <h3>8003674745</h3>
               <p>West Zone Head</p>
             </div>
           </div>
@@ -149,6 +153,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Ekshith sai Gunakar Pasala</h2>
+              <h3>9515364418</h3>
               <p>South Zone Head</p>
             </div>
           </div>
@@ -161,6 +166,7 @@ function ContactUs() {
             </div>
             <div className="abt-head">
               <h2>Shubham Kumar Soni</h2>
+              <h3>9142244288</h3>
               <p>East Zone Head</p>
             </div>
           </div>

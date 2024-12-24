@@ -13,9 +13,9 @@ import T_2011_j from "../../Assets/pyqs/Technothlon_2011_Juniors.pdf";
 import T_2012_j from "../../Assets/pyqs/Technothlon_2012_Juniors.pdf";
 // import T_2013_h from "../../Assets/pyqs/Technothlon_2013_Hauts.pdf";
 import T_2013_j from "../../Assets/pyqs/Technothlon_2013_Juniors.pdf";
-// import T_2014_h from "../../Assets/pyqs/Technothlon_2014_Hauts.pdf";
+import T_2014_he from "../../Assets/pyqs/2014HE.pdf";
 import T_2014_j from "../../Assets/pyqs/Technothlon_2014_Juniors(en).pdf";
-// import T_2015_h from "../../Assets/pyqs/Technothlon_2015_Hauts.pdf";
+import T_2015_he from "../../Assets/pyqs/2015HE.pdf";
 import T_2015_j from "../../Assets/pyqs/Technothlon_2015_JUNIOR(en).pdf";
 import T_2016_h from "../../Assets/pyqs/Technothlon_2016_HE.pdf";
 import T_2016_j from "../../Assets/pyqs/Technothlon_2016_JE.pdf";
@@ -32,8 +32,88 @@ import T_2019_hs from "../../Assets/pyqs/T19/2019hautssolutions.pdf";
 import T_2019_je from "../../Assets/pyqs/T19/2019juniors.pdf";
 import T_2019_js from "../../Assets/pyqs/T19/2019JuniorSolutions.pdf";
 
+import T_2020_he from "../../Assets/pyqs/T20/Hauts English 20.pdf";
+import T_2020_je from "../../Assets/pyqs/T20/Juniors English 20.pdf";
+
+
+
+import T_2021_he from "../../Assets/pyqs/T21/Hauts English 21.pdf";
+import T_2021_je from "../../Assets/pyqs/T21/Juniors English 2021.pdf";
+import T_2021_hh from "../../Assets/pyqs/T21/Hauts Hindi 21.pdf";
+import T_2021_jh from "../../Assets/pyqs/T21/Juniors Hindi 21.pdf";
+import T_2021_ha from "../../Assets/pyqs/T21/Hauts Key 21.pdf";
+import T_2021_ja from "../../Assets/pyqs/T21/Juniors Key 21.pdf";
+
+import T_2022_he from "../../Assets/pyqs/T22/Hauts english 22.pdf";
+import T_2022_je from "../../Assets/pyqs/T22/Juniors 22 English.pdf";
+import T_2022_hh from "../../Assets/pyqs/T22/Hauts Hindi 22.pdf";
+import T_2022_jh from "../../Assets/pyqs/T22/Juniors Hindi 22.pdf";
+import T_2022_ha from "../../Assets/pyqs/T22/Hauts key 22.pdf";
+import T_2022_ja from "../../Assets/pyqs/T22/Juniors Key 22.pdf";
+
+
+import T_2023_he from "../../Assets/pyqs/T23/Hauts English 23.pdf";
+import T_2023_je from "../../Assets/pyqs/T23/Juniors English 23.pdf";
+import T_2023_hh from "../../Assets/pyqs/T23/Hauts Hindi 23.pdf";
+import T_2023_jh from "../../Assets/pyqs/T23/Juniors Hindi 23.pdf";
+import T_2023_ha from "../../Assets/pyqs/T23/Hauts Key 23.pdf";
+import T_2023_ja from "../../Assets/pyqs/T23/Juniors Key 23.pdf";
 
 const data = [
+
+  {
+    year: "Technothlon 2023",
+    englishHauts: T_2023_he,
+    hindiHauts: T_2023_hh,
+    englishJunior: T_2023_je,
+    hindiJunior: T_2023_jh,
+    answerkeyHauts: T_2023_ha,
+    answerkeyJunior: T_2023_ja,
+    // answerHauts: "",
+    // answerJunior: "",
+    // solHauts: "",
+    // solJunior: "",
+  },
+
+
+  {
+    year: "Technothlon 2022",
+    englishHauts: T_2022_he,
+    hindiHauts: T_2022_hh,
+    englishJunior: T_2022_je,
+    hindiJunior: T_2022_jh,
+    answerkeyHauts: T_2022_ha,
+    answerkeyJunior: T_2022_ja,
+    // answerHauts: "",
+    // answerJunior: "",
+    // solHauts: "",
+    // solJunior: "",
+  },
+  {
+    year: "Technothlon 2021",
+    englishHauts: T_2021_he,
+    hindiHauts: T_2021_hh,
+    englishJunior: T_2021_je,
+    hindiJunior: T_2021_jh,
+    answerkeyHauts: T_2021_ha,
+    answerkeyJunior: T_2021_ja,
+    // answerHauts: "",
+    // answerJunior: "",
+    // solHauts: "",
+    // solJunior: "",
+  },
+  {
+    year: "Technothlon 2020",
+    englishHauts: T_2020_he,
+    // hindiHauts: "",
+    englishJunior: T_2020_je,
+    // hindiJunior: "",
+    // answerHauts: "",
+    // answerJunior: "",
+    // solHauts: "",
+    // solJunior: "",
+  },
+
 
     {
       year: "Technothlon 2019",
@@ -46,6 +126,7 @@ const data = [
       // solHauts: "",
       // solJunior: "",
     },
+    
 
     {
     year: "Technothlon 2018",
@@ -70,6 +151,7 @@ const data = [
     // solHauts: "",
     // solJunior: "",
   },
+ 
   {
     year: "Technothlon 2016",
     englishHauts: T_2016_h,
@@ -83,7 +165,7 @@ const data = [
   },
   {
     year: "Technothlon 2015",
-    // englishHauts: T_2015_h,
+    englishHauts: T_2015_he,
     // hindiHauts: "",
     englishJunior: T_2015_j,
     // hindiJunior: "",
@@ -94,7 +176,7 @@ const data = [
   },
   {
     year: "Technothlon 2014",
-    // englishHauts: T_2014_h,
+    englishHauts: T_2014_he,
     // hindiHauts: "",
     englishJunior: T_2014_j,
     // hindiJunior: "",

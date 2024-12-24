@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     try {
       console.log('Fetching announcements...');
       const announcements = await Announcement.find().sort({ createdAt: -1 });
-      console.log('Announcements fetched:', announcements);
+      //console.log('Announcements fetched:', announcements);
       res.json(announcements);
     } catch (err) {
       console.error('Error fetching announcements:', err);

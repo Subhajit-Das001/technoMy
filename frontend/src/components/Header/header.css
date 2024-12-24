@@ -263,8 +263,9 @@ margin-top: 20px;
     height:7vh;
     max-width: 150px;
   }
-  .regist p{
+  .registp{
     font-size: calc(1em + 1vw);
+    color: white;
   }
   .hlink img{
     height:calc(4em + 4vh);

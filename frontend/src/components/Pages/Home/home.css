@@ -54,11 +54,12 @@
     border-bottom: 3px solid #fff;
     opacity: 0;
     animation: slideFromTopHeading 1s ease forwards; 
+    display:flex;
   
   }
   
   .SubHeading-Hero {
-    width: 75%;
+    width: 80%;
     color: #fff;
     margin-top: 5vh;
     opacity: 0;
@@ -226,7 +227,7 @@
   transition: transform 0.3s ease;
 }
 .info-card img{
-  width: 70%;
+  width: 50%;
   height: 45%;
   margin-top: 2vh;
   display: flex;
@@ -301,7 +302,7 @@
   height: 45vh;
   min-height: 300px;
   max-height: 450px;
-  width: 13vw;
+  width: 23vw;
   min-width: 250px;
   max-width: 450px;
   margin-left: 2vw;
@@ -491,6 +492,7 @@ transition: transform 0.3s ease;
     border: 2px solid #28a745;
     border-radius: 5px;
   }
+  
   
   
   
@@ -887,9 +889,9 @@ transition: transform 0.3s ease;
 .event-heading{
 
   margin-top: 80px;
-font-size: 2em;
+font-size: 3em;
 font-weight: bold;
 color: #333;
 /* margin-bottom: 10px; */
-text-transform: uppercase;
+font-variant-caps: small-caps;
 }

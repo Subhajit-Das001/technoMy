@@ -4,7 +4,7 @@ const cityToID = require('./cityToID.json');
 function generateRollNumber(squad, language, city, studentCount) {
 
 
-    const medium = (language === "Hindi") ? "1" : "0";
+    const medium = (language === "Hindi") ? "H" : "E";
     const squadCode = (squad === "Hauts") ? "HE" : "JR";
     const year =25;
     const cityID = cityToID[city];

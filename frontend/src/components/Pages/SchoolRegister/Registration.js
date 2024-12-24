@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Header from '../../Header/header';
-import Footer from '../../Footer/footer';
-import Loader from '../../design/loader/Loader';
-
+import React, { useState } from "react";
+import axios from "axios";
+import Header from "../../Header/header";
+import Footer from "../../Footer/footer";
+import Loader from "../../design/loader/Loader";
 import "./Registration.css";
 import cityToId from "./cityToID.json";
-
-import InstructionPanel from './InstructionPanel'
-
-
-// Loader Component
-
+import InstructionPanel from "./InstructionPanel";
 
 const TeamReg = () => {
-  const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/api" : "http://localhost:3001/api";
-  const redirectUrl = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/confirmPayment" : "http://localhost:3000/confirmPayment";
+  const baseURL =
+    process.env.NODE_ENV === "production"
+      ? "https://technothlon.techniche.org.in/api"
+      : "http://localhost:3001/api";
+  const redirectUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://technothlon.techniche.org.in/confirmPayment"
+      : "http://localhost:3000/confirmPayment";
+  
   const [team, setTeam] = useState({
     name1: "", email1: "", contact1: "", school1: "", name2: "", email2: "", contact2: "", school2: "", squad: "", language: "", mode: "online", country: "", state: "", city: "",view:"", password1: "", password2: ""
   });
@@ -74,8 +74,7 @@ const TeamReg = () => {
 
   let name, value;
   const handleInput = (e) => {
-    name = e.target.name;
-    value = e.target.value;
+    const { name, value } = e.target;
     setTeam({ ...team, [name]: value });
   };
 
@@ -123,20 +122,20 @@ const TeamReg = () => {
   const filteredCountry = allCountries.filter((country) =>
     country.toLowerCase().includes(team.country.toLowerCase())
   );
-
-  
-
   const filteredCities = Object.keys(cityToId).filter((city) =>
     city.toLowerCase().includes(team.city.toLowerCase())
   );
 
-
   const validateForm = () => {
-    const requiredFields = ['name1', 'email1', 'contact1', 'name2', 'email2', 'contact2', 'password1', 'password2', 'school1','school2','view', 'city', 'state', 'country', 'squad', 'language'];
+    const requiredFields = [
+      "name1", "email1", "contact1", "name2", "email2", "contact2",
+      "password1", "password2", "school1", "school2", "view",
+      "city", "state", "country", "squad", "language"
+    ];
 
     for (const field of requiredFields) {
       if (!team[field]) {
-        alert(`Please fill in ${field.replace(/([A-Z])/g, ' $1').trim()}`);
+        alert(`Please fill in ${field.replace(/([A-Z])/g, " $1").trim()}`);
         return false;
       }
     }
@@ -146,7 +145,6 @@ const TeamReg = () => {
       return false;
     }
 
-    // Custom validation for city
     if (!Object.keys(cityToId).includes(team.city)) {
       alert("Please select a valid city from the dropdown");
       return false;
@@ -157,34 +155,29 @@ const TeamReg = () => {
 
   const postData = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
-
     try {
       const res = await axios.post(`${baseURL}/register`, {
         ...team,
         password: team.password1,
       });
 
-      if (res.data) {
-        const {  rollNumber } = res.data;
-        const redirectURL = redirectUrl + `/${rollNumber}`;
+      if (res.data && res.data.rollNumber) {
+        const { rollNumber } = res.data;
+        const redirectURL = `${redirectUrl}/${rollNumber}`;
         setTimeout(() => {
-          window.location.href = `https://www.meraevents.com/ticketWidget?eventId=262719&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&redirectUrl=` + redirectURL;
+          window.location.href = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=0&location=0&directDetails=0&redirectUrl=${redirectURL}`;
         }, 5000);
       } else {
-        setIsLoading(false);
-        window.alert("Team Registration Failed");
+        alert("Failed to retrieve roll number. Registration incomplete.");
       }
-
     } catch (error) {
+      console.error("Registration Error:", error);
+      alert("Team Registration Failed. Please try again.");
+    } finally {
       setIsLoading(false);
-      console.log(error);
-      window.alert("Team Registration Failed")
     }
   };
 

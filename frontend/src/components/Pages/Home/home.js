@@ -6,9 +6,9 @@ import Header from "../../Header/header";
 import Footer from "../../Footer/footer";
 import HautsTheme from "../../Assets/img/Hautstheme.png";
 import JuniorTheme from "../../Assets/img/Juniorstheme.png";
-import Invite1 from "../../Assets/img/prizes1.png";
-import Invite2 from "../../Assets/img/prizes2.png";
-import Prize from "../../Assets/img/prizes3.png";
+import Prize1 from "../../Assets/img/prizes1.png";
+import Prize2 from "../../Assets/img/prizes2.png";
+import Prize3 from "../../Assets/img/prizes3.png";
 import Laptop from "../../Assets/img/laptop.png";
 import Results from "../../Assets/img/Results.png";
 import IITG from "../../Assets/img/iitg.png";
@@ -54,7 +54,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>The wait is over! Registration Portal for 2025 is live now.!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>The wait is over! Registration Portal for 2025 is live now!!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
@@ -68,7 +68,7 @@ prizeImages.forEach(img => {
         <Text/>
       </div>
       <div className="SubHeading-Hero">
-        Technothlon is an international school championship organized by the student fraternity of IIT Guwahati. Technothlon was started with a group of students in a small room in 2004 to inspire young minds.
+      Technothlon is an international school championship organized entirely by its student community. Renowned as one of the largest events of its kind, it began its journey in 2004 and has grown tremendously, attracting thousands of students every year.
       </div>
       <div className="center">
           <div className="check-center">Click here for viewing Registered Centers
@@ -90,9 +90,9 @@ prizeImages.forEach(img => {
     <div class="main-headss">Check out last year's Prizes!</div>
   </div>
   <div class="image-container">
-    <img class="prize-img active" src={Prize} alt="Prize-img" />
-    <img class="prize-img" src={Invite1} alt="Invite" />
-    <img class="prize-img" src={Invite2} alt="Invite" />
+  <img class="prize-img " src={Prize1} alt="Prize-img" />
+    <img class="prize-img" src={Prize2} alt="Invite" />
+    <img class="prize-img" src={Prize3} alt="Invite" />
   </div>
 </div>
 
@@ -126,29 +126,22 @@ prizeImages.forEach(img => {
       <div className="slick-update ">
       <a href="/login" className="update-card">
           <div className="update-card-icon">
-              <img src={IITG} alt="IIT Guwahati Icon" />
+          <img src={IITG} alt="IIT Guwahati Icon" />
           </div>
           <div className="update-card-content">
           Results are out! Check your ranks now!!
           </div>
         </a>
-        <a href="/login" className="update-card">
+        <a href="/TeamRegistration" className="update-card">
           <div className="update-card-icon">
               <img src={Laptop} alt="Registration Icon" />
           </div>
           <div className="update-card-content">
-          Online registration has now closed for 2024!
+          Online registrations have now opened for 2025!
           </div>
         </a>
 
-         <a href="/registeredschool" className="update-card">
-          <div className="update-card-icon">
-              <img src={Results} alt="Results Icon" />
-          </div>
-          <div className="update-card-content">
-              Check the Registered Centers.
-          </div>
-        </a>
+        
 
         
       </div>
@@ -156,16 +149,16 @@ prizeImages.forEach(img => {
     <div className="parent-1">
         
           <div className="info-card">
-            <img src={AboutUs} alt="About Us Image" className="about-us-image"/>
+          <img src={AboutUs} alt="About Us Image" className="about-us-image info-img"/>
             <div className="info-card-heading">About Us</div>
             <div className="info-card-content">
-              Over the past 20 years we have expanded our reach to over 450 cities all over India and various centers abroad.
+              Over the past 21 years we have expanded our reach to over 450 cities all over India and various centers abroad.
             </div>
             <a href="/aboutus"> Learn More </a>
           </div>
       
           <div className="info-card">
-            <img src={Pedia} alt="Technopedia Image" />
+          <img src={Pedia} alt="Technopedia Image" className='info-img' />
             <div className="info-card-heading">Technopedia</div>
             <div className="info-card-content">
               Technopedia is the online module of Technothlon providing its students an ultimate experience of the prelims beforehand!
@@ -174,7 +167,7 @@ prizeImages.forEach(img => {
           </div>
         
           <div className="info-card">
-            <img src={Mains} alt="Mains Image" />
+          <img src={Mains} alt="Mains Image" className='info-img'/>
             <div className="info-card-heading">PYQs</div>
             <div className="info-card-content">
             Look through our repository of past question papers to help you prepare for Technothlon 2025.

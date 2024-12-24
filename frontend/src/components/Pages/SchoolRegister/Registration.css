@@ -16,7 +16,7 @@ body {
 
 .containe {
   width: 70%;
-  margin: 100px auto;
+  margin: 150px auto;
   
   background-color:#fff;
   border: 1px solid orange;
@@ -121,3 +121,24 @@ input, select, textarea {
   cursor: pointer;
   font-size: 16px;
 }
+@media screen and (max-width: 480px) {
+  .containe {
+    width: 95%;
+    margin: 100px auto;
+    
+    background-color:#fff;
+    border: 1px solid orange;
+    padding: 20px;
+  
+    /* border-radius: 8px; */
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    
+  }
+  .form-title {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: bolder;
+  }
+  
+  }

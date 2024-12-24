@@ -61,7 +61,7 @@ const Stats = () => {
 
   return (
     <div className="statsclass" ref={statsRef} style={{ textAlign: "center", padding: "40px"}}>
-      <h1 style={{ marginBottom: "40px", marginTop: "-15px", color: "#333", fontSize: "3rem" }}>Our Impact</h1>
+      <h1 style={{ marginBottom: "40px", marginTop: "-15px", color: "#fff", fontSize: "3rem" }}>Our Impact</h1>
       <div
         style={{
           display: "flex",

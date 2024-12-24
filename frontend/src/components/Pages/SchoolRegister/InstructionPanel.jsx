@@ -36,7 +36,7 @@ const InstructionPanel = () => {
                <li>Upon redirection, check your email for a verification message then click on the verification link provided in the email.</li>
                <li>A confirmation page will open, indicating successful registration.</li>
                <li>Both participants will receive an email with Roll numbers.</li>
-               <li>Each team is required to purchase only one ticket.</li>
+               
                <li className='disclaimer'><b style={{ color: 'red' }}>Disclaimer:</b> Ensure all provided information is accurate. Any false information will result in immediate disqualification, without refund.</li>
              </ul>
       </div>

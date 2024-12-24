@@ -95,7 +95,7 @@
     position: relative;
 }
 .pwd-change-wrapper {
-    margin-top: 5%;
+    margin-top: 1%;
     width: 100%; /* Update the width to 100% or desired value */
     max-width: 800px; /* Optional: limit max width for larger screens */
   }

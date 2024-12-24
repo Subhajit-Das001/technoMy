@@ -86,7 +86,7 @@ function Header() {
           className={`regist ${clickedLink === "register" ? "clicked" : ""}`}
           onClick={() => setClickedLink("register")}
         >
-          <p>Register</p>
+          <p className="registp">Register</p>
         </Link>
         <Link
           to="/login"

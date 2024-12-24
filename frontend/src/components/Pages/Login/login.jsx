@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './login.css';
+//import './login.css';
 import Header from "../../Header/header"; 
 import Footer from "../../Footer/footer";
 import Techno_owl from "./techno_owl_logo.jpg";
@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './lg.css';
 
 const Login = () => {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/api/" : "http://localhost:3001/api/";
@@ -124,9 +125,7 @@ const Login = () => {
               <div className="containerr">
                 <Button color="#00E86B" text="Login" onClick={handleSubmit} />
               </div>
-              <p className={`forgot-password ${forgotPasswordClicked ? 'underline' : ''}`} onClick={handleForgotPassword}>
-                Forgot Password?
-              </p>
+              
             </div>
           </div>
           <Footer />

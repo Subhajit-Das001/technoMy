@@ -43,7 +43,7 @@ function Technopedia() {
 <div className="l-blue1">
 
           <h1>Techno Coup D'oeil</h1>
-          <p>Techno Coup D'oeil is our weekly question series running on social media Facebook and Instagram.</p>
+          <p>Techno Coup D'oeil is our monthly question series running on social media Facebook and Instagram.</p>
           
         </div>
 

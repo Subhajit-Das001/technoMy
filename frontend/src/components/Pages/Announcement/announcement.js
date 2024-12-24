@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Announcement.css'; // Add your CSS here
-import icon from './Announcements-color.svg'
+import icon from './announcement.png';
+
 const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);

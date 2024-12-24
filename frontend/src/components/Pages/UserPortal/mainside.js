@@ -20,6 +20,7 @@ const UserPortal = () => {
     const [activeSection, setActiveSection] = useState(null);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth < 750);
     const [sidePanel, setSidePanel] = useState(screenWidth ? false : true);
+    const [user, setUser] = useState(null);
 
     // Retrieve the selected section from localStorage when component mounts
     useEffect(() => {

@@ -78,7 +78,7 @@
 .descriptionn1 p {
   font-weight: 400;
   font-size: calc(.8em + .4vw);
-  padding:3%;
+  /*padding:3%;*/
   
 }
 
