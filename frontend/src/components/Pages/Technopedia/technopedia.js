@@ -25,7 +25,7 @@ function Technopedia() {
             keeping the young minds involved in brainstorming questions and helping them prepare for
             the prelims. Only the students who have registered for Technothlon may log into
             Technopedia using either their email id or their roll number and password.
-            <a href={redirectUrl}><b> Click here!</b></a>
+            <a href={redirectUrl}><b>Click here!</b></a>
           </p>
         </div>
         {/* Additional components or sections can be added here */}
@@ -52,8 +52,8 @@ function Technopedia() {
           <p>
           This particular initiative of Technothlon is a series of questions released on our social media handles each month. In each series, a set of two questions will be released, both of similar patterns in which Prelims questions are made.
           </p>
-          <p>Please note that these contests and prizes are available exclusively for the registered participants only. Technopedia and Techno Coup D’oeil can be easily accessed by logging into your user profile using your email ID or Roll number and password. [ <a href={redirectUrl}><b>Click here! </b></a>
-            to log in to Technopedia and Techno Coup D’oeil ]
+          <p>Please note that these contests and prizes are available exclusively for the registered participants only. Technopedia and Techno Coup D’oeil can be easily accessed by logging into your user profile using your email ID or Roll number and password.             <a href={redirectUrl}><b>Click here! </b></a>
+            to log in to Technopedia and Techno Coup D’oeil 
           </p>
           {/* <p>In addition to these, we have another interesting series called Logic Lullaby. Head over to our Instagram page to check that out!
 </p> */}

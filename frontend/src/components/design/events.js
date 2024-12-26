@@ -159,7 +159,7 @@ const items = [
     id: 2,
     title: "Dust Dynamix",
     imgSrc:OPI2,
-     link: "https://www.instagram.com/profile2" // Add specific link
+     link: "https://www.instagram.com/p/DCqWduZPuwz/?img_index=1" // Add specific link
   },
   {
     id: 3,

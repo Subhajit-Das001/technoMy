@@ -26,6 +26,11 @@ const OnlineteamModel = mongoose.Schema(
         password: { type: String, require: true },
         isVerified: { type: Boolean, default: false },
         isPaid: { type: Boolean, default: false },
+        createdAt: {
+            type: Date,
+            default: () => new Date(Date.now() + 5.5 * 60 * 60 * 1000), // Convert UTC to IST
+        },
+        
     },
     {
         timestaps: true

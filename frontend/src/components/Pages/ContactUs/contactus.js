@@ -56,7 +56,7 @@ function ContactUs() {
             </div>
           ))
         ) : (
-          <p>No representatives found</p>
+          <p>Loading...</p>
         )}
       </div>
     </div>
@@ -69,6 +69,10 @@ function ContactUs() {
       <div className="cityrp-main">
         <div className="navy">
           <h1>Contact Us</h1>
+          <h2>
+          You can contact cityreps of your zone through their contacts given below : - 
+
+          </h2>
         </div>
       </div>
       
@@ -108,6 +112,7 @@ function ContactUs() {
             <div className="abt-head">
               <h2>Varshini Sathineni</h2>
               <h3>8106226713</h3>
+
               <p>West Zone Head</p>
             </div>
           </div>

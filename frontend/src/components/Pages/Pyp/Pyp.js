@@ -297,11 +297,13 @@ function Pyp() {
         </div>
       
       <div className="green">
-            <h1>Solutions</h1>
-            <p>Look through our repository of past question papers to help you prepare for Technothlon 2024</p>
+            <h1>Previous Year Questions</h1>
+            <p>See for yourself the unique question papers of Technothlon!
+              <br />  Go through our repository of past Technothlon papers to get a hang of the questions and get ready to face Technothlon 2025!
+              </p>
       </div>
       <div className="con">
-            <h3>Past Year Questions</h3>
+            {/* <h3>Learn from the Best – Dive into PYQs</h3> */}
       </div>
       {data.map((y) => (
         <Accordion y={y} />

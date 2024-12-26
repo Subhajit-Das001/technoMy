@@ -28,6 +28,9 @@
 .footer {
   margin-top: auto;
 }
+
+
+
 .splash-screen {
     /* Add any common styles for the splash screen here */
     width: 100vw;
@@ -41,8 +44,10 @@
     background-color: rgb(75, 75, 239);
   height:90vh;
   min-height: 800px;
-
   }
+
+
+
   .Heading-Hero {
     justify-content: center;
     width: 65%;
@@ -54,7 +59,7 @@
     border-bottom: 3px solid #fff;
     opacity: 0;
     animation: slideFromTopHeading 1s ease forwards; 
-    display:flex;
+
   
   }
   
@@ -64,6 +69,8 @@
     margin-top: 5vh;
     opacity: 0;
     animation: slideFromTopSubHeading 1s ease forwards; /* Animation to slide from top for subheading */
+    display: flex;
+    /* justify-content: center; */
   }
   
   @keyframes slideFromTopHeading {
@@ -205,7 +212,7 @@
   width:25%;
   min-width:230px;
   max-width: 420px;
-  max-height: 550px;
+  max-height: 650px;
   height:100%;
   display: flex;
   flex-direction: column;
@@ -217,24 +224,20 @@
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
-.info-card img {
-  object-fit: contain;
-}
-
 .info-card:hover{
   transform: scale(1.1);
   transition: transform 0.3s ease;
 }
 .info-card img{
-  width: 50%;
-  height: 45%;
+  width: 30%;
+  height: 25%;
   margin-top: 2vh;
   display: flex;
   justify-content: center;
   align-items: center;
   
 }
+
 
 .info-card-heading {
   height:8%;
@@ -284,14 +287,14 @@
     height: 45vh;
     min-height: 300px;
     max-height: 450px;
-    width: 23vw;
-    min-width: 300px;
+    width: 25vw;
+    min-width: 200px;
     max-width: 450px;
     margin-left: 2vw;
     margin-right: 2vw;
-    margin-top: 2vh;
     border-radius: 10px;
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+
 }
 
 .prize-img:hover{
@@ -300,11 +303,11 @@
 }
 .prize-imgg {
   height: 45vh;
-  min-height: 300px;
-  max-height: 450px;
-  width: 23vw;
-  min-width: 250px;
-  max-width: 450px;
+  min-height: 450px;
+  max-height: 400px;
+  width: 20vw;
+  min-width: 300px;
+  max-width: 350px;
   margin-left: 2vw;
   margin-right: 2vw;
   border-radius: 10px;
@@ -422,11 +425,7 @@ transition: transform 0.3s ease;
   }
   
 
-.about-us-image {
-    width: 70%; /* Set the maximum width to 75% of the parent container */
-    height: 50%;
-  }
-  
+
   
 
   
@@ -494,12 +493,29 @@ transition: transform 0.3s ease;
   }
   
   
-  
+@media only screen and (max-width: 1024px) {
+  .info-card{
+    width:50%;
+    height:100%;
+    max-width: 300px;
+    display: flex;
+flex-direction: column;
+align-items: center; /* Align content horizontally at the center */
+text-align: center;
+margin:0 0 0 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  }
+
+
+
+
   
   @media only screen and (max-width: 768px) {
   
     .floating-notice {
-      width:100vw;
+      /* width:max-content; */
       height: 8vh;
       z-index: 800;
       flex-direction: column;
@@ -513,10 +529,6 @@ transition: transform 0.3s ease;
       font-weight:600;
       font-size: calc(.5em + .5vh + .5vw) ;
       color: rgb(75, 75, 239);
-    }
-
-    .floating-notice {
-      width: 100%;
     }
     
     .floating-notice p{
@@ -538,7 +550,7 @@ transition: transform 0.3s ease;
     }
     .splash-screen {
         /* Add any common styles for the splash screen here */
-        width: 100vw;
+        width: max-content;
         /* padding-left: 10%; */
         display: flex;
         flex-direction: column;
@@ -549,7 +561,7 @@ transition: transform 0.3s ease;
     .Heading-Hero{
         /* width: 350px; */
         /* margin-top: 10%; */
-        width:100vw;
+        width:100%;
         margin-right: 7%;
         color: #fff;
         font-size: calc(2.5vh + 2.5vw);
@@ -610,10 +622,10 @@ transition: transform 0.3s ease;
       height:90%;
       max-width: 300px;
       display: flex;
-      flex-direction: column;
-      align-items: center; /* Align content horizontally at the center */
-      text-align: center;
-      margin:0 0 0 0;
+  flex-direction: column;
+  align-items: center; /* Align content horizontally at the center */
+  text-align: center;
+  margin:0 0 0 0;
       border: 1px solid #ddd;
       border-radius: 5px;
   
@@ -680,22 +692,23 @@ transition: transform 0.3s ease;
     .image-container {
       row-gap: 5vh;
       flex-direction: column;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      width:60%;
-      min-width: 250px;
-      max-width: 300px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        width:60%;
+        min-width: 230px;
+        max-width: 300px;
+        margin-right: 0vw;
         
     }  
     
     .prize-img {
-        width: 100%;
-        min-width: 250px;
-        max-width: 300px;
         height: 100%;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        
     }
-
     .row {
         display: flex;
         flex-direction: row;
@@ -877,9 +890,8 @@ transition: transform 0.3s ease;
     
 .statsclass{
   background-color: rgb(75, 75, 239);
-  padding: 0px 0px;
+  padding: 10px 80px;
   justify-content: space-evenly;
-  width: 100%;
 }
 
 .events{
@@ -893,5 +905,7 @@ font-size: 3em;
 font-weight: bold;
 color: #333;
 /* margin-bottom: 10px; */
+/* text-transform: uppercase; */
 font-variant-caps: small-caps;
+
 }

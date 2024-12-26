@@ -36,12 +36,12 @@ function FAQ() {
           },
           {
             question: "How do I register for Technothlon 2025?",
-            answer: "You can either register Online through our payment portal on this website  [Click <a href='https://technothlon.techniche.org.in/TeamRegistration'>Click here to register!</a> or Offline by contacting the City Representative of your city.",
+            answer: "You can either register Online through our Registration portal on this website <strong> <a href='https://technothlon.techniche.org.in/TeamRegistration'>[Click here to register!]</a> </strong> or Offline by contacting the City Representative of your city.",
           },
         
           {
             question: "What is the Registration Fee this year?",
-            answer: "It is <strong>200/-</strong> per team of two. You can register either Online through our website portal or Offline through our City representatives. <a href='https://technothlon.techniche.org.in/TeamRegistration'>Click here to register!</a>",
+            answer: "It is 200/- per team of two. You can register either Online through our website portal or Offline through our City representatives. <strong> <a href='https://technothlon.techniche.org.in/TeamRegistration'>[Click here to register!]</a>  </strong>",
           },
        
        
@@ -60,7 +60,7 @@ function FAQ() {
         },
         {
           question: "What kind of questions can I expect in the paper?",
-          answer: "No question in the paper will require prior knowledge of facts, formulae, etc. Questions will be both objective and subjective and will demand basic common sense, logic, and presence of mind. You can go through the previous papers for reference.",
+          answer: "No question in the paper will require prior knowledge of facts, formulae, etc. Questions will be both objective and subjective and will demand basic common sense, logic, and presence of mind. You can go through the previous papers for reference.   <strong> <a href='https://technothlon.techniche.org.in/pyp'>[Click here to view PYQ's !]</a> </strong> ",
         },
         {
           question: "What will be the mode of conduction of Technothlon this year?",

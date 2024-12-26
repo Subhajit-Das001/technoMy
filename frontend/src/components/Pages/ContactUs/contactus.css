@@ -40,7 +40,13 @@
   padding: 0;
   /* flex-direction: row;
   text-align: center; */
+  color: white;
+
 }
+.navy h2{
+  color: rgb(224, 212, 212);
+}
+
 .head-heading{
   width:50%;
   margin-top: 10vh;

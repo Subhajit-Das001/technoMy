@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-// const TeamModel = require('../models/teamModel');
 
 const Onlinereg =require('../models/onlineReg')
 
@@ -13,17 +12,22 @@ const generateRollNumber = require('../utils/generateRollNumber');
 
 const baseURL = process.env.NODE_ENV==="production"? "/api" : "http://localhost:3001/api";
 const redirectUrl = process.env.NODE_ENV==="production"? "https://technothlon.techniche.org.in" : "http://localhost:3000";
+const whatsapp="https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S";
+
+
 
 const TeamController = {
     createTeam: async (req, res) => {
         try {
             const { email1, email2 } = req.body;
-            const teamExists = await Onlinereg.findOne({ $or: [{ email1 }, { email2 }] });
+            // const teamExists = await Onlinereg.findOne({
+            //     $or: [{ email1 }, { email2 }],
+            //     isPaid: true,
+            // });
 
-
-            if (teamExists) {
-                return res.status(400).json({ error: "One or the other members is already registered" });
-            }
+            // if (teamExists) {
+            //     return res.status(400).json({ error: "One or the other members is already registered" });
+            // }
 
             const newTeam = new Onlinereg(req.body);
 
@@ -35,12 +39,6 @@ const TeamController = {
                 { new: true, upsert: true }
             );         
            
-
-
-            // const cityInfo=await CityStudentCount.findOneAndUpdate({ cityID },{city}, { $inc: { studentCount: 1 } }, { upsert: true });
-
-            // const cityInfo = await CityStudentCount.findOne({ cityID });
-            // const studentCount = cityInfo ? cityInfo.studentCount + 1 : 1;
             cityInfo.city=newTeam.city;
 
             const rollNumber = generateRollNumber(newTeam.squad, newTeam.language, newTeam.city, cityInfo.studentCount);
@@ -59,11 +57,10 @@ const TeamController = {
                 },
             });
             
-            // const randomString = Math.random().toString(36).replace(/\//g,'_');
             console.log(rollNumber)
             const redirectURL = redirectUrl + `/confirmPayment/&${rollNumber}`;
-            const paymentPortalURL = 'https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=0&location=0&directDetails=0&redirectUrl=https://technothlon.techniche.org.in/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"';
-            //const paymentPortalURL = `"https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&samepage=1" width="100%" height="600px" frameborder="0px"`;
+            const paymentPortalURL = 'https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=https://technothlon.techniche.org.in/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"';
+            // const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=http://localhost:3000/confirmPayment/${rollNumber}&theme=1&t=1" width="100%" height="600" frameborder="0px"`;
 
 
 
@@ -113,7 +110,6 @@ const TeamController = {
 
             const { rollNumber, paymentStatus } = req.body;
 
-            // const team = await TeamModel.findOne({ rollNumber });
             const team = await Onlinereg.findOne({ rollNumber });
 
 
@@ -127,7 +123,7 @@ const TeamController = {
                     service: 'gmail',
                     host: 'smtp.gmail.com',
                     auth: {
-                        user: 'technothloniitg@gmail.com',
+                        user: 'technothlon@technicheiitg.in',
                         pass: 'fjowuvpqbbtjrvsa'
                     },
                 });
@@ -235,7 +231,8 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
                     <p>Your roll number is: <strong>${team.rollNumber}</strong></p>
-                     <p>If you have any queries, please feel free to contact us.</p>
+                     <p>Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated:${whatsapp}</p>
+                    <p>If you have any queries, please feel free to contact us.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>
                 `
@@ -249,6 +246,7 @@ const TeamController = {
                     <p>Hey Champs!</p>
                     <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
                     <p>Your roll number is: <strong>${team.rollNumber}</strong></p>
+                     <p>Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated:${whatsapp}</p>
                     <p>If you have any queries, please feel free to contact us.</p>
                     <p>Warm regards,</p>
                     <p>Team Technothlon</p>
@@ -256,7 +254,10 @@ const TeamController = {
             });
 
             // return res.redirect("https://technothlon.techniche.org.in/login");
-            return res.redirect(`http://localhost:3000/teamverified`);
+         return res.redirect(`https://technothlon.techniche.org.in/teamverified`);
+
+            // return res.redirect(`http://localhost:3000/teamverified`);
+
     
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
@@ -291,6 +292,18 @@ const TeamController = {
     },
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     forgotPassword: async (req, res) => {
         try {
             const { rollNumber } = req.body;
@@ -303,7 +316,7 @@ const TeamController = {
             }
 
             const email = team.email1; // Assuming email1 is the primary email
-          //  const password = team.password; // Assuming `password` is stored securely
+            // const password = team.password; // Assuming `password` is stored securely
 
             // Configure nodemailer
             const transporter = nodemailer.createTransport({
@@ -361,8 +374,8 @@ async function sendVerificationEmail(email, token) {
     });
 
     // Send the email verification link containing the token
-    // const verificationLink = `https://technothlon.techniche.org.in/api/verify?token=${token}`;
-    const verificationLink = `http://localhost:3001/api/verify?token=${token}`;
+    const verificationLink = `https://technothlon.techniche.org.in/api/verify?token=${token}`;
+    // const verificationLink = `http://localhost:3001/api/verify?token=${token}`;
 
     await transporter.sendMail({
         from : '"Technothlon" <technothlon@technicheiitg.in>',
