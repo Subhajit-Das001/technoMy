@@ -183,7 +183,7 @@ const TeamReg = () => {
         const {  rollNumber } = res.data;
         const redirectURL = redirectUrl + `/${rollNumber}`;
         setTimeout(() => {
-          window.location.href = `https://www.meraevents.com/ticketWidget?eventId=262719&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&redirectUrl=` + redirectURL;
+          window.location.href = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&theme=1&redirectUrl=` + redirectURL;
         }, 5000);
       } else {
         setIsLoading(false);
