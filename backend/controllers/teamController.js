@@ -20,15 +20,7 @@ const TeamController = {
     createTeam: async (req, res) => {
         try {
             const { email1, email2 } = req.body;
-            // const teamExists = await Onlinereg.findOne({
-            //     $or: [{ email1 }, { email2 }],
-            //     isPaid: true,
-            // });
-
-            // if (teamExists) {
-            //     return res.status(400).json({ error: "One or the other members is already registered" });
-            // }
-
+            
             const newTeam = new Onlinereg(req.body);
 
             const City=newTeam.city;
@@ -171,13 +163,17 @@ const TeamController = {
 
     verifyTeam: async (req, res) => {
         const { token } = req.query;
+
+        const { rollNumber } = req.body;
+
     
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const email = decoded.email;
     
             // const team = await TeamModel.findOne({ $or: [{ email1: email }, { email2: email }] });
-            const team = await Onlinereg.findOne({ $or: [{ email1: email }, { email2: email }] });
+            // const team = await Onlinereg.findOne({ $or: [{ email1: email }, { email2: email }] });
+            const team = await Onlinereg.findOne({ rollNumber });
 
     
             if (!team) {
@@ -401,5 +397,4 @@ function generateVerificationToken(email) {
 }
 
 module.exports = TeamController;
-
 
