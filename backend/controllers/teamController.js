@@ -20,21 +20,7 @@ const TeamController = {
     createTeam: async (req, res) => {
         try {
             const { email1, email2 } = req.body;
-             // Check if either email1 or email2 is already in use
-            const existingTeam = await Onlinereg.findOne({
-            $or: [
-                { email1: email1 },
-                { email2: email1 },
-                { email1: email2 },
-                { email2: email2 }
-            ],
-        });
-
-        if (existingTeam) {
-            return res.status(400).json({ 
-                error: "One or both of the provided emails are already registered with another team." 
-            });
-        }
+            
             const newTeam = new Onlinereg(req.body);
 
             const City=newTeam.city;
