@@ -10,9 +10,9 @@ router.use(cors({
 }));
 
 router.post('/register', TeamController.createTeam);
-router.get('/verify', TeamController.verifyTeam);
+// router.get('/verify', TeamController.verifyTeam);
 router.put('/handlePayment', TeamController.handlePayment);
-router.post('/forgot-password', TeamController.forgotPassword);
+// router.post('/forgot-password', TeamController.forgotPassword);
 // router.post('/reset-password', TeamController.resetPassword);
 
 module.exports = router;

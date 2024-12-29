@@ -24,7 +24,7 @@ const OnlineteamModel = mongoose.Schema(
         cityrepID: { type: String },
         rollNumber: { type: String },
         password: { type: String, require: true },
-        isVerified: { type: Boolean, default: false },
+        // isVerified: { type: Boolean, default: false },
         isPaid: { type: Boolean, default: false },
         createdAt: {
             type: Date,
