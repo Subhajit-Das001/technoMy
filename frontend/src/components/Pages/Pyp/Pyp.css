@@ -33,6 +33,7 @@
   font-size: calc(2em + 1.8vw);
   font-weight: 600;
   letter-spacing: 1px;
+
 }
 .green p {
   text-align: center;
@@ -118,4 +119,11 @@
 }
 .toggle {
   overflow: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .green h1{
+   
+    font-size: 3vh;
+  }
 }
