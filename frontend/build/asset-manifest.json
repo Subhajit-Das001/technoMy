@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.53d6a6b1.css",
-    "main.js": "/static/js/main.5692b6ae.js",
+    "main.css": "/static/css/main.d64c0555.css",
+    "main.js": "/static/js/main.326c4465.js",
     "static/media/Hauts english 22.pdf": "/static/media/Hauts english 22.f753fc4d5ed99ba8ae58.pdf",
     "static/media/2019hauts.pdf": "/static/media/2019hauts.669672443df660a331f3.pdf",
     "static/media/Technothlon_2017_HE.pdf": "/static/media/Technothlon_2017_HE.cdff712ddb1b5808079b.pdf",
@@ -83,11 +83,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.53d6a6b1.css.map": "/static/css/main.53d6a6b1.css.map",
-    "main.5692b6ae.js.map": "/static/js/main.5692b6ae.js.map"
+    "main.d64c0555.css.map": "/static/css/main.d64c0555.css.map",
+    "main.326c4465.js.map": "/static/js/main.326c4465.js.map"
   },
   "entrypoints": [
-    "static/css/main.53d6a6b1.css",
-    "static/js/main.5692b6ae.js"
+    "static/css/main.d64c0555.css",
+    "static/js/main.326c4465.js"
   ]
 }
