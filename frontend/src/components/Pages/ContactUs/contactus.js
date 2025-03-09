@@ -44,6 +44,13 @@ function ContactUs() {
     fetchCityReps();
   }, [baseURL]);
 
+  const cityreplogin = () => {
+    window.location.href =
+      process.env.NODE_ENV === "production"
+        ? "https://technothlon.techniche.org.in/cityreplogin"
+        : "http://localhost:3000/cityreplogin";
+  };
+
   const renderZone = (zoneName, contacts) => (
     <div className="zone">
       <h2>{zoneName} Zone</h2>
@@ -70,9 +77,11 @@ function ContactUs() {
         <div className="navy">
           <h1>Contact Us</h1>
           <h2>
-          You can contact cityreps of your zone through their contacts given below : - 
-
+            You can contact cityreps of your zone through their contacts given below : - 
           </h2>
+          <button onClick={cityreplogin} className="cityrep-login-btn">
+            Login for Cityreps
+          </button>
         </div>
       </div>
       

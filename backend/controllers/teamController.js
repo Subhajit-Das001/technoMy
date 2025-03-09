@@ -29,30 +29,6 @@ const TeamController = {
 
             await newTeam.save();
 
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                host: 'smtp.gmail.com',
-                auth: {
-                    user: 'technothlon@technicheiitg.in',
-                    pass: 'fjowuvpqbbtjrvsa'
-                },
-            });
-
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=1789A3-1789A3-333333-81C868-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${rollNumber}&theme=1&t=1`;
-
-            transporter.sendMail({
-                from: '"Technothlon" <technothlon@technicheiitg.in>',
-                to: [email1, email2],
-                subject: 'Complete your payment',
-                html: `
-                <p>Hey Champs!</p>
-                <p>We appreciate your interest in registering for Technothlon '25.</p>
-                <p>You will be redirected to the payment portal automatically. If not, click <a href="${paymentPortalURL}">here</a> to complete the payment.</p>
-                <p><strong>Warm regards,</strong></p>
-                <p>Team Technothlon</p>
-                `
-            });
-
             res.status(201).json({ message: "Team created successfully", rollNumber });
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -70,45 +46,35 @@ const TeamController = {
             }
 
             if (paymentStatus !== "success") {
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    host: 'smtp.gmail.com',
-                    auth: {
-                        user: 'technothlon@technicheiitg.in',
-                        pass: 'fjowuvpqbbtjrvsa'
-                    },
-                });
-
-                transporter.sendMail({
-                    from: '"Technothlon" <technothlon@technicheiitg.in>',
-                    to: [team.email1],
-                    subject: "Payment Unsuccessful",
-                    html: `
-                    <p>Hey Champs!</p>
-                    <p>Your payment for Technothlon '25 was not processed successfully. Please retry or contact us if the payment is reflected on your bank account.</p>
-                    <p>Warm regards,</p>
-                    <p>Team Technothlon</p>
-                    `
-                });
-
                 return res.status(400).json({ error: "Payment failed" });
             }
 
             await team.updateOne({ isPaid: true });
 
+            // Send only the registration confirmation email
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 host: 'smtp.gmail.com',
                 auth: {
-                    user: 'technothlon@technicheiitg.in',
-                    pass: 'fjowuvpqbbtjrvsa'
+                    user: process.env.SENDER_EMAIL,
+                    pass: process.env.SENDER_PASSWORD
                 },
             });
 
             transporter.sendMail({
-                from: '"Technothlon" <technothlon@technicheiitg.in>',
-                to: [team.email1, team.email2],
-                subject: "Registration Confirmation for Technothlon '25",
+                from: '"Technothlon" <technothlon.iitg@gmail.com>',
+                to: [team.email1], // Send separately for better deliverability
+                subject: "Your Technothlon 2025 Registration is Confirmed!",
+                replyTo: "technothlon.iitg@gmail.com",
+                text: `Hey Champs!
+            Your registration for Technothlon '25 has been successfully confirmed.
+            
+            Your roll number is: ${team.rollNumber}
+            
+            Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated: ${whatsapp}
+            
+            Warm regards,
+            Team Technothlon`,
                 html: `
                 <p>Hey Champs!</p>
                 <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
@@ -119,8 +85,34 @@ const TeamController = {
                 `
             });
 
-             // Redirect the user to the confirmation page
-        res.redirect(`${redirectUrl}/confirmPayment/${rollNumber}`);
+
+
+            transporter.sendMail({
+                from: '"Technothlon" <technothlon.iitg@gmail.com>',
+                to: [team.email2], // Send separately for better deliverability
+                subject: "Your Technothlon 2025 Registration is Confirmed!",
+                replyTo: "technothlon.iitg@gmail.com",
+                text: `Hey Champs!
+            Your registration for Technothlon '25 has been successfully confirmed.
+            
+            Your roll number is: ${team.rollNumber}
+            
+            Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated: ${whatsapp}
+            
+            Warm regards,
+            Team Technothlon`,
+                html: `
+                <p>Hey Champs!</p>
+                <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
+                <p><strong>Your roll number is: ${team.rollNumber}</strong></p>
+                <p>Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated: <a href="${whatsapp}">${whatsapp}</a></p>
+                <p>Warm regards,</p>
+                <p>Team Technothlon</p>
+                `
+            });
+
+            // Redirect the user to the confirmation page
+            res.redirect(`${redirectUrl}/confirmPayment/${rollNumber}`);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

@@ -1,0 +1,450 @@
+.crp-container {
+  @apply min-h-screen bg-gray-50 p-4;
+}
+
+.crp-header {
+  @apply bg-white rounded-lg shadow-md mb-6;
+}
+
+.crp-header-content {
+  @apply p-4 flex flex-col md:flex-row justify-between items-center gap-4;
+}
+
+.crp-user-info {
+  @apply flex flex-col md:flex-row items-center md:items-start gap-4;
+}
+
+.crp-user-avatar {
+  @apply w-20 h-20 rounded-full object-cover;
+}
+
+.crp-user-details {
+  @apply text-center md:text-left;
+}
+
+.crp-user-name {
+  @apply text-xl md:text-2xl font-bold mb-2;
+}
+
+.crp-user-city, .crp-user-zone {
+  @apply text-sm md:text-base;
+}
+
+.crp-info-container {
+  @apply flex flex-col md:flex-row gap-2 md:gap-4;
+}
+
+.crp-logout-button {
+  @apply flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors;
+}
+
+.crp-main {
+  @apply space-y-6;
+}
+.crp-container{
+  background-color: #f4f9fb;
+}
+.crp-user-avatar {
+  border: 2px solid #3b82f6;
+}
+
+.crp-user-avatar:hover {
+  transform: scale(1.1);
+}
+
+.crp-user-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* gap: 0.5rem; */
+}
+
+.crp-user-name {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #000;
+    font-weight: 500;
+
+}
+
+.crp-user-city {
+  margin: 0;
+  color: #3b82f6;
+  font-weight: bold;
+  font-size: 1.3rem;
+  /* font-weight: 500; */
+
+}
+
+.crp-user-zone {
+  margin: 0;
+  color: #3b82f6;
+  font-size: 1.2rem;
+  font-weight: 500;
+
+}
+
+.crp-logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #eb3434;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.crp-logout-button:hover {
+  background: #27ae60;
+  transform: scale(1.1);
+}
+
+.crp-logout-icon {
+  width: 18px;
+  height: 18px;
+}
+/* Main Content */
+.crp-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Error Message */
+.crp-error {
+  background: #fdecea;
+  color: #d32f2f;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Cards */
+.crp-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.crp-card:hover {
+  transform: scale(1.02);
+}
+
+.crp-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Upload Area */
+.crp-upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+  transition: background 0.3s;
+
+}
+
+.crp-upload-area:hover {
+  background: #f0f0f0;
+  border: 2px dashed #3b82f6;
+
+}
+
+/* Table */
+.crp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.crp-table th,
+.crp-table td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.crp-table th {
+  background: #f9f9f9;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.crp-table tr:hover {
+  background: #f2f2f2;
+  transition: background 0.3s;
+}
+
+.crp-table a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.crp-table a:hover {
+  color: #d35400;
+  font-size: 1rem;
+}
+
+/* Empty State */
+.crp-empty-state {
+  text-align: center;
+  font-size: 1rem;
+  color: #777;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.crp-card,
+.crp-table {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ...existing code... */
+
+/* Responsive styles for mobile (<768px) */
+@media screen and (max-width: 768px) {
+  .crp-header-content {
+    position: relative;
+    padding: 1rem;
+  }
+
+  .crp-user-info {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .crp-user-avatar {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 1rem;
+  }
+
+  .crp-user-details {
+    text-align: center;
+    width: 100%;
+  }
+
+  .crp-user-details > div {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .crp-user-name {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .crp-user-city {
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+        overflow-wrap: break-word;
+        max-width: 100%;
+
+  }
+  @media screen and (max-width: 400px) {
+    .crp-user-city {
+      font-size: 1.2rem;
+    }
+    .crp-user-name {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+  }
+
+  
+ 
+
+
+  @media screen and (max-width: 350px) {
+    .crp-user-city {
+      font-size: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 300px) {
+    .crp-user-city {
+      font-size: 0.9rem;
+    }
+  }
+
+  .crp-user-zone {
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+  }
+
+  
+  .crp-logout-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.8rem 0.8rem;
+    font-size: 1rem;
+  }
+
+  .crp-upload-area {
+    padding: 1rem;
+  }
+
+  .crp-upload-area p {
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .upload-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .select-file-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.8rem;
+  }
+
+  /* Table responsive styles */
+  .crp-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .crp-table thead {
+    display: none; /* Optional: hide headers on mobile */
+  }
+
+  .crp-table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+  }
+
+  .crp-table td {
+    display: block;
+    text-align: right;
+    padding: 0.5rem;
+    border: none;
+    position: relative;
+  }
+
+  .crp-table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+  }
+
+  .crp-card {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}
+@media screen and (max-width: 600px) {
+  .crp-logout-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.6rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+/* ...existing code... */
+@media screen and (max-width: 410px) {
+  .crp-table {
+    display: block;
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .crp-table tbody tr {
+    display: block;
+    margin-bottom: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .crp-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+  }
+
+  .crp-table td:last-child {
+    border-bottom: none;
+  }
+
+  .crp-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 1rem;
+    color: #333;
+    flex-shrink: 0;
+    width: 40%;
+  }
+
+  .crp-table a {
+    color: #007bff;
+    text-decoration: underline;
+    word-break: break-all;
+  }
+
+  .crp-table td[data-label="Download"] {
+    background-color: #f8f9fa;
+  }
+
+  .crp-card {
+    margin: 0.5rem;
+    padding: 0.8rem;
+  }
+  
+}
+@media screen and (max-width: 500px) {
+  .crp-logout-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  }
