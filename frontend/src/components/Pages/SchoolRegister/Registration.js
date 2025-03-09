@@ -29,7 +29,7 @@ const TeamReg = () => {
     "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
     "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
     "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-    "Uttar Pradesh", "Uttarakhand", "West Bengal"
+    "Uttar Pradesh", "Uttarakhand", "West Bengal","Ladakh", "Jammu & Kashmir", "Puducherry", "Lakshadweep", "Delhi", "Chandigarh", "Dadra and Nagar Haveli and Daman & Diu", "Andaman and Nicobar"
   ];
   const allCountries = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
