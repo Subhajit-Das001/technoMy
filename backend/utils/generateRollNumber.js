@@ -16,7 +16,7 @@ function generateRollNumber(squad, language, city, studentCount) {
     const paddedCityID = String(cityID).padStart(3, '0');
 
     // Concatenate components to generate roll number
-    const rollNumber = `${squadCode}${year}${mode}${medium}${paddedCityID}${paddedStudentCount}`; //(1+2+1+1+1+3+4=13)
+    const rollNumber = `${squadCode}${year}${mode}${medium}${paddedCityID}${paddedStudentCount}`; //(1+2+1+1+1+3+5=14)
 
     return rollNumber;
 }

@@ -73,4 +73,3 @@ const PaymentConfirmed = () => {
 };
 
 export default PaymentConfirmed;
-

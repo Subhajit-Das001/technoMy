@@ -201,6 +201,22 @@
     text-align: center;
 }
 
+.cityrep-login-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: white;
+  color: rgb(88, 64, 244);
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cityrep-login-btn:hover {
+  background-color: rgb(205, 220, 252);
+  transform: scale(1.05);
+}
 
 @media only screen and (max-width: 768px) {
   
@@ -255,6 +271,11 @@
     justify-content: center;
 }
 
+.cityrep-login-btn {
+  margin-top: 15px;
+  padding: 8px 16px;
+  font-size: 14px;
+}
 
 .zone{
   width:100%;

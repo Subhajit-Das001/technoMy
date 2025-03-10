@@ -8,6 +8,9 @@ import Technopedia from './components/Pages/Technopedia/technopedia';
 import AboutUs from './components/Pages/AboutUs/aboutus';
 import ContactUs from './components/Pages/ContactUs/contactus';
 
+import Cityreplogin from './components/Pages/cityrep/cityreplogin';
+import Cityrep_Portal from './components/Pages/cityrep/cityrep_portal';
+
 // import Ct from './components/Pages/ContactUs/ct.js';
 
 
@@ -81,6 +84,9 @@ const AppRoutes = () => {
       <Route path="/Crew-Member" element={<Crew/>}/> */}
 
       {/* <Route path="/Ct" element={<Ct/>}/> */}
+
+      <Route path="/cityreplogin" element={<Cityreplogin />} />
+      <Route path="/cityrep_portal" element={<Cityrep_Portal />} />
 
 
     </Routes>

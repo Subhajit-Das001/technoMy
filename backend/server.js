@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const EventEmitter = require('events');
 
 
+
 const teamRoutes = require('./routes/teamRouter');
 const dashRoutes = require('./routes/dashRouter');
 const uploadCsv = require('./routes/uploadCsv');
@@ -15,6 +16,8 @@ const cityRepRoutes = require('./routes/cityrep'); // Import cityrep routes
 const CityStudentCount = require('./routes/citystudentcountroute'); // Import cityrep routes
 
 const Announcement=require('./routes/announcementRoutes');
+
+const Cityrepportal = require('./routes/cityrep_portal');
 
 
 // const contestRoutes = require('./routes/contestRoutes');  // Import contest routes
@@ -76,16 +79,7 @@ app.use('/api/centre', uploadCSVRouter);
 app.use('/api/cityreps', cityRepRoutes);
 app.use('/api',CityStudentCount)
 app.use('/api',Announcement);
-
-
-
-// app.use('./api/cityreps',cityRepRoutes)
-
-
-// Correct route for contest
-// app.use('/api', contestRoutes);  // Use the contestRoutes here
-// app.use('/api', contestScoreRoutes);  // Use the contestScoreRoutes here for handling score-related routes
-// Home route
+app.use('/api/cityrep_portal',Cityrepportal);
 
 
 app.get('/', (req, res) => {
