@@ -38,8 +38,8 @@ const TeamController = {
                 service: 'gmail',
                 host: 'smtp.gmail.com',
                 auth: {
-                    user: 'technothlon@technicheiitg.in',
-                    pass: 'fjowuvpqbbtjrvsa'
+                    user: process.env.SENDER_EMAIL,
+                    pass: process.env.SENDER_PASSWORD
                 },
             });
 
@@ -80,10 +80,9 @@ const TeamController = {
             if (paymentStatus !== "success") {
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',
-                    host: 'smtp.gmail.com',
                     auth: {
-                        user: 'technothlon@technicheiitg.in',
-                        pass: 'fjowuvpqbbtjrvsa'
+                        user: process.env.SENDER_EMAIL,
+                        pass: process.env.SENDER_PASSWORD
                     },
                 });
 
