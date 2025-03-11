@@ -9,6 +9,15 @@ const baseURL = process.env.NODE_ENV === "production" ? "/api" : "http://localho
 const redirectUrl = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3000";
 const whatsapp = "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S";
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    auth: {
+        user: 'technothloniitg@gmail.com',
+        pass: process.env.SENDER_PASSWORD
+    },
+});
+
 const TeamController = {
     createTeam: async (req, res) => {
         try {
@@ -34,19 +43,10 @@ const TeamController = {
             await newTeam.save();
 
             // Send an email to the team members with the payment portal link
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                host: 'smtp.gmail.com',
-                auth: {
-                    user: process.env.SENDER_EMAIL,
-                    pass: process.env.SENDER_PASSWORD
-                },
-            });
-
             const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${rollNumber}&theme=1&t=1`;
-            
+
             await transporter.sendMail({
-                from: '"Technothlon" <technothlon@technicheiitg.in>',
+                from: '"Technothlon" <technothloniitg@gmail.com>',
                 to: [email1, email2],
                 subject: 'Complete your payment',
                 html: `
@@ -78,16 +78,8 @@ const TeamController = {
 
             // Handle payment failure
             if (paymentStatus !== "success") {
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.SENDER_EMAIL,
-                        pass: process.env.SENDER_PASSWORD
-                    },
-                });
-
                 await transporter.sendMail({
-                    from: '"Technothlon" <technothlon@technicheiitg.in>',
+                    from: '"Technothlon" <technothloniitg@gmail.com>',
                     to: [team.email1],
                     subject: "Payment Unsuccessful",
                     html: `
@@ -113,17 +105,8 @@ const TeamController = {
             }
 
             // Send a confirmation email
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                host: 'smtp.gmail.com',
-                auth: {
-                    user: process.env.SENDER_EMAIL,
-                    pass: process.env.SENDER_PASSWORD
-                },
-            });
-
             await transporter.sendMail({
-                from: '"Technothlon" <technothlon@technicheiitg.in>',
+                from: '"Technothlon" <technothloniitg@gmail.com>',
                 to: [team.email1, team.email2],
                 subject: "Registration Confirmation for Technothlon '25",
                 html: `
