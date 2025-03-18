@@ -14,7 +14,11 @@ router.use(cookieParser());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-const allowedOrigins = ["http://localhost:3000"];
+
+const allowedOrigins = [
+    'http://localhost:3000', // Local development URL
+    'https://technothlon.techniche.org.in' // Production URL
+  ];
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes(origin) || !origin) {
