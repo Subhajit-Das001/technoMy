@@ -76,12 +76,12 @@ prizeImages.forEach(img => {
 
 
       
-      {/* <div className="center">
+      <div className="center">
           <div className="check-center">Click here for viewing Registered Centers
-          <Link  to='/registeredschool'><button className='btn1'>Centers</button></Link>
+          <Link  to='/center-list'><button className='btn1'>Centers</button></Link>
           </div>
           
-      </div>  */}
+      </div> 
       </div>
       <div className="Hero-img">
         <img src={HeroImg}  />

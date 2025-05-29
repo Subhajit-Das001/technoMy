@@ -25,7 +25,8 @@ const Offline25 = require("../models/Offline25.js")
 const { parse } = require('json2csv');
 const Cityrep_portal = require('../models/cityrep_portal.js');
 const CityRep_portal = require('../models/cityrep_portal.js');
-
+const { Parser } = require('json2csv');
+// const XLSX = require('xlsx');
 
 const CityStudentCount = require('../models/cityStudentCountModel.js');
 
@@ -68,16 +69,29 @@ const EXPECTED_COLUMNS = [
   'squad', 'language', 'city','state'
 ];
 
+// Update the upload configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'text/csv' || 
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only CSV and XLSX files are allowed.'));
+  }
+};
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter
+});
 
 const cityFilePath = path.join(__dirname, '../utils/cityToID.json');
 
@@ -296,6 +310,7 @@ router.get('/results', async (req, res) => {
 });
 
 const XLSX = require('xlsx');
+const getZone = require('../utils/getZone');
 
 // 🚀 Upload CSV and process data
 router.post('/uploadcsv', upload.single('file'), async (req, res) => {
@@ -304,20 +319,60 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Generate a unique batchId for this upload
-    const batchId = uuidv4();
+    let jsonArray;
+    
+    // Parse file based on extension
+    if (req.file.originalname.endsWith('.xlsx')) {
+      const workbook = XLSX.readFile(req.file.path);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      jsonArray = XLSX.utils.sheet_to_json(worksheet);
+    } else {
+      jsonArray = await csv().fromFile(req.file.path);
+    }
 
-    // Convert the uploaded CSV into JSON
-    const jsonArray = await csv().fromFile(req.file.path);
+    // Clean up uploaded file
     fs.unlinkSync(req.file.path);
 
-    // Optional: Remove duplicates
-    const uniqueEntries = [...new Set(jsonArray.map(JSON.stringify))].map(JSON.parse);
+    // Validate columns
+    const fileColumns = Object.keys(jsonArray[0] || {});
+    const missingColumns = EXPECTED_COLUMNS.filter(col => !fileColumns.includes(col));
+    const extraColumns = fileColumns.filter(col => !EXPECTED_COLUMNS.includes(col));
 
+    if (missingColumns.length > 0 || extraColumns.length > 0) {
+      return res.status(400).json({
+        error: 'Column validation failed',
+        details: {
+          missingColumns: missingColumns.length > 0 ? { missing: missingColumns } : null,
+          incorrectColumns: extraColumns.length > 0 ? { 
+            incorrect: extraColumns.map(col => ({
+              found: col,
+              shouldBe: null
+            }))
+          } : null
+        }
+      });
+    }
+
+    // Check only first entry for duplicate
+    const firstEntry = jsonArray[0];
+    const existingEntry = await Offline25.findOne({ name1: firstEntry.name1 });
+    
+    if (existingEntry) {
+      return res.status(400).json({
+        error: 'Duplicate entry found',
+        message: `An entry with name1: "${firstEntry.name1}" already exists in the database.`
+      });
+    }
+
+    // If no duplicate found, process all entries including the first one
+    const uniqueEntries = [...new Set(jsonArray.map(JSON.stringify))].map(JSON.parse);
+    const batchId = uuidv4();
     let processedData = [];
 
+    // Process all entries
     for (let entry of uniqueEntries) {
-      const { squad, language, city, email1, email2, name1, name2 } = entry;
+      const { squad, language, city, state, email1, email2 } = entry;
 
       // 1) Get cityID
       const cityID = cityToID[city] || getCityID(city);
@@ -333,47 +388,58 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
       const rollNumber = generateRollNumber(squad, language, city, cityInfo.studentCount);
       const password = uuidv4();
 
-      // 4) Send emails (sequential)
+      // 4) Send emails without stopping on failure
       let mail_sent = 'No';
       try {
-        await sendEmail(email1, rollNumber, password);
-        await sendEmail(email2, rollNumber, password);
+        const emailPromises = [];
+        if (email1) {
+          emailPromises.push(sendEmail(email1, rollNumber, password));
+        }
+        if (email2) {
+          emailPromises.push(sendEmail(email2, rollNumber, password));
+        }
 
-        mail_sent = 'Yes';
+        // Send emails concurrently and wait for all to complete
+        const results = await Promise.allSettled(emailPromises);
+        const anySuccess = results.some(r => r.status === 'fulfilled' && r.value === true);
+        mail_sent = anySuccess ? 'Yes' : 'No';
       } catch (err) {
-        console.error(`Error sending email to [${email1}, ${email2}]:, err`);
+        console.error(`Email process error for ${rollNumber}:`, err);
+        // Continue processing even if emails fail
       }
 
       // 5) Construct doc for DB
       const doc = {
         ...entry,
+      
         rollNumber,
         password,
         mail_sent,
         view: 'school',
         mode: 'offline',
-        isPaid: true, // or false, depending on logic
+        isPaid: true,
         batchId,
       };
 
-      // 6) Insert or update in DB
+      // 6) Insert in DB
       await Offline25.create(doc);
-
       processedData.push(doc);
     }
 
-    // Return the processed data & batchId
     return res.json({
       message: 'Data processed successfully',
       data: processedData,
       batchId
     });
+
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Upload error:', error);
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message 
+    });
   }
 });
-
 
 
 function generateRollNumber(squad, language, city, studentcount) {
@@ -418,7 +484,7 @@ router.get("/downloadcsv", async (req, res) => {
     // Fetch teams with batchId
     const teams = await Offline25.find(
       { batchId },
-      "-_id name1 email1 contact1 school1 name2 email2 contact2 school2 squad language city state rollNumber"
+      "-_id name1 email1 contact1 school1 name2 email2 contact2 school2 squad language city state rollNumber password"
     );
 
     if (!teams.length) {
@@ -451,6 +517,7 @@ router.get("/downloadcsv", async (req, res) => {
       city: team.city,
       state: team.state,
       rollNumber: team.rollNumber,
+      password: team.password,
     }));
 
     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -459,6 +526,7 @@ router.get("/downloadcsv", async (req, res) => {
 
     // Save file in temp folder
     const filePath = path.join(tempDir, filename);
+
     XLSX.writeFile(wb, filePath);
 
     // Get cityrep details
@@ -566,22 +634,18 @@ router.get("/downloadcsv/file/:filename", (req, res) => {
 
 
 
-  async function sendEmail(email, roll, password) {
-    try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.SENDER_EMAIL,
-          pass: process.env.SENDER_PASSWORD
-        },
-      });
-  
-      await transporter.sendMail({
-        from: 'Technothlon <technothlon.iitg@gmail.com>',
-        to: email,
-        subject: 'Technothlon 2025 Registration',
-        html: `<p>Hey champs!</p>
-  <p>Greetings from Technothlon!</p>
+// Add this helper function to add delay between operations
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Simplify the sendEmail function - remove retry logic
+async function sendEmail(email, roll, password) {
+  try {
+    await transporter.sendMail({
+      from: 'Technothlon <technothlon.iitg@gmail.com>',
+      to: email,
+      subject: 'Technothlon 2025 Registration',
+      html: `<p>Hey champs!</p>
+      <p>Greetings from Technothlon!</p>
   <p>We're excited to inform you that your details have been updated. Below are your credentials to access the Technothlon portal:</p>
   <ul>
     <li><strong>Roll Number:</strong> ${roll}</li>
@@ -596,10 +660,190 @@ router.get("/downloadcsv/file/:filename", (req, res) => {
                     <li><a href="https://www.instagram.com/technothlon.iitg?igsh=MWU1NmU3ZG8zcnFpbg==">Instagram</a></li>                    <li><a href="http://technothlon.techniche.org.in">Website</a></li>
               </ul>
   <p>Best regards,<br>Technothlon IITG</p>`
-      });
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
+    });
+    return true;
+  } catch (error) {
+    console.error(`Email send failed for ${email}:`, error);
+    return false;
   }
+}
+const mongoose = require('mongoose');
+const { Long } = require('mongodb');
+
+router.post('/fetch-data', async (req, res) => {
+  try {
+    const { criteria } = req.body;
+        
+    if (!criteria || !Array.isArray(criteria) || criteria.length === 0) {
+      return res.status(400).json({ 
+        error: 'Missing required fields',
+        message: 'Search criteria is required'
+      });
+    }
+
+    // Helper function to convert contact numbers to MongoDB Long
+    const convertToLong = (value) => {
+      const cleanValue = value.toString().replace(/\D/g, '');
+      return Long.fromString(cleanValue);
+    };
+
+    // Build query with proper Long conversion for contact fields
+    const buildQuery = (criteria, isOnlineDb = false) => {
+      const query = {};
+      
+      criteria.forEach(({ column, value }) => {
+        if (column && value) {
+          if ((column === 'contact1' || column === 'contact2') && isOnlineDb) {
+            // Convert to MongoDB Long for online database
+            try {
+              query[column] = convertToLong(value);
+            } catch (error) {
+              console.error(`Error converting ${value} to Long:`, error);
+              // Fallback to original value
+              query[column] = value;
+            }
+          } else {
+            query[column] = value;
+          }
+        }
+      });
+      
+      return query;
+    };
+
+    // Build separate queries for each database
+    const offlineQuery = buildQuery(criteria, false);
+    const onlineQuery = buildQuery(criteria, true);
+
+    console.log('Offline Query:', JSON.stringify(offlineQuery, null, 2));
+    console.log('Online Query:', JSON.stringify(onlineQuery, null, 2));
+
+    // Alternative: Use aggregation pipeline for more flexible matching
+    const onlineAggregation = [
+      {
+        $addFields: {
+          contact1_str: { $toString: "$contact1" },
+          contact2_str: { $toString: "$contact2" }
+        }
+      }
+    ];
+
+    // Add match stage based on criteria
+    const matchConditions = {};
+    criteria.forEach(({ column, value }) => {
+      if (column && value) {
+        if (column === 'contact1' || column === 'contact2') {
+          const cleanValue = value.toString().replace(/\D/g, '');
+          matchConditions[`${column}_str`] = cleanValue;
+        } else {
+          matchConditions[column] = value;
+        }
+      }
+    });
+
+    if (Object.keys(matchConditions).length > 0) {
+      onlineAggregation.push({ $match: matchConditions });
+    }
+
+    // Fetch matching documents
+    const [offlineDocuments, onlineDocuments] = await Promise.all([
+      Offline25.find(offlineQuery).lean(),
+      Object.keys(matchConditions).some(key => key.includes('contact')) 
+        ? Onlinereg.aggregate(onlineAggregation)
+        : Onlinereg.find(onlineQuery).lean()
+    ]);
+
+    console.log(`Found ${offlineDocuments.length} offline documents`);
+    console.log(`Found ${onlineDocuments.length} online documents`);
+
+    // Combine results
+    const documents = [...offlineDocuments, ...onlineDocuments];
+
+    if (documents.length === 0) {
+      return res.status(404).json({
+        error: 'No records found',
+        message: 'No records found matching your criteria',
+        debug: {
+          offlineQuery: JSON.stringify(offlineQuery),
+          onlineQuery: JSON.stringify(onlineQuery),
+          onlineAggregation: JSON.stringify(onlineAggregation)
+        }
+      });
+    }
+
+    // Add source field and normalize contact fields
+    const documentsWithSource = documents.map(doc => ({
+      ...doc,
+      source: doc.mode === 'offline' ? 'Offline Registration' : 'Online Registration',
+      contact1: doc.contact1 ? (typeof doc.contact1 === 'object' ? doc.contact1.toString() : doc.contact1) : '',
+      contact2: doc.contact2 ? (typeof doc.contact2 === 'object' ? doc.contact2.toString() : doc.contact2) : ''
+    }));
+
+    // Prepare CSV fields
+    const fields = [
+      'name1', 'email1', 'contact1', 'school1',
+      'name2', 'email2', 'contact2', 'school2',
+      'squad', 'language', 'city', 'state',
+      'rollNumber', 'password', 'createdAt', 'source'
+    ];
+
+    // Create CSV parser
+    const json2csvParser = new Parser({ fields });
+    const csv = json2csvParser.parse(documentsWithSource);
+
+    // Generate filename using criteria
+    const searchTerms = criteria
+      .filter(c => c.column && c.value)
+      .map(c => `${c.column}-${c.value}`)
+      .join('_');
+    const filename = `search-${searchTerms}-${Date.now()}.csv`;
+        
+    const tempDir = path.join(__dirname, '../../temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+
+    const filePath = path.join(tempDir, filename);
+    fs.writeFileSync(filePath, csv);
+
+    // Send response
+    res.json({
+      message: 'Data fetched successfully',
+      count: documents.length,
+      fileName: filename,
+      fileUrl: `uploadcsv/download-fetch/${filename}`,
+      summary: {
+        total: documents.length,
+        offline: offlineDocuments.length,
+        online: onlineDocuments.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Fetch error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      message: error.message
+    });
+  }
+});
+// Add download route for fetched files
+router.get('/download-fetch/:filename', (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, '../../temp', filename);
+
+  if (fs.existsSync(filePath)) {
+    res.download(filePath, filename, (err) => {
+      if (err) {
+        console.error('Download error:', err);
+        res.status(500).json({ error: 'Failed to download file' });
+      } else {
+        fs.unlinkSync(filePath); // Delete file after download
+      }
+    });
+  } else {
+    res.status(404).json({ error: 'File not found' });
+  }
+});
 
 module.exports = router;

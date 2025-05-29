@@ -3,7 +3,13 @@ import axios from 'axios';
 import './Announcement.css'; // Add your CSS here
 import icon from './announcement.png';
 
+
 const Announcement = () => {
+  const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://technothlon.techniche.org.in/api/"
+    : "http://localhost:3001/api/";
+
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +17,7 @@ const Announcement = () => {
   const fetchAnnouncements = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/');
+      const response = await axios.get(`${baseURL}announcement`);
       setAnnouncements(response.data);
     } catch (err) {
       setError('Error fetching announcements');

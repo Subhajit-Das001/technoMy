@@ -1,93 +1,108 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const EventEmitter = require('events');
 
+// Load environment variables
+dotenv.config();
 
+// Connect to MongoDB
+connectDB();
 
+// Import routes after database connection
 const teamRoutes = require('./routes/teamRouter');
 const dashRoutes = require('./routes/dashRouter');
 const uploadCsv = require('./routes/uploadCsv');
 const feedback = require('./routes/feedback');
-const cityRepRoutes = require('./routes/cityrep'); // Import cityrep routes
-// const cityRepRoutes=require('./routes/cityrep')
-
-const CityStudentCount = require('./routes/citystudentcountroute'); // Import cityrep routes
-
-const Announcement=require('./routes/announcementRoutes');
-
+const cityRepRoutes = require('./routes/cityrep');
+const CityStudentCount = require('./routes/citystudentcountroute');
+const announcementRoutes = require('./routes/announcementRoutes');
 const Cityrepportal = require('./routes/cityrep_portal');
-
-
-// const contestRoutes = require('./routes/contestRoutes');  // Import contest routes
-// const contestScoreRoutes = require('./routes/contestScoreRoutes');  // Import contest score routes
-
 const questionsRouter = require('./routes/questionRouter');
-const answerRouter = require('./routes/answerRouter');
 const techpedResult = require('./routes/techpedResult');
-const scoreRouter = require('./routes/scoreRouter');
 const checkAttemptRouter = require('./routes/checkAttemptRouter');
-const uploadCSVRouter = require('./routes/centre'); 
-const { ppid } = require('process');
+const uploadCSVRouter = require('./routes/centre');
+const authRoutes = require('./routes/authRoutes');
+const contestRoutes = require('./routes/contestRoutes');
+const centerListRoutes = require('./routes/center_list_route');
 
+// Configure event emitter
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
 
-
-
-dotenv.config();
-connectDB();
-
 const app = express();
 
-// Middleware to parse JSON and URL-encoded data
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS configuration for specific allowed origins
+// Define allowed origins
 const allowedOrigins = [
-    'http://localhost:3000', // Local development URL
-    'https://technothlon.techniche.org.in' // Production URL
+  'http://localhost:3000',  // React dev server
+  'http://localhost:3001',  // Backend server
+  'http://localhost:5173',  // Vite default
+  'https://technothlon.techniche.org.in',
+  // Add any other production URLs
 ];
 
+// CORS configuration
 const corsOptions = {
-    origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`Origin ${origin} not allowed by CORS`);
+      callback(null, true); // Still allow it for now, but log it
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
 
-// CORS middleware
+// Apply CORS before any routes
 app.use(cors(corsOptions));
 
-// Use route handlers
+// For preflight requests
+app.options('*', cors(corsOptions));
+
+// Routes
 app.use('/api', teamRoutes);
 app.use('/dashboard', dashRoutes);
 app.use('/api/uploadcsv', uploadCsv);
 app.use('/api/feedback', feedback);
 app.use('/api', questionsRouter);
-app.use('/api', answerRouter);
 app.use('/api', techpedResult);
-app.use('/api', scoreRouter);
+// app.use('/api', scoreRouter);
 app.use('/api', checkAttemptRouter);
 app.use('/api/centre', uploadCSVRouter);
 app.use('/api/cityreps', cityRepRoutes);
-app.use('/api',CityStudentCount)
-app.use('/api',Announcement);
-app.use('/api/cityrep_portal',Cityrepportal);
+app.use('/api', CityStudentCount);
+app.use('/api/announcement', announcementRoutes);
+app.use('/api/cityrep_portal', Cityrepportal);
+app.use('/api', contestRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api', centerListRoutes);
 
-
+// Root route
 app.get('/', (req, res) => {
     res.send("Hello from Technothlon Server");
 });
 
-// Port setup
-const PORT = process.env.PORT || 4000;
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // Start server
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));

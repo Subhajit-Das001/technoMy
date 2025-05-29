@@ -1,0 +1,439 @@
+/* Decrease container size */
+.auth-container {
+  position: relative;
+  max-width: 40vw;
+  min-height: 80vh;
+  margin: 1rem auto;
+  padding: 1rem;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+}
+
+/* Decrease toggle size */
+.main-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.main-toggle button {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 
+    5px 5px 10px #d1d1d1,
+    -5px -5px 10px #ffffff;
+}
+
+.main-toggle button.active {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2);
+  transform: translateY(1px);
+}
+
+.new-student-container {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.new-student-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.new-student-toggle button {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  background: #e9ecef;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.new-student-toggle button.active {
+  background: #28a745;
+  color: white;
+}
+
+/* Compact auth form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 
+    0 10px 20px rgba(0,0,0,0.1),
+    inset 0 -2px 0 rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  width: 100%; /* Full width */
+  max-width: 400px; /* Fixed maximum width */
+  min-height: 320px; /* Fixed minimum height */
+  margin: 0 auto;
+}
+
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #1976d2, #1565c0, #1976d2);
+  background-size: 200% 100%;
+  animation: gradient 3s linear infinite;
+}
+
+.auth-form h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.auth-form input {
+  padding: 0.6rem 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  height: 2.8rem;
+  width: 100%;
+}
+
+/* Add spacing between form elements */
+.auth-form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* Label styling */
+.auth-form label {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.auth-form input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Compact submit button */
+.submit-button {
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.message {
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 4px;
+  text-align: center;
+  background: #e3f2fd;
+  color: #1565c0;
+  animation: fadeIn 0.3s ease;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Compact countdown */
+.countdown-wrapper {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  width: 100%;  /* Ensure full width */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  transition: all 0.3s ease;
+}
+
+.countdown-wrapper.contest-started {
+  padding: 0.8rem;
+  margin: 0.8rem 0;
+  background: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
+}
+
+.countdown-wrapper.contest-started .login-countdown {
+  padding: 0.8rem;
+  font-size: 1rem;
+}
+
+.countdown-wrapper.contest-started .countdown-number {
+  font-size: 1.8rem;
+}
+
+.login-countdown {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border-radius: 6px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 600px; /* Limit maximum width */
+  display: flex;
+  justify-content: space-evenly; /* Even spacing between items */
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Style individual countdown items */
+.countdown-item {
+  text-align: center;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  flex: 1; /* Allow items to grow equally */
+  min-width: 90px;  /* Set minimum width */
+  max-width: 120px; /* Add maximum width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.countdown-number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.countdown-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.contest-status {
+  text-align: center;
+  margin-bottom: 0.8rem;
+  color: white;  /* Changed to white for better visibility */
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.contest-not-started {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.contest-not-started h2 {
+  color: #dc3545;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.contest-not-started p {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.timing-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.timing-info small {
+  color: #666;
+  font-style: italic;
+  background-color: #f0f8ff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+  display: inline-block;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 98%;
+    min-height: 75vh;
+    margin: 0.5rem auto;
+    padding: 0.8rem;
+  }
+
+  .countdown-wrapper {
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+
+  .login-countdown {
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .countdown-item {
+    min-width: calc(50% - 0.5rem); /* 2 items per row on mobile */
+    max-width: none;
+    padding: 0.6rem;
+  }
+
+  .countdown-number {
+    font-size: 1.5rem;
+  }
+
+  .auth-form {
+    padding: 1.2rem;
+    min-height: 300px;
+  }
+
+  .auth-form h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .auth-form input {
+    padding: 0.8rem 1rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+
+  .back-button {
+    top: 15px !important;    /* Changed from bottom to top */
+    left: 15px !important;
+    padding: 6px 12px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.auth-form[data-form-type="signup"] .submit-button {
+  margin-top: 0rem; /* Less margin for signup submit button */
+}
+
+.auth-form[data-form-type="signup"] > div {
+  gap: 0rem; /* Tighter gap between label and input */
+}
+.auth-form[data-form-type="signup"] {
+  gap: 0.4rem; /* Tighter gap for signup */
+  padding: 1rem 1.5rem; /* Less padding */
+  min-height: 280px; /* Shorter minimum height */
+}
+
+/* Remove the previous back-button styles and add these */
+.back-button.MuiButton-root {
+    position: absolute !important;
+    top: 20px !important;
+    left: 20px !important;
+    z-index: 9999 !important;
+    background-color: #fff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    padding: 8px 16px !important;
+    min-width: auto !important;
+    color: #020202 !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+}
+
+.back-button.MuiButton-root:hover {
+    background-color: #f5f5f5 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+
+.back-button.MuiButton-root:active {
+    transform: translateY(0) !important;
+}
+
+/* Add media query for mobile responsiveness */
+@media (max-width: 768px) {
+    .back-button.MuiButton-root {
+        top: 10px !important;
+        left: 10px !important;
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+.contest-header {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.techno-logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 1rem;
+  z-index: 2;
+}
+
+.contest-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  z-index: 1;
+}

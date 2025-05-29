@@ -18,8 +18,8 @@ router.get('/', async (req, res) => {
 
 // Add a new announcement
 router.post('/', async (req, res) => {
-  const { title, content, link } = req.body;
-  const announcement = new Announcement({id, title, content, link });
+  const { id, title, content, link } = req.body;  // Make sure to include id in the destructuring
+  const announcement = new Announcement({ id, title, content, link });
 
   try {
     const savedAnnouncement = await announcement.save();

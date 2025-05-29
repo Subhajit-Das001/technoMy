@@ -4,9 +4,13 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
     "@react-map/india": "^1.0.21",
     "@react-pdf/renderer": "^4.0.0",
     "@tabler/icons-react": "^3.23.0",

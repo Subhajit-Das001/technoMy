@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
 const Onlinereg = require('../models/onlineReg');
+const NewStudent = require('../models/newStudent');
 const cityToID = require('../utils/cityToID.json');
 require('dotenv').config();
 const CityStudentCount = require('../models/cityStudentCountModel');
 const generateRollNumber = require('../utils/generateRollNumber');
+const getZone = require('../utils/getZone');
 
 const baseURL = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3001/api";
 const redirectUrl = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3000";
@@ -21,19 +23,64 @@ const transporter = nodemailer.createTransport({
 const TeamController = {
     createTeam: async (req, res) => {
         try {
-            const { email1, email2 } = req.body;
+            const { email1, email2, contact1, contact2, state } = req.body;
 
-            // Create a new team document
-            const newTeam = new Onlinereg(req.body);
+            // Check if either student exists in NewStudent collection
+            const matchingStudent1 = await NewStudent.findOne({
+                $or: [
+                    { email: email1 },
+                    { contact: contact1 }
+                ]
+            });
+
+            const matchingStudent2 = await NewStudent.findOne({
+                $or: [
+                    { email: email2 },
+                    { contact: contact2 }
+                ]
+            });
+
+            // Update registration status for matching students
+            if (matchingStudent1) {
+                await NewStudent.findByIdAndUpdate(
+                    matchingStudent1._id,
+                    { registered: true },
+                    { new: true }
+                );
+                console.log(`Updated NewStudent registration status for student 1: ${matchingStudent1.email}`);
+            }
+
+            if (matchingStudent2) {
+                await NewStudent.findByIdAndUpdate(
+                    matchingStudent2._id,
+                    { registered: true },
+                    { new: true }
+                );
+                console.log(`Updated NewStudent registration status for student 2: ${matchingStudent2.email}`);
+            }
+
+            // Add zone based on state
+            const zone = getZone(state);
+            
+            // Create a new team document with zone
+            const newTeam = new Onlinereg({
+                ...req.body,
+                zone
+            });
             const City = newTeam.city;
             const cityID = cityToID[City];
 
+             // If found, update their registered status
+            
             // Update city info with student count
             const cityInfo = await CityStudentCount.findOneAndUpdate(
                 { cityID },
                 { $set: { city: City }, $inc: { studentCount: 1 } },
                 { new: true, upsert: true }
             );
+
+           
+
 
             // Generate roll number
             const rollNumber = generateRollNumber(newTeam.squad, newTeam.language, newTeam.city, cityInfo.studentCount);
@@ -45,18 +92,18 @@ const TeamController = {
             // Send an email to the team members with the payment portal link
             const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${rollNumber}&theme=1&t=1`;
 
-            await transporter.sendMail({
-                from: '"Technothlon" <technothloniitg@gmail.com>',
-                to: [email1, email2],
-                subject: 'Complete your payment',
-                html: `
-                    <p>Hey Champs!</p>
-                    <p>We appreciate your interest in registering for Technothlon '25.</p>
-                    <p>You will be redirected to the payment portal automatically. If not, click <a href="${paymentPortalURL}">here</a> to complete the payment.</p>
-                    <p><strong>Warm regards,</strong></p>
-                    <p>Team Technothlon</p>
-                `
-            });
+            // await transporter.sendMail({
+            //     from: '"Technothlon" <technothloniitg@gmail.com>',
+            //     to: [email1, email2],
+            //     subject: 'Complete your payment',
+            //     html: `
+            //         <p>Hey Champs!</p>
+            //         <p>We appreciate your interest in registering for Technothlon '25.</p>
+            //         <p>You will be redirected to the payment portal automatically. If not, click <a href="${paymentPortalURL}">here</a> to complete the payment.</p>
+            //         <p><strong>Warm regards,</strong></p>
+            //         <p>Team Technothlon</p>
+            //     `
+            // });
 
             res.status(201).json({ message: "Team created successfully", rollNumber });
         } catch (error) {

@@ -1,0 +1,697 @@
+/* Dotted background */
+.technothlon-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  background-image: radial-gradient(#ddd 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.header-banner {
+
+   background-color: #fee6a1;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  /* margin-top: 3rem; */
+}
+
+
+
+.logo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.institution-logo {
+  height: 120px;
+  width: auto;
+}
+.partner-logo {
+  height: 80px;
+  width: auto;
+}
+
+.main-logo {
+  height: 230px;
+  width: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.main-logo:hover {
+  transform: scale(1.05);
+}
+
+.ob {
+    position: relative;
+    width: 80%;
+    max-width: 1000px;
+    height: 120px;
+    margin: 0 auto;
+    background-image: url('../../Assets/img/ob.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  margin: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-section {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  background-image: radial-gradient(#ddd 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.content-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.content-description {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.description {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.center-table-container {
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.center-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  margin-top: 1rem;
+}
+
+.center-table th, 
+.center-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.center-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.center-table tr:hover {
+  background-color: #f5f5f5;
+  background-color: #f9f9f9;
+}
+
+.center-table a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.center-table a:hover {
+  text-decoration: underline;
+}
+
+
+.contact-footer {
+    background-color: #fff9e6;
+
+    padding: 1.5rem;
+    margin-top: auto;
+    border-top: 1px solid #eee;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: clamp(2rem, 5vw, 10rem); /* Responsive gap */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #333;
+    text-decoration: none;
+    font-size: clamp(0.9rem, 1vw, 1.1rem); /* Responsive font size */
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.contact-links a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.footer-icon {
+    min-height: 20px;
+    height: 20px;
+    min-width: 20px;
+    width: 20px;
+    color: #FF6B35;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.contact-links a:hover {
+  color: #333;
+}
+
+/* Add specific breakpoint for footer adjustments */
+@media (max-width: 1135px) {
+    .contact-links {
+        gap: 3rem;
+    }
+
+    .contact-links a {
+        font-size: 0.9rem;
+    }
+
+    .footer-icon {
+        height: 18px;
+        width: 18px;
+    }
+}
+
+/* Add this media query after your existing styles and before the 768px breakpoint */
+@media (max-width: 1024px) {
+  .logo-container {
+    max-width: 900px;
+    padding: 0.8rem;
+  }
+
+  .institution-logo {
+    height: 100px;
+  }
+
+  .partner-logo {
+    height: 60px !important ;
+  }
+
+  .ob {
+    width: 60%;
+    height: 100px;
+  }
+
+   .main-logo {
+    height: 180px;
+  }
+
+  .content-wrapper {
+    max-width: 900px;
+    padding: 1.5rem;
+  }
+
+  .center-table {
+    font-size: 0.95rem;
+  }
+
+  .center-table th, 
+  .center-table td {
+    padding: 0.8rem;
+  }
+
+  .contact-links {
+    gap: 6rem;
+  }
+
+  .contact-links a {
+    font-size: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+  }
+
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .title-banner {
+    width: 90%;
+    max-width: 300px;
+  }
+  
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  .logo-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    align-items: center;
+    justify-items: center;
+    padding: 0.5rem;
+  }
+
+  .institution-logo {
+    height: 70px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .partner-logo {
+    height: 60px;
+    width: auto !important;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ob {
+    width: 100% !important;
+    height: 90px !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 1rem auto 0;
+  }
+
+   .main-logo {
+    height: 160px;
+  }
+
+  .logo-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .contact-links a {
+    font-size: 0.8rem;
+  }
+
+
+  .logo-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+
+  .institution-logo {
+    height: 90px;
+  }
+
+  .partner-logo {
+    height: 20px;
+ width: auto !important;
+
+  }
+
+  .ob {
+    height: 80px;
+  }
+
+  .main-logo {
+    height: 160px;
+    width: 240px;
+  }
+
+  /* Table responsive styles */
+  .center-table {
+    border: none;
+    box-shadow: none;
+  }
+
+  .center-table thead {
+    display: none;
+  }
+
+  .center-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #FF6B35;
+    border-radius: 8px;
+  }
+
+  .center-table td {
+    display: block;
+    text-align: left;
+    padding: 0.8rem;
+    position: relative;
+    padding-left: 50%;
+    border-bottom: 1px solid #FF6B35;
+  }
+
+  .center-table td:last-child {
+    border-bottom: none;
+  }
+
+  .center-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 0.8rem;
+    font-weight: bold;
+    text-align: left;
+    color: #666;
+  }
+
+  /* Footer responsive styles */
+  .contact-footer {
+    padding: 1rem;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    align-items: center;
+    /* gap: 1rem; */
+  }
+
+  .contact-links a {
+    font-size: 0.9rem;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .footer-icon {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Rest of your existing styles */
+  .ob  {
+    height: 90px;
+    width: 400px;
+    display: block;
+    margin: 0 auto;
+  }
+   .main-logo {
+    height: 140px;
+    width: 250px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Rest of your existing styles */
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.2rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .contact-links a {
+    font-size: 0.8rem;
+  }
+
+  .header-banner {
+    padding: 0.5rem;
+    /* margin-top: 0.5rem; */
+  } */
+
+  .logo-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+    padding: 0.3rem;
+  }
+
+  .institution-logo {
+    height: 80px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .partner-logo {
+    height: 20px;
+    width: auto !important;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ob {
+    width: 100% !important;
+    height: 80px !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 0.5rem auto 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+   .main-logo {
+    height: 140px;
+    width: auto;
+  }
+
+  /* Adjust table styles for mobile */
+  .center-table td {
+    padding: 0.6rem;
+    padding-left: 45%;
+    font-size: 0.9rem;
+  }
+
+  .center-table td::before {
+    font-size: 0.9rem;
+  }
+
+  /* Footer adjustments */
+  .contact-footer {
+    padding: 0.5rem;
+  }
+
+  .contact-links {
+    gap: 0.3rem;
+  }
+
+  .contact-links a {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .footer-icon {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.location-link {
+    display: flex;
+    justify-content: flex-start; /* Change from center to flex-start */
+    align-items: center;
+    width: 100%; /* Change from 40px to 100% */
+    height: 40px;
+    border-radius: 20px; /* Changed from 50% to fixed value */
+    margin: 0; /* Remove auto margin */
+    position: relative;
+    transition: all 0.3s ease;
+    padding-left: 10px; /* Add left padding */
+}
+
+.location-icon {
+    color: #0066cc;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+/* Update ripple effect position */
+.location-link::before {
+    content: '';
+    position: absolute;
+    left: 10px; /* Align with icon */
+    width: 40px; /* Fixed width for ripple */
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(46, 204, 113, 0.2);
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+/* Hover effects */
+.location-link:hover::before {
+    transform: scale(1);
+    animation: ripple 1.5s infinite;
+}
+
+.location-link:hover .location-icon {
+    color: #27ae60;
+    transform: rotate(360deg);
+    animation: bounce 1s infinite;
+}
+
+/* Animations */
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-3px) rotate(180deg);
+    }
+}
+
+/* Active state */
+.location-link:active .location-icon {
+    transform: scale(0.9);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .location-link {
+        height: 36px;
+        padding-left: 8px;
+    }
+
+    .location-link::before {
+        width: 36px;
+        height: 36px;
+        left: 8px;
+    }
+
+    .location-icon {
+        font-size: 1rem;
+    }
+}
+
+.important-note {
+    display: block;
+    margin-top: 0.75rem;
+    color: #333; /* Change text color to black */
+    font-weight: 400; /* Regular weight for main text */
+    font-size: 0.90em;
+}
+
+.important-note::before {
+    content: "Note: ";
+    color: #ff3333; /* Red color for the word "Note:" */
+    font-weight: 600; /* Make "Note:" bold */
+}
+
+/* Make it responsive */
+@media (max-width: 768px) {
+    .important-note {
+        font-size: 0.9em;
+        margin-top: 0.5rem;
+    }
+}

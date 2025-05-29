@@ -51,6 +51,7 @@ const UserPortal = () => {
         { title: 'Profile', img: admin }, 
         { title: 'Updates', img: add }, 
         { title: 'Results', img: hat }, 
+        { title: 'Quiz', img: hat } // Add appropriate icon
     ];
 
     return (
@@ -107,8 +108,7 @@ const User = ({ selectedSection }) => {
             {selectedSection === 'Profile' && <Profile />}
             {selectedSection === 'Updates' && <Updates />}
             {selectedSection === 'SignOut' && <SignOut />}
-            {selectedSection==='Results' && <Results/>}
-          
+            {selectedSection === 'Results' && <Results />}
         </div>
     );
 };

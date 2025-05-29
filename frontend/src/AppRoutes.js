@@ -11,12 +11,11 @@ import ContactUs from './components/Pages/ContactUs/contactus';
 import Cityreplogin from './components/Pages/cityrep/cityreplogin';
 import Cityrep_Portal from './components/Pages/cityrep/cityrep_portal';
 
-// import Ct from './components/Pages/ContactUs/ct.js';
+import Leaderboard from './components/Pages/Contest/Leaderboard';
 
 
 import Login from './components/Pages/Login/login';
 import Register from './components/Pages/Register/register';
-//import Technothlon23Updates from './components/Pages/Technothlon2023/Updates/updates';
 import SchoolReg from './components/Pages/SchoolRegister/SchoolReg';
 import Technothlon23Updates from './components/Pages/Technothlon2023/Updates/updates';
 import Feedback from './components/Pages/Feedback/feedback';
@@ -33,10 +32,12 @@ import UserPortal from './components/Pages/UserPortal/mainside';
 import AdmitCard from './components/Pages/Admitcard';
 import Registration from './components/Pages/SchoolRegister/Registration'
 
-// import ContestForm from './components/Pages/Contest/ContestForm.js'
-// import Crew from './components/Pages/Crew/crew.js'
 
+import Contestlogin from './components/Pages/Contest/contest_login';
+import Contest from './components/Pages/Contest/Contest';
+import Question from './components/Pages/Contest/question';
 
+import CenterTable from './components/Pages/Center/CenterTable';
 
 const AppRoutes = () => {
   return (
@@ -72,24 +73,23 @@ const AppRoutes = () => {
       />
       <Route path="/TeamRegistration" element={<Registration />} />
 
-       {/* <Route path="/schoolregister" element={<SchoolReg />} />  */}
-
       <Route path="/dashboard" element={<Technothlon23Updates />} />
       <Route path="/teamverified" element={<TeamVerified />} />
       <Route path="/confirmPayment/:ciphertext" element={<PaymentConfirmed />} />
-     {/* <Route path="/dashboard24" element={<Technothlon23Updates />}/> */}
       <Route path="/userportal" element={<UserPortal/>}/>
       <Route path="/Admitcard" element={<AdmitCard/>}/>
-      {/* <Route path="/ContestForm" element={<ContestForm/>}/>
-      <Route path="/Crew-Member" element={<Crew/>}/> */}
-
-      {/* <Route path="/Ct" element={<Ct/>}/> */}
-
+     
       <Route path="/cityreplogin" element={<Cityreplogin />} />
       <Route path="/cityrep_portal" element={<Cityrep_Portal />} />
 
+      {/* Contest Routes */}
+      <Route path="/contest/login" element={<Contestlogin />} />
+      <Route path="/contest" element={<Contest />} />
+      <Route path="/contest/:id/:letter" element={<Question />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/center-list" element={<CenterTable />} />
 
-    </Routes>
+       </Routes>
   );
 };
 

@@ -112,6 +112,7 @@
 .crp-main {
   flex: 1;
   padding: 2rem;
+  width: 95%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -131,6 +132,9 @@
 
 /* Cards */
 .crp-card {
+  width: 95%;
+  max-width: 1200px;
+  margin: 0 auto;
   background: #fff;
   padding: 1.5rem;
   border-radius: 10px;
@@ -369,6 +373,12 @@
   .crp-card {
     margin: 1rem;
     padding: 1rem;
+    width: 95%;
+  }
+
+  .crp-main {
+    width: 95%;
+    padding: 1rem;
   }
 }
 @media screen and (max-width: 600px) {
@@ -446,5 +456,20 @@
     padding: 0.4rem 0.5rem;
     font-size: 0.7rem;
   }
+  .crp-card {
+  flex: 1;
+  padding: 2rem;
+  /* max-width: 1500px; */
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
 
+  .crp-main {
+    width: 95%;
+    padding: 0.8rem;
+    margin: 0 auto;
   }
+}

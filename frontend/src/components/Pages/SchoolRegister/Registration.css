@@ -121,7 +121,157 @@ input, select, textarea {
   cursor: pointer;
   font-size: 16px;
 }
-@media screen and (max-width: 480px) {
+
+.header-banner-reg {
+  background-color: #fee6a1;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo-container-reg {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.institution-logo-reg {
+  height: 120px;
+  width: auto;
+}
+
+.partner-logo-reg {
+  height: 80px;
+  width: auto;
+}
+
+.main-logo-reg {
+  height: 230px;
+  width: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.main-logo-reg:hover {
+  transform: scale(1.05);
+}
+
+.ob-reg {
+  position: relative;
+  width: 80%;
+  max-width: 1000px;
+  height: 120px;
+  margin: 0 auto;
+  background-image: url('../../Assets/img/ob.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contact-footer-reg {
+  background-color: #fff9e6;
+  padding: 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid #eee;
+}
+
+.contact-links-reg {
+  display: flex;
+  justify-content: center;
+  gap: clamp(2rem, 5vw, 10rem);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-links-reg a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  text-decoration: none;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.footer-icon-reg {
+  min-height: 20px;
+  height: 20px;
+  min-width: 20px;
+  width: 20px;
+  color: #FF6B35;
+  flex-shrink: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .logo-container-reg {
+    max-width: 900px;
+    padding: 0.8rem;
+  }
+
+  .institution-logo-reg {
+    height: 100px;
+  }
+
+  .partner-logo-reg {
+    height: 60px !important;
+  }
+
+  .ob-reg {
+    width: 60%;
+    height: 100px;
+  }
+
+  .main-logo-reg {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-container-reg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .institution-logo-reg {
+    height: 70px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .partner-logo-reg {
+    height: 60px;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ob-reg {
+    width: 100%;
+    height: 90px;
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .contact-links-reg {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
   .containe {
     width: 95%;
     margin: 100px auto;
@@ -141,4 +291,42 @@ input, select, textarea {
     font-weight: bolder;
   }
   
+  .header-banner-reg {
+    padding: 0.5rem;
   }
+
+  .logo-container-reg {
+    gap: 0.5rem;
+    padding: 0.3rem;
+  }
+
+  .institution-logo-reg {
+    height: 80px;
+  }
+
+  .partner-logo-reg {
+    height: 20px;
+  }
+
+  .ob-reg {
+    height: 80px;
+  }
+
+  .main-logo-reg {
+    height: 140px;
+  }
+
+  .contact-footer-reg {
+    padding: 0.5rem;
+  }
+
+  .contact-links-reg a {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .footer-icon-reg {
+    height: 16px;
+    width: 16px;
+  }
+}

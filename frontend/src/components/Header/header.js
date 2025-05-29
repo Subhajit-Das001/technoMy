@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./header.css";
 import { Link } from "react-router-dom";
 import Blue_logo from "./Blue_technologo.png";
@@ -7,16 +7,22 @@ import insta from "../Assets/img/insta.png";
 import youtube from "../Assets/img/utube.png";
 import blog from "../Assets/img/blog.png";
 import Graylogo from "../Assets/img/Gray_technologo.png"
-
+import { FaTrophy } from 'react-icons/fa'; // for leaderboard icon
+import { GiPodium } from 'react-icons/gi'; // for contest icon
+import axios from 'axios';
 import Logo from "../Assets/techno1.png"
 import logo from "../Assets/img/logo.png"
 
-
-
-
 function Header() {
+  const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://technothlon.techniche.org.in/api/"
+    : "http://localhost:3001/api/";
+
   const [clickedLink, setClickedLink] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [showContest, setShowContest] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   const refreshPage = () => {
     window.location.reload(); // This will reload the page
@@ -31,6 +37,33 @@ function Header() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const checkAnnouncements = async () => {
+      try {
+        const response = await axios.get(`${baseURL}announcement`);
+        const announcements = response.data;
+        
+        // Log the announcements to debug
+        console.log('Received announcements:', announcements);
+        
+        // Check for announcements with id 1 and 4
+        const contestAnnouncement = announcements.find(ann => Number(ann.id) === 1);
+        const leaderboardAnnouncement = announcements.find(ann => Number(ann.id) === 4);
+        
+        // Debug logs
+        console.log('Contest announcement:', contestAnnouncement);
+        console.log('Leaderboard announcement:', leaderboardAnnouncement);
+        
+        setShowContest(!!contestAnnouncement);
+        setShowLeaderboard(!!leaderboardAnnouncement);
+      } catch (error) {
+        console.error('Error checking announcements:', error);
+      }
+    };
+
+    checkAnnouncements();
+  }, [baseURL]);
 
   return (
     <div className="header">
@@ -95,6 +128,27 @@ function Header() {
         >
           <p>Login</p>
         </Link>
+        
+        {showContest  && (
+          <Link
+            to="/contest/login"
+            className={`hlinkss contest-link ${clickedLink === "contest" ? "clicked" : ""}`}
+            onClick={() => setClickedLink("contest")}
+          >
+  
+              <span className="contest-link-content">💻 Contest</span>
+          </Link>
+        )}
+        
+        {showLeaderboard && (
+          <Link
+            to="/leaderboard"
+            className={`hlinkss leaderboard-link ${clickedLink === "leaderboard" ? "clicked" : ""}`}
+            onClick={() => setClickedLink("leaderboard")}
+          >
+              <span className="leaderboard-link-content">🏆 Leaderboard</span>
+          </Link>
+        )}
         </div>
         
         <div className="handles-icons">

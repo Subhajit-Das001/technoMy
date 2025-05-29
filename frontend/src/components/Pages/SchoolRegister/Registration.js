@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../Header/header';
 import Footer from '../../Footer/footer';
 import Loader from '../../design/loader/Loader';
+import iitg2 from '../../Assets/img/iitg2.png';
+import techniche from '../../Assets/img/technicheb.png';
+import logo1 from '../../Assets/img/logo2.png';
+import { MdEmail } from 'react-icons/md';
+import { FaGlobe, FaInstagram } from 'react-icons/fa';
 
 import "./Registration.css";
 import cityToId from "./cityToID.json";
@@ -203,232 +208,262 @@ const TeamReg = () => {
     setExpanded(!expanded);
   };
 
+  const navigate = useNavigate(); // Add this hook
+  
+  // Add the click handler function
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
 
   
 
   return (
-    
-    <div className="wrapper">
-<Header/>
+    <div className="wrapper-reg">
+      <div className="header-banner-reg">
+        <div className="logo-container-reg">
+          <img src={iitg2} alt="IIT Guwahati" className="institution-logo-reg" />
+          <div className="ob-reg">
+            <img 
+              src={logo1} 
+              alt="Technothlon" 
+              className="main-logo-reg"
+              onClick={handleLogoClick}
+              style={{ cursor: 'pointer' }} // Add cursor pointer to indicate clickable
+            />
+          </div>
+          <img src={techniche} alt="Techniche" className="partner-logo-reg" />
+        </div>
+      </div>
 
-{/* <div>
-<Header/>
-</div> */}
+      <div className="containe">
+        {/* <Header/> */}
 
+        <div>
+          <InstructionPanel/>
+        </div>
 
-  <div className="containe">
-  <div>
-<InstructionPanel/>
-</div>
-
-  
-    <h1 className="form-title">Student Registration Form</h1>
-    <form onSubmit={postData}>
-      <h2 className="section-title">Student Information 1</h2>
-      <label htmlFor='name1'>Name:</label>
-                 <input type='text' autoComplete='off' name='name1' id='name1' placeholder='' required value={team.name1} onChange={handleInput} />
-           
-      <label htmlFor="full-name">Contact Information:</label>
-      <input
-        type="tel"
-        autoComplete="off"
-        name="contact1"
-        id="contact1"
-        required
-        value={team.contact1}
-        onChange={handleInput}
-      />
-      <label htmlFor="email1">Email:</label>
-      <input
-        type="email"
-        autoComplete="off"
-        name="email1"
-        id="email1"
-        required
-        value={team.email1}
-        onChange={handleInput}
-      />
-      <label htmlFor="school1">School:</label>
-      <input
-        type="text"
-        autoComplete="off"
-        name="school1"
-        id="school1"
-        required
-        value={team.school1}
-        onChange={handleSchool1Change}
-      />
-       <h2 className="section-title">Student Information 2</h2>
-      <label htmlFor="full-name">Name:</label>
-      <input
-        type="text"
-        id="name2"
-        name="name2"
-        required
-        value={team.name2}
-        onChange={handleInput}
-      />
-      <label htmlFor="full-name">Contact Information:</label>
-      <input
-        type="tel"
-        autoComplete="off"
-        name="contact2"
-        id="contact2"
-        required
-        value={team.contact2}
-        onChange={handleInput}
-      />
-      <label htmlFor="email1">Email:</label>
-      <input
-        type="email"
-        autoComplete="off"
-        name="email2"
-        id="email2"
-        required
-        value={team.email2}
-        onChange={handleInput}
-      />
-      <label htmlFor="school2">School:</label>
-      <input
-        type="text"
-        autoComplete="off"
-        name="school2"
-        id="school2"
-        required
-        value={team.school2}
-        onChange={handleSchool2Change}
-      />
-      <h2 className="section-title">Team Information</h2>
-      <label htmlFor="squad">Choose your Squad:</label>
-      <select
-        name="squad"
-        id="squad"
-        onChange={handleSquadChange}
-        value={team.squad}
-        required
-      >
-        <option value="" disabled>
-          Select Squad
-        </option>
-        <option value="Juniors">Juniors Squad</option>
-        <option value="Hauts">Hauts Squad</option>
-      </select>
-      <label htmlFor="language">Language:</label>
-      <select
-        name="language"
-        id="language"
-        onChange={handleLanguageChange}
-        value={team.language}
-        required
-      >
-        <option value="" disabled>
-          Select Language
-        </option>
-        <option value="English">English</option>
-        <option value="Hindi">Hindi</option>
-      </select>
-  
-      <label htmlFor="country">Country:</label>
-      <input
-        type="text"
-        name="country"
-        id="country"
-        list="countries"
-        // placeholder="Country"
-        required
-        value={team.country}
-        onChange={handleCountryChange}
-      />
-      <datalist id="countries">
-        {filteredCountry.map((country, index) => (
-          <option key={index} value={country} />
-        ))}
-
-      </datalist>
-     
-      <label htmlFor="state">State:</label>
-      <input
-        type="text"
-        name="state"
-        id="state"
-        list="states"
-        value={team.state}
-        onChange={handleStateChange}
-        required
-      />
-      <datalist id="states">
-        {filteredStates.map((state, index) => (
-          <option key={index} value={state} />
-        ))}
-      </datalist>
-
+        <h1 className="form-title">Student Registration Form</h1>
+        <form onSubmit={postData}>
+          <h2 className="section-title">Student Information 1</h2>
+          <label htmlFor='name1'>Name:</label>
+          <input type='text' autoComplete='off' name='name1' id='name1' placeholder='' required value={team.name1} onChange={handleInput} />
+          
+          <label htmlFor="full-name">Contact Information:</label>
+          <input
+            type="tel"
+            autoComplete="off"
+            name="contact1"
+            id="contact1"
+            required
+            value={team.contact1}
+            onChange={handleInput}
+          />
+          <label htmlFor="email1">Email:</label>
+          <input
+            type="email"
+            autoComplete="off"
+            name="email1"
+            id="email1"
+            required
+            value={team.email1}
+            onChange={handleInput}
+          />
+          <label htmlFor="school1">School:</label>
+          <input
+            type="text"
+            autoComplete="off"
+            name="school1"
+            id="school1"
+            required
+            value={team.school1}
+            onChange={handleSchool1Change}
+          />
+          <h2 className="section-title">Student Information 2</h2>
+          <label htmlFor="full-name">Name:</label>
+          <input
+            type="text"
+            id="name2"
+            name="name2"
+            required
+            value={team.name2}
+            onChange={handleInput}
+          />
+          <label htmlFor="full-name">Contact Information:</label>
+          <input
+            type="tel"
+            autoComplete="off"
+            name="contact2"
+            id="contact2"
+            required
+            value={team.contact2}
+            onChange={handleInput}
+          />
+          <label htmlFor="email1">Email:</label>
+          <input
+            type="email"
+            autoComplete="off"
+            name="email2"
+            id="email2"
+            required
+            value={team.email2}
+            onChange={handleInput}
+          />
+          <label htmlFor="school2">School:</label>
+          <input
+            type="text"
+            autoComplete="off"
+            name="school2"
+            id="school2"
+            required
+            value={team.school2}
+            onChange={handleSchool2Change}
+          />
+          <h2 className="section-title">Team Information</h2>
+          <label htmlFor="squad">Choose your Squad:</label>
+          <select
+            name="squad"
+            id="squad"
+            onChange={handleSquadChange}
+            value={team.squad}
+            required
+          >
+            <option value="" disabled>
+              Select Squad
+            </option>
+            <option value="Juniors">Juniors Squad</option>
+            <option value="Hauts">Hauts Squad</option>
+          </select>
+          <label htmlFor="language">Language:</label>
+          <select
+            name="language"
+            id="language"
+            onChange={handleLanguageChange}
+            value={team.language}
+            required
+          >
+            <option value="" disabled>
+              Select Language
+            </option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+          </select>
       
-      <label htmlFor="city">City:</label>
-      <input
-        type="text"
-        autoComplete="off"
-        list="cities"
-        name="city"
-        id="city"
-        placeholder="City"
-        required
-        value={team.city}
-        onChange={handleCityChange}
-      />
-      <datalist id="cities">
-        {filteredCities.map((cityName, index) => (
-          <option key={index} value={cityName} />
-        ))}
-      </datalist>
+          <label htmlFor="country">Country:</label>
+          <input
+            type="text"
+            name="country"
+            id="country"
+            list="countries"
+            // placeholder="Country"
+            required
+            value={team.country}
+            onChange={handleCountryChange}
+          />
+          <datalist id="countries">
+            {filteredCountry.map((country, index) => (
+              <option key={index} value={country} />
+            ))}
 
+          </datalist>
+          
+          <label htmlFor="state">State:</label>
+          <input
+            type="text"
+            name="state"
+            id="state"
+            list="states"
+            value={team.state}
+            onChange={handleStateChange}
+            required
+          />
+          <datalist id="states">
+            {filteredStates.map((state, index) => (
+              <option key={index} value={state} />
+            ))}
+          </datalist>
+
+          
+          <label htmlFor="city">City:</label>
+          <input
+            type="text"
+            autoComplete="off"
+            list="cities"
+            name="city"
+            id="city"
+            placeholder="City"
+            required
+            value={team.city}
+            onChange={handleCityChange}
+          />
+          <datalist id="cities">
+            {filteredCities.map((cityName, index) => (
+              <option key={index} value={cityName} />
+            ))}
+          </datalist>
+
+          
+          <label htmlFor='password1'></label>
+          <input type='password' autoComplete='off' name='password1' id='password1' placeholder='Password' required value={team.password1} onChange={handleInput} />
+          
+          
+          <input type='password' autoComplete='off' name='password2' id='password2' placeholder='Confirm Password' required value={team.password2} onChange={handleInput} />
+          
       
-                 <label htmlFor='password1'></label>
-                 <input type='password' autoComplete='off' name='password1' id='password1' placeholder='Password' required value={team.password1} onChange={handleInput} />
-               
-             
-                 <input type='password' autoComplete='off' name='password2' id='password2' placeholder='Confirm Password' required value={team.password2} onChange={handleInput} />
-            
-    
 
-<label htmlFor="view">How did you hear about Technothlon:</label>
-      <select
-        name="view"
-        id="view"
-        onChange={handleViewChange}
-        value={team.view}
-        required
-      >
-        <option value="" disabled>
-          Select 
-        </option>
-        <option value="Cityrep">Through City Representatives</option>
-  <option value="School">Through Your School/Teacher</option>
-  <option value="Friends">Through Friends or Family</option>
-  <option value="Social Media">Through Social Media Platforms</option>
-  <option value="Newspaper">Through Newspaper or Magazine</option>
-  <option value="Website">Through the Official Technothlon Website</option>
-  <option value="Already Participated">I Have Already Participated Before</option>
-  <option value="Event">Through a Local Event/Workshop</option>
-  <option value="Other">Other</option>
-      </select>
+          <label htmlFor="view">How did you hear about Technothlon:</label>
+          <select
+            name="view"
+            id="view"
+            onChange={handleViewChange}
+            value={team.view}
+            required
+          >
+            <option value="" disabled>
+              Select 
+            </option>
+            <option value="Cityrep">Through City Representatives</option>
+            <option value="School">Through Your School/Teacher</option>
+            <option value="Friends">Through Friends or Family</option>
+            <option value="Social Media">Through Social Media Platforms</option>
+            <option value="Newspaper">Through Newspaper or Magazine</option>
+            <option value="Website">Through the Official Technothlon Website</option>
+            <option value="Already Participated">I Have Already Participated Before</option>
+            <option value="Event">Through a Local Event/Workshop</option>
+            <option value="Other">Other</option>
+          </select>
 
 
-      <button
-        type="submit"
-        className="form-submit"
-        name="register"
-        id="register"
-      >
-        Pay Now
-      </button>
-    </form>
-   {isLoading && <Loader />}
+          <button
+            type="submit"
+            className="form-submit"
+            name="register"
+            id="register"
+          >
+            Pay Now
+          </button>
+        </form>
+        {isLoading && <Loader />}
+      </div>
 
-  </div>
-  
-</div>
-
-);
+      <footer className="contact-footer-reg">
+        <div className="contact-links-reg">
+          <a href="mailto:technothlon@iitg.ac.in">
+            <MdEmail className="footer-icon-reg" />
+            <span>technothlon@iitg.ac.in</span>
+          </a>
+          <a href="https://technothlon.techniche.org.in">
+            <FaGlobe className="footer-icon-reg" />
+            <span>technothlon.techniche.org.in</span>
+          </a>
+          <a href="https://instagram.com/technothlon.iitg">
+            <FaInstagram className="footer-icon-reg" />
+            <span>technothlon.iitg</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+  );
 };
 
 export default TeamReg;

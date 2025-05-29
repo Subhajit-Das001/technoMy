@@ -20,6 +20,11 @@ const OnlineteamModel = mongoose.Schema(
         country: { type: String, require: true },
         state: { type: String, require: true },
         city: { type: String, require: true },
+        zone: { 
+            type: String, 
+            enum: ['North', 'South', 'East', 'West', 'Unknown'],
+            required: true 
+        },
         view:{type: String, require: true},
         cityrepID: { type: String },
         rollNumber: { type: String },
