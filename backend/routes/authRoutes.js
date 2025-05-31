@@ -41,14 +41,14 @@ router.post('/check-student', async (req, res) => {
           email: isContact1 ? offlineStudent.email1 : offlineStudent.email2,
           phone: cleanPhone,
           school: selectedSchool,
-          isRegistered: true
+          studentType: "offline",
         });
       }
-    }
+    } 
 
+    else{
     // If not found in Offline25, check Online25 database
     const onlineStudent = await Online25.findOne({ rollNumber: cleanRollNumber });
-    
     if (onlineStudent) {
       // Check if phone matches either contact
       const isContact1 = onlineStudent.contact1 === cleanPhone;
@@ -63,7 +63,7 @@ router.post('/check-student', async (req, res) => {
           email: isContact1 ? onlineStudent.email1 : onlineStudent.email2,
           phone: cleanPhone,
           school: selectedSchool,
-          isRegistered: true
+          studentType: "online",          
         });
       }
     }
@@ -72,7 +72,7 @@ router.post('/check-student', async (req, res) => {
       exists: false, 
       message: 'Student not found. Please check your details or register as a new student.' 
     });
-
+  }
   } catch (error) {
     console.error('Error details:', error);
     res.status(500).json({ 
@@ -110,8 +110,7 @@ router.post('/signin-new', async (req, res) => {
       phone: student.phone,
       school: student.school,
       city: student.city,
-      isNewStudent: true
-    });
+      studentType: "new",});
   } catch (error) {
     console.error('Error signing in student:', error);
     res.status(500).json({ asuccess: false, message: 'Sign in failed' });

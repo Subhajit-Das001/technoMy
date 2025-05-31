@@ -7,17 +7,25 @@ const Announcement = require('../models/announcement');
 const Online25=require('../models/onlineReg');
 const { convertToIST } = require('../utils/timeUtils');
 const Offline25 = require('../models/offline25'); // Import Offline25 model
+const newStudent = require('../models/newStudent'); // Import newStudent model
 
 // Start contest
 router.post('/contest/start', async (req, res) => {
     try {
-        const { phone, name, school } = req.body;
+        const { phone, name, school, studentType } = req.body;
         
-        console.log('Received start request:', { phone, name, school });
+        console.log('Received start request:', { phone, name, school, studentType });
         
-        if (!phone || !name || !school) {
+        if (!phone || !name || !school || !studentType) {
             return res.status(400).json({ 
-                message: 'Phone number, name and school are required' 
+                message: 'Phone number, name, school and student type are required' 
+            });
+        }
+
+        // Validate student type
+        if (!['offline', 'online', 'new'].includes(studentType)) {
+            return res.status(400).json({
+                message: 'Invalid student type. Must be offline, online, or new'
             });
         }
 
@@ -31,56 +39,16 @@ router.post('/contest/start', async (req, res) => {
             });
         }
 
-        // Determine student type by checking both contact fields in both databases
-        let studentType = 'new'; // default type
-
-        // Check Offline25 first
-        const offlineStudent = await Offline25.findOne({
-            $or: [
-                { contact1: cleanPhone },
-                { contact2: cleanPhone },
-                { contact1: parseInt(cleanPhone) },
-                { contact2: parseInt(cleanPhone) }
-            ]
-        });
-
-        if (offlineStudent) {
-            studentType = 'offline';
-            console.log('Found offline student:', offlineStudent.rollNumber);
-        } else {
-            // If not offline, check Online25
-            const onlineStudent = await Online25.findOne({
-                $or: [
-                    { contact1: cleanPhone },
-                    { contact2: cleanPhone },
-                    { contact1: parseInt(cleanPhone) },
-                    { contact2: parseInt(cleanPhone) }
-                ]
-            });
-            
-            if (onlineStudent) {
-                studentType = 'online';
-                console.log('Found online student:', onlineStudent.rollNumber);
-            } else {
-                console.log('No matching student found in either database');
-            }
-        }
-
-        console.log('Determined student type:', studentType);
-
-        // Create exact start and end times
-        const startTime = new Date();
-        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+        console.log('Creating contest for student type:', studentType);
 
         // Create new contest with student type
         const contest = new ContestScore({
             phone: cleanPhone,
             name: name,
             school: school,
-            student: studentType,
-            isNewStudent: studentType === 'new',
-            startTime: startTime,
-            endTime: endTime,
+            student: studentType,  // Store the student type
+            startTime: new Date(),
+            endTime: new Date(Date.now() + 60 * 60 * 1000),
             isStarted: true,
             isCompleted: false,
             questionsAttempted: 0,
@@ -102,10 +70,10 @@ router.post('/contest/start', async (req, res) => {
         res.json({ 
             success: true, 
             message: 'Contest started successfully',
-            startTime: startTime.toISOString(),
-            endTime: endTime.toISOString(),
+            startTime: contest.startTime.toISOString(),
+            endTime: contest.endTime.toISOString(),
             sessionToken,
-            studentType
+            studentType  // Return the student type in response
         });
 
     } catch (error) {
@@ -148,14 +116,21 @@ router.post('/contest/submit', async (req, res) => {
         let score;
         if (isCorrect) {
             switch(questionId) {
-                case 1: score = Math.max(0, 300 - (totalTimeSpent/20000)); break;
-                case 2: score = Math.max(0, 600 - (totalTimeSpent/15000)); break;
-                case 3: score = Math.max(0, 1000 - (totalTimeSpent/10000)); break;
-                default: score = 0;
+                case 1: 
+                    score = Math.max(0, 300 - (totalTimeSpent/20000)); 
+                    break;  // Add break statement here
+                case 2: 
+                    score = Math.max(0, 600 - (totalTimeSpent/15000)); 
+                    break;
+                case 3: 
+                    score = Math.max(0, 1000 - (totalTimeSpent/10000)); 
+                    break;
+                default: 
+                    score = 0;
             }
         } else {
             // Negative score for wrong answers
-            score = -(totalTimeSpent/10000);
+            score = -(totalTimeSpent/20000);
         }
 
         // Create new answer with visit count
@@ -181,6 +156,13 @@ router.post('/contest/submit', async (req, res) => {
             contestScore.answers[existingAnswerIndex] = newAnswer;
         } else {
             contestScore.answers.push(newAnswer);
+        }
+
+        // After updating the answer:
+
+        // Update questionsAttempted if this is a new question
+        if (existingAnswerIndex === -1) {
+            contestScore.questionsAttempted += 1;
         }
 
         // Update question score in scores object
@@ -387,13 +369,14 @@ router.get('/contest/leaderboard', async (req, res) => {
 
         // Get all completed contests with scores
         const leaderboard = await ContestScore.find({ 
-            isCompleted: true 
+            isCompleted: true
         })
         .select('name school scores answers totalTimeSpent')
         .sort({ 'scores.total': -1, totalTimeSpent: 1 }) // Sort by total score (desc) and time (asc)
         .limit(100); // Limit to top 100
 
-        // Format the response
+        // Update the leaderboard route's formatting logic:
+
         const formattedLeaderboard = leaderboard.map(entry => {
             const questionStatus = {
                 A: { status: 'not-attempted', time: null },
@@ -405,15 +388,16 @@ router.get('/contest/leaderboard', async (req, res) => {
             entry.answers.forEach(answer => {
                 const letter = String.fromCharCode(64 + answer.questionId); // Convert 1,2,3 to A,B,C
                 questionStatus[letter] = {
-                    status: answer.isCorrect ? 'correct' : 'incorrect',
-                    time: answer.timeSpent
+                    status: answer.isCorrect ? 'correct' : (answer.attempted ? 'incorrect' : 'not-attempted'),
+                    time: answer.totalTimeSpent ? Math.floor(answer.totalTimeSpent/1000) : null, // Convert to seconds
+                    score: answer.score // Include the score
                 };
             });
 
             return {
                 name: entry.name,
                 school: entry.school,
-                totalScore: entry.scores.total,
+                totalScore: Math.round(entry.scores.total), // Ensure total score is rounded
                 totalTime: entry.totalTimeSpent,
                 questionA: questionStatus.A,
                 questionB: questionStatus.B,

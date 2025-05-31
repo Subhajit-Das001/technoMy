@@ -254,6 +254,7 @@ function Contest() {
             const userPhone = localStorage.getItem('userPhone');
             const userName = localStorage.getItem('userName');
             const userSchool = localStorage.getItem('userSchool');
+            const studentType1 = localStorage.getItem('usertype');
 
             if (!userPhone || !userName || !userSchool) {
                 throw new Error('Missing user information. Please login again.');
@@ -262,7 +263,8 @@ function Contest() {
             const response = await axios.post(`${baseURL}/api/contest/start`, {
                 phone: userPhone,
                 name: userName,
-                school: userSchool
+                school: userSchool,
+                studentType: studentType1
             });
 
             if (response.data.success) {
@@ -320,6 +322,7 @@ function Contest() {
                     'userPhone',
                     'userName',
                     'userRoll',
+                    'usertype',
                     'answeredQuestions',
                     'contestCompleted'
                 ];
@@ -373,60 +376,6 @@ function Contest() {
     };
     // Components
     
-const QuestionCard = ({ question, answered, contestStarted, onClick }) => {
-  return (
-    <div className={`question-card ${answered ? 'answered' : ''}`}>
-      <div className="question-header">
-        <span className="question-letter">{question.letter}</span>
-        <span className="points-badge">{question.points} pts</span>
-      </div>
-      {/* <div className="question-content"> */}
-        <h3 className="question-title">{question.title}</h3>
-        <div className="question-interactive">
-          {contestStarted ? (
-            <button 
-              className="solve-button"
-              onClick={onClick}
-            >
-              Solve Now <span className="arrow">→</span>
-            </button>
-          ) : (
-            <div className="status-badge locked">
-              <span className="lock-icon">🔒</span>
-              Locked
-            </div>
-          )}
-        </div>
-      </div>
-    // </div>
-  );
-};
-    const startContest = async () => {
-        try {
-            const rollNumber = localStorage.getItem('userRoll');
-            const phone = localStorage.getItem('userPhone');
-            const school = localStorage.getItem('userSchool');
-
-            const response = await axios.post(`${baseURL}/api/contest/start`, {
-                rollNumber,
-                phone,
-                school
-            });
-
-            if (response.data.success) {
-                // Save start time
-                const startTime = new Date().toISOString();
-                localStorage.setItem('contestStartTime', startTime);
-                
-                // Navigate to first question
-                navigate(`/contest/question/1`);
-            } else {
-                setError(response.data.message);
-            }
-        } catch (error) {
-            setError(error.response?.data?.message || 'Error starting contest');
-        }
-    };
 
 
     return (

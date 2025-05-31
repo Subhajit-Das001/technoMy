@@ -49,13 +49,16 @@ const Leaderboard = () => {
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
-    const getQuestionStatus = (status, time) => {
+    const getQuestionStatus = (status, time, score) => {
         switch (status) {
             case 'correct':
                 return (
                     <div className="status correct">
                         <FaCheck />
-                        <span className="time">{formatTime(time)}</span>
+                        <div className="score-info">
+                            <span className="time">{formatTime(time)}</span>
+                            {/* <span className="score">(+{Math.round(score)})</span> */}
+                        </div>
                     </div>
                 );
             case 'incorrect':
@@ -199,13 +202,17 @@ const Leaderboard = () => {
                                     <td className="name">{entry.name}</td>
                                     <td className="school">{entry.school}</td>
                                     <td className="question-status">
-                                        {getQuestionStatus(entry.questionA.status, entry.questionA.time)}
+                                        {getQuestionStatus(
+                                            entry.questionA.status, 
+                                            entry.questionA.time, 
+                                            entry.questionA.score
+                                        )}
                                     </td>
                                     <td className="question-status">
-                                        {getQuestionStatus(entry.questionB.status, entry.questionB.time)}
+                                        {getQuestionStatus(entry.questionB.status, entry.questionB.time, entry.questionB.score)}
                                     </td>
                                     <td className="question-status">
-                                        {getQuestionStatus(entry.questionC.status, entry.questionC.time)}
+                                        {getQuestionStatus(entry.questionC.status, entry.questionC.time, entry.questionC.score)}
                                     </td>
                                     <td className="total-score">{entry.totalScore}</td>
                                     {/* <td className="total-time">{formatTime(entry.totalTime)}</td> */}

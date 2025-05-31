@@ -134,8 +134,7 @@ const StudentAuth = () => {
           localStorage.setItem('userPhone', response.data.phone);
           localStorage.setItem('userRoll', formData.rollNumber);
           localStorage.setItem('userSchool', response.data.school);
-          localStorage.setItem('isNewStudent', 'false');
-          
+          localStorage.setItem('usertype', response.data.studentType);          
           // Clear existing contest data
           localStorage.removeItem('contestStartTime');
           localStorage.removeItem('contestEndTime');
@@ -191,8 +190,7 @@ const StudentAuth = () => {
             localStorage.setItem('userEmail', response.data.email);
             localStorage.setItem('userCity', response.data.city);
             localStorage.setItem('userSchool', response.data.school);
-            localStorage.setItem('isNewStudent', 'true');
-            
+            localStorage.setItem('usertype', response.data.studentType);            
             // Clear existing contest data
             localStorage.removeItem('contestStartTime');
             localStorage.removeItem('contestEndTime');

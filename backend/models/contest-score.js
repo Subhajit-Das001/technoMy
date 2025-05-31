@@ -74,54 +74,35 @@ ContestScoreSchema.methods.calculateScore = function() {
     };
 
     this.answers.forEach(answer => {
-        const timeInMilliseconds = answer.totalTimeSpent;
-        const timePenalty = timeInMilliseconds / 1000;
-        
-        if (!answer.attempted) {
-            // Not attempted = 0 points
+        let score;
+        if (answer.isCorrect) {
             switch(answer.questionId) {
-                case 1: scores.question1 = 0; break;
-                case 2: scores.question2 = 0; break;
-                case 3: scores.question3 = 0; break;
+                case 1: 
+                    score = Math.max(0, 300 - (answer.totalTimeSpent/20000)); 
+                    break;
+                case 2: 
+                    score = Math.max(0, 600 - (answer.totalTimeSpent/15000)); 
+                    break;
+                case 3: 
+                    score = Math.max(0, 1000 - (answer.totalTimeSpent/10000)); 
+                    break;
+                default: 
+                    score = 0;
             }
-        } else if (answer.isCorrect) {
-            // Correct answer = max points - time penalty
-            switch(answer.questionId) {
-                case 1:
-                    scores.question1 = Math.max(0, 300 - timePenalty);
-                    break;
-                case 2:
-                    scores.question2 = Math.max(0, 600 - timePenalty);
-                    break;
-                case 3:
-                    scores.question3 = Math.max(0, 1000 - timePenalty);
-                    break;
-            }
+        } else if (answer.attempted) {
+            score = -(answer.totalTimeSpent/20000);
         } else {
-            // Wrong answer = negative time penalty
-            switch(answer.questionId) {
-                case 1:
-                    scores.question1 = -(timePenalty);
-                    break;
-                case 2:
-                    scores.question2 = -(timePenalty);
-                    break;
-                case 3:
-                    scores.question3 = -(timePenalty);
-                    break;
-            }
+            score = 0;
         }
-
-        // Store individual answer score
-        answer.score = scores[`question${answer.questionId}`];
+        
+        scores[`question${answer.questionId}`] = Math.round(score);
     });
 
-    // Update final scores
     this.scores = {
-        question1: Math.round(scores.question1),
-        question2: Math.round(scores.question2),
-        question3: Math.round(scores.question3),
-        total: Math.round(scores.question1 + scores.question2 + scores.question3)
+        question1: scores.question1,
+        question2: scores.question2,
+        question3: scores.question3,
+        total: scores.question1 + scores.question2 + scores.question3
     };
 };
 
