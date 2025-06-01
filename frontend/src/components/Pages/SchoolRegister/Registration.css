@@ -164,7 +164,6 @@ input, select, textarea {
   max-width: 1000px;
   height: 120px;
   margin: 0 auto;
-  background-image: url('../../Assets/img/ob.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

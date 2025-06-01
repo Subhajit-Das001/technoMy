@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import iitg2 from '../../Assets/img/iitg2.png';
 import { MdEmail } from 'react-icons/md';
 import { FaGlobe, FaInstagram, FaMapMarkerAlt } from 'react-icons/fa';
-
+import ob from '../../Assets/img/ob.png';
 import techniche from '../../Assets/img/technicheb.png';
 import logo from '../../Assets/img/text_logo.png';
 import logo1 from '../../Assets/img/logo2.png';
@@ -97,7 +97,7 @@ const TechnothonCenterList = () => {
             <div className="header-banner">
                 <div className="logo-container">
                     <img src={iitg2} alt="IIT Guwahati" className="institution-logo" />
-                    <div className="ob">
+                    <div className="ob" style={{ backgroundImage: `url(${ob})` }}>
                         <img 
                             src={logo1} 
                             alt="Technothlon" 

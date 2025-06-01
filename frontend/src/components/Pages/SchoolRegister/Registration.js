@@ -9,6 +9,7 @@ import techniche from '../../Assets/img/technicheb.png';
 import logo1 from '../../Assets/img/logo2.png';
 import { MdEmail } from 'react-icons/md';
 import { FaGlobe, FaInstagram } from 'react-icons/fa';
+import ob from '../../Assets/img/ob.png';
 
 import "./Registration.css";
 import cityToId from "./cityToID.json";
@@ -223,13 +224,13 @@ const TeamReg = () => {
       <div className="header-banner-reg">
         <div className="logo-container-reg">
           <img src={iitg2} alt="IIT Guwahati" className="institution-logo-reg" />
-          <div className="ob-reg">
+          <div className="ob-reg" style={{ backgroundImage: `url(${ob})` }}>
             <img 
               src={logo1} 
               alt="Technothlon" 
               className="main-logo-reg"
               onClick={handleLogoClick}
-              style={{ cursor: 'pointer' }} // Add cursor pointer to indicate clickable
+              style={{ cursor: 'pointer' }}
             />
           </div>
           <img src={techniche} alt="Techniche" className="partner-logo-reg" />
