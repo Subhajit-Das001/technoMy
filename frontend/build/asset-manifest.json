@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.d64c0555.css",
-    "main.js": "/static/js/main.326c4465.js",
+    "main.css": "/static/css/main.e7384ce9.css",
+    "main.js": "/static/js/main.ad9ce24c.js",
     "static/media/Hauts english 22.pdf": "/static/media/Hauts english 22.f753fc4d5ed99ba8ae58.pdf",
     "static/media/2019hauts.pdf": "/static/media/2019hauts.669672443df660a331f3.pdf",
     "static/media/Technothlon_2017_HE.pdf": "/static/media/Technothlon_2017_HE.cdff712ddb1b5808079b.pdf",
@@ -47,6 +47,7 @@
     "static/media/jayant1.jpeg": "/static/media/jayant1.6b4c4a1e496319ecbe1b.jpeg",
     "static/media/Technothlon_2010_Juniors.pdf": "/static/media/Technothlon_2010_Juniors.bd10f6649ae825b457b3.pdf",
     "static/media/Technothlon_2009_Juniors.pdf": "/static/media/Technothlon_2009_Juniors.cece57a63c98cddc2ecc.pdf",
+    "static/media/logo2.png": "/static/media/logo2.365368fcbab10ddc673b.png",
     "static/media/Hautstheme.png": "/static/media/Hautstheme.83db8e323eb96aee1bd0.png",
     "static/media/Gold_Juniors.png": "/static/media/Gold_Juniors.6f4a4e5276d3eb0d04db.png",
     "static/media/Gold_Hauts.png": "/static/media/Gold_Hauts.c2c54fb3598a81113371.png",
@@ -64,12 +65,18 @@
     "static/media/Poojitha.jpg": "/static/media/Poojitha.8f490ee94066b84d791d.jpg",
     "static/media/prizes3.png": "/static/media/prizes3.03758a79ed971e6a69ba.png",
     "static/media/prizes1.png": "/static/media/prizes1.c1551efec7241e8138fa.png",
+    "static/media/text_logo.png": "/static/media/text_logo.2e2b57236eba239868ec.png",
+    "static/media/bird_logo1.png": "/static/media/bird_logo1.a2b75bcaaa452c519859.png",
     "static/media/lalith1.jpeg": "/static/media/lalith1.acff6311764744a42c92.jpeg",
     "static/media/technologo.png": "/static/media/technologo.9c346684217c919f2da8.png",
     "static/media/techno1.png": "/static/media/techno1.e1d55409b17d83992178.png",
     "static/media/HeroImgD.png": "/static/media/HeroImgD.d5b42bf2bb0eb9db661b.png",
     "static/media/Juniors Key 22.pdf": "/static/media/Juniors Key 22.f73fe459ddac47d36d30.pdf",
     "static/media/logo.png": "/static/media/logo.44c3e5a082e0c63c8b6e.png",
+    "static/media/techno_contest.png": "/static/media/techno_contest.79050a32848a78c66dc3.png",
+    "static/media/technicheb.png": "/static/media/technicheb.c027df0dc323c724780c.png",
+    "static/media/iitg2.png": "/static/media/iitg2.3eebdb9cb3be7c56e5e6.png",
+    "static/media/arc.png": "/static/media/arc.7a0a9083c322f28bee1d.png",
     "static/media/Birb.png": "/static/media/Birb.f19781ab5a9227746da4.png",
     "static/media/techno-owl.png": "/static/media/techno-owl.62b161acf6909d78d78d.png",
     "static/media/announcement.png": "/static/media/announcement.6458ec72c326fae7d4fe.png",
@@ -83,11 +90,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.d64c0555.css.map": "/static/css/main.d64c0555.css.map",
-    "main.326c4465.js.map": "/static/js/main.326c4465.js.map"
+    "main.e7384ce9.css.map": "/static/css/main.e7384ce9.css.map",
+    "main.ad9ce24c.js.map": "/static/js/main.ad9ce24c.js.map"
   },
   "entrypoints": [
-    "static/css/main.d64c0555.css",
-    "static/js/main.326c4465.js"
+    "static/css/main.e7384ce9.css",
+    "static/js/main.ad9ce24c.js"
   ]
 }
