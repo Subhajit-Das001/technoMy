@@ -36,8 +36,8 @@ function Contest() {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
     const [contestTimeLeft, setContestTimeLeft] = useState(3600);
     const [questions, setQuestions] = useState([
-        { id: 1, letter: 'A', title: 'The Twin Cube Mystery', points: 300, content: '', attempted: false, answered: false },
-        { id: 2, letter: 'B', title: 'Split the sticks', points: 600, content: '', attempted: false, answered: false },
+        { id: 1, letter: 'A', title: 'Lost Sequences in Number Maze', points: 300, content: '', attempted: false, answered: false },
+        { id: 2, letter: 'B', title: 'Bamboo Breakfast: Slicing to Share', points: 600, content: '', attempted: false, answered: false },
         { id: 3, letter: 'C', title: "The Leader's Last Apple", points: 1000, content: '', attempted: false, answered: false }
     ]);
     const [contestStarted, setContestStarted] = useState(false);
