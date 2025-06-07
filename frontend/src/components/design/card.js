@@ -47,6 +47,10 @@ const TiltCard = () => {
     y.set(rY);
   };
 
+
+
+  
+
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);

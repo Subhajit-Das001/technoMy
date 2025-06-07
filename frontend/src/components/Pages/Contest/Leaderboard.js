@@ -163,7 +163,7 @@ const Leaderboard = () => {
                     </div>
                 </motion.div>
 
-                <div className="search-container">
+                {/* <div className="search-container">
                     <input
                         type="text"
                         placeholder="🔍 Search by name..."
@@ -174,7 +174,7 @@ const Leaderboard = () => {
                         }}
                         className="search-input"
                     />
-                </div>
+                </div> */}
 
                 <div className="leaderboard-table-container">
                     <table className="leaderboard-table">

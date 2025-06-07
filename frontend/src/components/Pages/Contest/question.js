@@ -231,8 +231,8 @@ function Question() {
         </h2>
         <div className="points-question">Points Available: {question.points}</div>
         
-        <div className="question-text-question">
-          {question.content}
+        <div style={{whiteSpace: "pre-line"}} className="question-text-question">
+          {question.content.replace(/\\n/g, "\n")}
         </div>
 
         <div className="answer-section-question">

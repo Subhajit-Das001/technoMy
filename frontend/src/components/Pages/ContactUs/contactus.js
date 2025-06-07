@@ -58,7 +58,7 @@ function ContactUs() {
         {contacts.length > 0 ? (
           contacts.map((contact) => (
             <div key={contact.cityRepID}>
-              <p style={{ fontWeight: "600" }}>{contact.name}</p>
+              <p style={{ fontWeight: "600",whiteSpace: "pre-line"}}>{contact.name.replace(/\\n/g, "\n")}</p>
               <p>{contact.contact}</p>
             </div>
           ))
