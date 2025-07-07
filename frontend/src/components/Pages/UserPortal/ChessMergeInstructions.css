@@ -1,0 +1,262 @@
+/* Base styles */
+.instruction-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */
+  }
+  
+  .instruction-btn:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .instruction-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Backdrop overlay - separate from instruction panel */
+  .instruction-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .instruction-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Instruction panel styles */
+  .chess-instr {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    z-index: 1000;
+    display: none;
+    overflow-y: auto;
+    border: 2px solid #e9ecef;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .chess-instr.expanded {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .chess-instr h2 {
+    margin: 0 0 25px;
+    font-size: 28px;
+    text-align: center;
+    color: #2c3e50;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 15px;
+  }
+  
+  .chess-instr h3 {
+    color: #667eea;
+    font-size: 20px;
+    margin: 25px 0 15px 0;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .instructions-content {
+    line-height: 1.7;
+    color: #2c3e50;
+  }
+  
+  .chess-instr ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  
+  .chess-instr li {
+    margin: 12px 0;
+    font-size: 16px;
+    position: relative;
+    padding-left: 25px;
+  }
+  
+  .chess-instr li:before {
+    content: "▶";
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+  }
+  
+  .chess-instr li ul {
+    margin-top: 8px;
+    margin-left: 15px;
+  }
+  
+  .chess-instr li ul li {
+    font-size: 14px;
+    color: #495057;
+    margin: 6px 0;
+  }
+  
+  .chess-instr li ul li:before {
+    content: "→";
+    color: #28a745;
+  }
+  
+  .chess-instr strong {
+    color: #495057;
+    font-weight: 600;
+  }
+  
+  .highlight-red {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .important-note {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #adb5bd;
+    transition: all 0.3s ease;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
+  .close-btn:hover {
+    color: #ff6b6b;
+    background-color: #f8f9fa;
+    transform: rotate(90deg);
+  }
+  
+  .close-btn:active {
+    transform: rotate(90deg) scale(0.9);
+  }
+  
+  /* Alternative: No backdrop overlay version */
+  .chess-instr.no-backdrop {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .chess-instr {
+      width: 95%;
+      padding: 20px;
+      max-height: 90vh;
+    }
+    
+    .chess-instr h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .chess-instr h3 {
+      font-size: 18px;
+      margin: 20px 0 10px 0;
+    }
+    
+    .chess-instr li {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    
+    .chess-instr li ul li {
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .instruction-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+    
+    .chess-instr {
+      width: 98%;
+      padding: 15px;
+    }
+    
+    .chess-instr h2 {
+      font-size: 20px;
+    }
+    
+    .chess-instr h3 {
+      font-size: 16px;
+    }
+    
+    .chess-instr li {
+      font-size: 13px;
+    }
+  }
+  
+  /* Scrollbar styling */
+  .chess-instr::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .chess-instr::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .chess-instr::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+  }
+  
+  .chess-instr::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  }

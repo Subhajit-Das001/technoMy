@@ -240,12 +240,25 @@ const TeamReg = () => {
       <div className="containe">
         {/* <Header/> */}
 
-        <div>
+        {/* <div>
           <InstructionPanel/>
-        </div>
+        </div> */}
 
         <h1 className="form-title">Student Registration Form</h1>
-        <form onSubmit={postData}>
+        <div style={{
+          textAlign: 'center',
+          fontSize: '1.5rem',
+          color: '#b71c1c',
+          margin: '40px 0',
+          fontWeight: 'bold',
+          background: '#fff3e0',
+          borderRadius: '12px',
+          padding: '32px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.07)'
+        }}>
+          Registration for Technothlon 2025 is closed now.
+        </div>
+        {/* <form onSubmit={postData}>
           <h2 className="section-title">Student Information 1</h2>
           <label htmlFor='name1'>Name:</label>
           <input type='text' autoComplete='off' name='name1' id='name1' placeholder='' required value={team.name1} onChange={handleInput} />
@@ -443,7 +456,7 @@ const TeamReg = () => {
           >
             Pay Now
           </button>
-        </form>
+        </form> */}
         {isLoading && <Loader />}
       </div>
 
@@ -468,7 +481,6 @@ const TeamReg = () => {
 };
 
 export default TeamReg;
-
 
 
 

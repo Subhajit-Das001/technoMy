@@ -20,13 +20,14 @@ const cityRepRoutes = require('./routes/cityrep');
 const CityStudentCount = require('./routes/citystudentcountroute');
 const announcementRoutes = require('./routes/announcementRoutes');
 const Cityrepportal = require('./routes/cityrep_portal');
-const questionsRouter = require('./routes/questionRouter');
-const techpedResult = require('./routes/techpedResult');
-const checkAttemptRouter = require('./routes/checkAttemptRouter');
+// const questionsRouter = require('./routes/questionRouter');
+// const checkAttemptRouter = require('./routes/checkAttemptRouter');
 const uploadCSVRouter = require('./routes/centre');
 const authRoutes = require('./routes/authRoutes');
 const contestRoutes = require('./routes/contestRoutes');
 const centerListRoutes = require('./routes/center_list_route');
+const technopediaRoutes = require('./routes/Technopedia_Route');
+const merchAnalyticsRoutes = require('./routes/merchAnalytics');
 
 // Configure event emitter
 EventEmitter.defaultMaxListeners = 20;
@@ -79,10 +80,10 @@ app.use('/api', teamRoutes);
 app.use('/dashboard', dashRoutes);
 app.use('/api/uploadcsv', uploadCsv);
 app.use('/api/feedback', feedback);
-app.use('/api', questionsRouter);
-app.use('/api', techpedResult);
+// app.use('/api', questionsRouter);
+// app.use('/api', techpedResult);
 // app.use('/api', scoreRouter);
-app.use('/api', checkAttemptRouter);
+// app.use('/api', checkAttemptRouter);
 app.use('/api/centre', uploadCSVRouter);
 app.use('/api/cityreps', cityRepRoutes);
 app.use('/api', CityStudentCount);
@@ -91,7 +92,8 @@ app.use('/api/cityrep_portal', Cityrepportal);
 app.use('/api', contestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', centerListRoutes);
-
+app.use('/api/technopedia', technopediaRoutes);
+app.use('/api/merch', merchAnalyticsRoutes);
 // Root route
 app.get('/', (req, res) => {
     res.send("Hello from Technothlon Server");

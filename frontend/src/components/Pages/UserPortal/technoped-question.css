@@ -83,13 +83,29 @@ input{
     display: flex;
     flex-direction: row;
 }
-.nav-btn{
-    background-color:rgb(146, 146, 197);
-    margin-right:20px;
-   margin-top:5px;
-cursor:pointer;
-color:white;
-    height:30px;
+.technoped-question-back-btn {
+    background-color: #2563eb;
+    margin-right: 20px;
+    margin-top: 5px;
+    cursor: pointer;
+    color: white;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    padding: 0 18px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+.technoped-question-back-btn:disabled {
+    background-color: #b3c6f7;
+    color: #f4f4f4;
+    cursor: not-allowed;
+}
+.technoped-question-back-btn:hover:not(:disabled) {
+    background-color: #1746a0;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
 }
 #nav-btn1{
     margin-left:30px;

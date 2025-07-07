@@ -359,7 +359,7 @@ router.get('/contest/questions/:id', async (req, res) => {
 router.get('/contest/leaderboard', async (req, res) => {
     try {
         // First check if leaderboard should be shown
-        const announcement = await Announcement.findOne({ id: 4 });
+        const announcement = await Announcement.findOne({ id: 1 });
         if (!announcement) {
             return res.status(403).json({ 
                 message: 'Leaderboard is not yet available',

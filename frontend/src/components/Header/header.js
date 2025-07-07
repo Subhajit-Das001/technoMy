@@ -37,6 +37,15 @@ function Header() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  const handleMerchNavClick = async () => {
+    try {
+      await axios.post(`${baseURL}merch/navclick`);
+      // Navigate to merch page
+      window.location.href = '/Technothlon-Merch'; // or use your router
+    } catch (err) {
+      console.error('Error tracking merch nav click:', err);
+    }
+  };
 
   useEffect(() => {
     const checkAnnouncements = async () => {
@@ -98,6 +107,7 @@ function Header() {
           >
             <p>Technopedia</p>
           </Link>
+          
           <Link
             to="/pyp"
             className={`hlinks ${clickedLink === "pyqs" ? "clicked" : ""}`}
@@ -121,6 +131,8 @@ function Header() {
         >
           <p className="registp">Register</p>
         </Link>
+
+        
         <Link
           to="/login"
           className={`hlinkss ${clickedLink === "login" ? "clicked" : ""}`}
@@ -128,6 +140,13 @@ function Header() {
         >
           <p>Login</p>
         </Link>
+        <Link
+            to="/Technothlon-Merch"
+            className={`hlinks merch-highlight ${clickedLink === "merch" ? "clicked" : ""}`}
+            onClick={handleMerchNavClick}
+          >
+            <p>TechnoMerch</p>
+          </Link>
         
         {showContest  && (
           <Link

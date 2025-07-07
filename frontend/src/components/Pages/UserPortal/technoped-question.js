@@ -262,8 +262,8 @@ const TechnopedQuestion = ({ rollNumber }) => {
             <div className='question-list-wrapper'>
                 {renderQuestions()}
                 <div>
-                    <button className='nav-btn' onClick={handlePrevQuestion} disabled={current === 0}>Previous</button>
-                    <button className='nav-btn' onClick={handleNextQuestion} disabled={current === questions.length - 1}>Next</button>
+                    <button className='technoped-question-back-btn' onClick={handlePrevQuestion} disabled={current === 0}>Previous</button>
+                    <button className='technoped-question-back-btn' onClick={handleNextQuestion} disabled={current === questions.length - 1}>Next</button>
                     <button className='end-btn' onClick={handleEndExam}>END</button>
                 </div>
             </div>

@@ -16,6 +16,10 @@ const offlineTeamSchema = new mongoose.Schema(
         state: { type: String, required: true },
         city: { type: String, required: true },
         view: { type: String, required: true, default: 'school' },
+        center: { 
+        type: String, 
+        default: "Indian Institute of Technology Guwahati, Guwahati 781039, Assam, India" 
+    },
         rollNumber: { type: String },
         password: { type: String, required: true },
         isPaid: { type: Boolean, default: false },

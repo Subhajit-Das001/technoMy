@@ -1,0 +1,241 @@
+/* Technopedia Question Container */
+.technopedia-question-container {
+  min-height: 100vh;
+  background: #f5f5dc; /* Beige background */
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Question Header */
+.technopedia-question-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.technopedia-back-button {
+  background: #8B4513; /* Saddle brown color */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+}
+
+.technopedia-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.4);
+  background: #A0522D; /* Darker brown on hover */
+}
+
+.technopedia-back-button span {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Hide mood container and timer - removed */
+.technopedia-mood-container,
+.technopedia-no-timer {
+  display: none;
+}
+
+/* Question Content */
+.technopedia-question-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  position: relative;
+  border: 2px solid #8B4513; /* Saddle brown border */
+}
+
+.technopedia-question-content::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 4px;
+  background: #8B4513; /* Saddle brown top border */
+  border-radius: 16px 16px 0 0;
+}
+
+/* Question Title */
+.technopedia-question-title {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #eef2f7;
+  text-align: center;
+}
+
+/* Points Display */
+.technopedia-points {
+  display: inline-block;
+  background: #8B4513; /* Saddle brown color */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+}
+
+
+
+/* Question Text */
+.technopedia-question-text {
+  background: #f8fafc;
+  padding: 28px;
+  border-radius: 12px;
+  border-left: 6px solid #8B4513; /* Saddle brown left border */
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #2c3e50;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Answer Section */
+.technopedia-answer-section {
+  background: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  border: 2px solid #e1e8ef;
+  margin-top: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.technopedia-answer-section label {
+  display: block;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.technopedia-answer-section input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e1e8ef;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.technopedia-answer-section input:focus {
+  outline: none;
+  border-color: #8B4513; /* Saddle brown focus border */
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+.technopedia-answer-section input:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Submit Button */
+.technopedia-submit-button {
+  background: #8B4513; /* Saddle brown color */
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+  width: 100%;
+}
+
+.technopedia-submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+  background: #A0522D; /* Darker brown on hover */
+}
+
+.technopedia-submit-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.technopedia-submit-button.submitted {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Error Message */
+.technopedia-error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  border: 1px solid #f5c6cb;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .technopedia-question-container {
+    padding: 12px;
+  }
+  
+  .technopedia-question-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .technopedia-question-content {
+    padding: 20px;
+    margin: 0;
+  }
+  
+  .technopedia-question-title {
+    font-size: 1.4rem;
+  }
+  
+  .technopedia-question-text {
+    padding: 20px;
+    font-size: 1rem;
+  }
+  
+  .technopedia-answer-section {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .technopedia-mood-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .technopedia-question-title {
+    font-size: 1.2rem;
+  }
+  
+  .technopedia-points {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}

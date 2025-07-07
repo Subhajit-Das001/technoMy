@@ -5,25 +5,50 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
-.user-main{
-  width:100vw;
+
+.user-main {
+  width: 100vw;
   display: flex;
   flex-direction: row;
-  height:100vh;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
-.user-side{
+
+.user-side {
   display: flex;
   flex-direction: column;
-  height:105vh;
+  height: 100vh;
   color: black;
   background-color: #223438;
-  transition: 0.5s;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  width: 280px;
+  position: relative;
 }
-.user-disp{
+
+.user-side.sidebar-closed {
+  width: 80px;
+}
+
+.user-side.sidebar-open {
+  width: 280px;
+}
+
+.user-disp {
   display: flex;
   height: 100vh;
+  flex: 1;
+  overflow: auto;
+  transition: all 0.3s ease;
 }
-.blue-techno{
+
+.user-disp.fullscreen {
+  width: 100vw;
+  margin-left: 0;
+}
+
+.blue-techno {
   width: 100%;
   height: 8%;
   display: flex;
@@ -31,103 +56,302 @@
   justify-content: center;
   align-items: center;
   background-color: white;
+  min-height: 60px;
 }
 
-.techno-img{
-  width:100%;
+.blue-techno img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.side-panel-wrapper {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
-.techno-img img{
-  width:auto;
-  height: 80%;
-  border-radius: 1000px;
-  margin: 10px 0px;
-}
-.page-cont{
-  width:100%;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-}
-.nav{
-  width:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  color: rgba(255, 255, 255, 0.741);
-  margin-bottom: 5%;
-  font-weight: 600;
-  font-size: calc(.7em + 1vh);
-  background-color: #1c2a2dca;
-}
-.Profile,
-.Updates,
-.Results,
-.Technopedia,
-.SignOut {
+
+.techno-img {
   width: 100%;
-  height:10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.techno-owl-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.sidebar-closed .techno-owl-img {
+  width: 50px;
+  height: 50px;
+}
+
+.page-cont {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.navLi {
+  width: 100%;
+  height: 50px;
   display: flex;
   flex-direction: row;
-  justify-content:left;
+  justify-content: flex-start;
   align-items: center;
   color: white;
-  margin: 5px 0px;
-  font-size: calc(.7em + .8vw);
+  margin: 3px 0;
+  font-size: 16px;
+  min-height: 50px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0 20px;
 }
+
+.sidebar-closed .navLi {
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.navLi img {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.sidebar-closed .navLi img {
+  margin-right: 0;
+}
+
+.nav-text {
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar-closed .nav-text {
+  display: none;
+}
+
 .active {
-  border-left: 5px solid green;
-  background-color: #152022ca;
-  color:rgba(255, 255, 255, 0.588);
+  border-left: 5px solid #4CAF50;
+  background-color: #1a2a2e;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.navLi , .active{
-  cursor: pointer;
-}
-.SignOut img , .navLi img{
-  width:25px;
-}
-.navLi:hover{
-  background-color: #333e41ca;
-  border-left: 5px solid rgba(0, 128, 0, 0.685);
-}
-.hamburger-lines svg{
-  width: 30px;
-  cursor: pointer;
-}
-.hamburger-lines svg:hover{
-  stroke: black;
-}
-.hamburger-lines{
-  margin: 10px;
+.navLi:hover {
+  background-color: #2c3e41;
+  border-left: 5px solid rgba(76, 175, 80, 0.7);
+  transform: translateX(2px);
 }
 
-@media screen and (max-width:750px) {
+.sidebar-closed .navLi:hover,
+.sidebar-closed .active {
+  border-left: none;
+  border-radius: 8px;
+  transform: scale(1.05);
+}
+
+/* Desktop hamburger button */
+.desktop-hamburger {
+  position: absolute;
+  right: -15px;
+  top: 15px;
+  z-index: 1001;
+  cursor: pointer;
+  padding: 8px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop-hamburger:hover {
+  background: #f5f5f5;
+  transform: scale(1.1);
+}
+
+.desktop-hamburger svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile hamburger button */
+.hamburger-menu-button {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1002;
+  cursor: pointer;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-menu-button:hover {
+  background: #f5f5f5;
+  transform: scale(1.05);
+}
+
+.hamburger-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 750px) {
+  .user-side.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    width: 280px;
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
   
-  .nav{
+  .user-side.mobile-sidebar.sidebar-open {
+    left: 0;
+  }
+  
+  .user-side.mobile-sidebar.sidebar-closed {
+    left: -100%;
+    width: 280px; /* Keep consistent width on mobile */
+  }
+  
+  .user-disp.mobile-content {
+    width: 100vw;
+    margin-left: 0;
+  }
+  
+  .desktop-hamburger {
     display: none;
   }
+  
+  .techno-owl-img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .navLi {
+    padding: 0 25px;
+    height: 55px;
+    font-size: 15px;
+  }
+  
+  .navLi img {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .nav-text {
+    font-size: 15px;
+  }
+}
 
-  .SignOut , .navLi{
-    font-size: calc(.5em + .5vw);
+@media screen and (max-width: 480px) {
+  .user-side.mobile-sidebar {
+    width: 260px;
   }
-  .SignOut img , .navLi img{
-    width:15px;
+  
+  .hamburger-menu-button {
+    top: 10px;
+    left: 10px;
+    padding: 8px;
   }
-}
-@media screen and  (max-width:450px) {
-  .user-side{
-    width:30vw;
-}
+  
+  .hamburger-icon {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .techno-owl-img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .navLi {
+    padding: 0 20px;
+    height: 50px;
+    font-size: 14px;
+  }
+  
+  .navLi img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+  }
+  
+  .nav-text {
+    font-size: 14px;
+  }
+  
   .active {
-    border-left: 2px solid green;
+    border-left: 3px solid #4CAF50;
   }
-  .navLi:hover{
-    border-left: 2px solid rgba(0, 128, 0, 0.685);
+  
+  .navLi:hover {
+    border-left: 3px solid rgba(76, 175, 80, 0.7);
+  }
+}
+
+/* Hide desktop hamburger on mobile */
+@media screen and (max-width: 750px) {
+  .hamburger-lines {
+    display: none;
+  }
+}
+
+/* Ensure proper spacing and layout */
+.Profile, .Updates, .Results, .Chess, .AdmitCard, .SignOut {
+  /* These individual classes are now handled by the generic .navLi class */
+}
+
+/* Smooth animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }

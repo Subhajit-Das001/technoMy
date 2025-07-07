@@ -162,13 +162,44 @@ const Profile = () => {
             </div>
           </div>
           {isEditing ? (
-            <button onClick={handleSaveClick}>Save</button>
+            <button 
+              onClick={handleSaveClick}
+              style={{
+                background: '#2563eb',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                padding: '0.5rem 1.2rem',
+                fontWeight: 600,
+                fontSize: '1rem',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(34, 52, 56, 0.08)'
+              }}
+            >
+              Save
+            </button>
           ) : (
-            <button onClick={handleEditClick}>Update Info</button>
-          // <button type="button" onClick={handleSaveClick} class="text-blue-700  bg-blue-100 hover:text-white border border-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-          //   Save</button>):(
-          //   <button type="button" onClick={handleEditClick}  class="text-blue-700  bg-blue-100 hover:text-white border border-blue-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-          //   Update Info</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <button 
+                onClick={handleEditClick}
+                style={{
+                  background: '#2563eb',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '0.5rem 1.2rem',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(34, 52, 56, 0.08)'
+                }}
+              >
+                Update Info
+              </button>
+              <span style={{ color: 'red', fontWeight: 500, fontSize: '1.08rem',  }}>
+                Update your email and phone number in the 'Update Info' section. Both teammates must provide correct and unique details to receive contest updates, admit cards, and certificates.
+              </span>
+            </div>
           )}
         </div>
         <div className='pwd-change-wrapper'>

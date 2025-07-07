@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import Home from './components/Pages/Home/home';
 import Pyp from './components/Pages/Pyp/Pyp';
-import Technopedia from './components/Pages/Technopedia/technopedia';
+// import Technopedia from './components/Pages/Technopedia/technopedia';
 import AboutUs from './components/Pages/AboutUs/aboutus';
 import ContactUs from './components/Pages/ContactUs/contactus';
 
@@ -36,8 +36,12 @@ import Registration from './components/Pages/SchoolRegister/Registration'
 import Contestlogin from './components/Pages/Contest/contest_login';
 import Contest from './components/Pages/Contest/Contest';
 import Question from './components/Pages/Contest/question';
+import TechnopediaLogin from './components/Pages/Technopedia/technopedia_login';
+import Technopedia from './components/Pages/Technopedia/technopedia';
+import TechnopediaQuestion from './components/Pages/Technopedia/technopedia-question';
 
 import CenterTable from './components/Pages/Center/CenterTable';
+import Merch from './components/Pages/Merch/merch';
 
 const AppRoutes = () => {
   return (
@@ -88,6 +92,10 @@ const AppRoutes = () => {
       <Route path="/contest/:id/:letter" element={<Question />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/center-list" element={<CenterTable />} />
+      <Route path="/technopedia-login" element={<TechnopediaLogin />} />
+      <Route path="/technopedia" element={<Technopedia />} />
+      <Route path="/techno/:id/:letter" element={<TechnopediaQuestion />} />
+      <Route path="/Technothlon-Merch" element={<Merch/>} />
 
        </Routes>
   );

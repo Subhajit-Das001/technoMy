@@ -27,11 +27,11 @@ const Updates = () => {
     <div className="heading-banner">General Instructions</div>
     {/* <img src={techno} alt="Technothlon Owl" className="instructions-image" /> */}
     <div className="updates-content-wrapper">
-      <div className="updates-content-heading">TECHNOTHLON 2024 UPDATES</div>
+      <div className="updates-content-heading">TECHNOTHLON 2025 UPDATES</div>
       <div className="updates-contents">
         <ul>
-          <li>Results declared by our team are final; no re-evaluation queries will be entertained.</li>
-          <li>If you spot an error in any questions, email us at technothlon.iitg@gmail.com or technothlon@iitg.ac.in.</li>
+        <li>Admit Card is now available. Please check your examination centre and download your admit card at the earliest.</li>
+        <li>If you spot an error in any questions, email us at technothlon.iitg@gmail.com or technothlon@iitg.ac.in.</li>
           <li>For technical issues with result access, contact our team promptly.</li>
           <li>Stay tuned! Follow our social media handles for more updates. Good luck, champs!</li>
         </ul>

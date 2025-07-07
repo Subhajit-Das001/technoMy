@@ -25,6 +25,10 @@ const OnlineteamModel = mongoose.Schema(
             enum: ['North', 'South', 'East', 'West', 'Unknown'],
             required: true 
         },
+        center: { 
+        type: String, 
+        default: "Indian Institute of Technology Guwahati, Guwahati 781039, Assam, India" 
+    },
         view:{type: String, require: true},
         cityrepID: { type: String },
         rollNumber: { type: String },
