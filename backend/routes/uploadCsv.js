@@ -127,17 +127,12 @@ router.post('/login', async (req, res) => {
     let user = null;
 
 
-    user = await UploadOffTeam.findOne({ roll });
+    user = await Offline25.findOne({ rollNumber: roll });
 
     if (!user) {
       user = await Onlinereg.findOne({ rollNumber: roll });
     }
-    if (!user) {
-      user = await Offline25.findOne({ rollNumber: roll });
-    }
-    if (!user) {
-      user = await Teams.findOne({ rollNumber: roll });
-    }
+
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -190,13 +185,13 @@ router.get('/user', verifyToken, async (req, res) => {
       user = await Offline25.findOne({ rollNumber: roll });
     }
 
-    if (!user) {
-      user = await Teams.findOne({ roll });
-    }
+    // if (!user) {
+    //   user = await Teams.findOne({ roll });
+    // }
 
-    if (!user) {
-      user = await UploadOffTeam.findOne({ roll });
-    }
+    // if (!user) {
+    //   user = await UploadOffTeam.findOne({ roll });
+    // }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
