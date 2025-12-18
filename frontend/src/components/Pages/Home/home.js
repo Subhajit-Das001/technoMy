@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import  HeroImg  from "./HeroImgD.png"
 import Header from "../../Header/header"; 
 import Footer from "../../Footer/footer";
-import HautsTheme from "../../Assets/img/Hautstheme.png";
-import JuniorTheme from "../../Assets/img/Juniorstheme.png";
+import HautsTheme from "../../Assets/img/httyd.png";
+import JuniorTheme from "../../Assets/img/ht.png";
 import Prize1 from "../../Assets/img/prizes1.png";
 import Prize2 from "../../Assets/img/prizes2.png";
 import Prize3 from "../../Assets/img/prizes3.png";
@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>The wait is over! Admit Card for Technothlon 2025 is live now!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>The wait is over! Registration for Technothlon 2026 is live now!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
@@ -127,25 +127,23 @@ prizeImages.forEach(img => {
 <div className='events'>
           <Events/>
           </div>
-          <div className="partners-section">
+          {/* <div className="partners-section">
   <h4 className="partners-title">Our Official Partners for Technothlon 2025</h4>
   <div className="partners-list">
     <a href="https://www.ednite.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
       <img src={Ednite} alt="EdNite Logo" className="partner-logo" />
       <div className="partner-info">
-        {/* <div className="partner-name">EdNite</div> */}
         <div className="partner-role">Academic Partner</div>
       </div>
     </a>
     <a href="https://www.trexed.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
       <img src={TREX} alt="TReX Logo" className="partner-logo" />
       <div className="partner-info">
-        {/* <div className="partner-name">TReX</div> */}
         <div className="partner-role">Organising Partner</div>
       </div>
     </a>
   </div>
-</div>
+</div> */}
 
 
       <h4 className="h4-updates">RECENT UPDATES</h4>
@@ -155,19 +153,19 @@ prizeImages.forEach(img => {
             <img src={IITG} alt="IIT Guwahati Icon" />
           </div>
           <div className="update-card-content">
-            <div style={{fontWeight: 'bold'}}>Admit card are out!</div>
-            <div>Check now your center</div>
+            <div style={{fontWeight: 'bold'}}>Certificates are out!</div>
+            <div>Download now </div>
           </div>
         </a>
-        {/* <a href="/technopedia-login" className="update-card">
-          <div className="update-card-icon u1">
+        <a href="/technopedia-login" className="update-card">
+          <div className="update-card-icon ">
             <img src={Technoped} alt="Technopedia Icon" />
           </div>
           <div className="update-card-content">
             <div style={{fontWeight: 'bold'}}>Technopedia is available now.</div>
             <div>So check your IQ level!</div>
           </div>
-        </a> */}
+        </a>
       </div>
     </div>
     <div className="parent-1">

@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const Onlinereg = require('../models/onlineReg');
+const Onlinereg = require('../models/online26');
 const NewStudent = require('../models/newStudent');
 const cityToID = require('../utils/cityToID.json');
 require('dotenv').config();
@@ -15,97 +15,63 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
     auth: {
-        user: 'technothloniitg@gmail.com',
+        user: 'technothlon.iitg@gmail.com',
         pass: process.env.SENDER_PASSWORD
     },
 });
+
+// Helper function to format Date to DDMMYYYY
+const formatDateForPassword = (dateInput) => {
+    const d = new Date(dateInput);
+    // Add 5.5 hours to shift UTC back to Indian Time
+    d.setTime(d.getTime() + (5.5 * 60 * 60 * 1000));
+    
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const year = d.getUTCFullYear();
+    
+    return `${day}${month}${year}`;
+};
 
 const TeamController = {
     createTeam: async (req, res) => {
         try {
             const { email1, email2, contact1, contact2, state } = req.body;
 
-            // Check if either student exists in NewStudent collection
-            const matchingStudent1 = await NewStudent.findOne({
-                $or: [
-                    { email: email1 },
-                    { contact: contact1 }
-                ]
-            });
+            // 1. Check NewStudent registration (same as before)
+            const matchingStudent1 = await NewStudent.findOne({ $or: [{ email: email1 }, { contact: contact1 }] });
+            const matchingStudent2 = await NewStudent.findOne({ $or: [{ email: email2 }, { contact: contact2 }] });
 
-            const matchingStudent2 = await NewStudent.findOne({
-                $or: [
-                    { email: email2 },
-                    { contact: contact2 }
-                ]
-            });
+            if (matchingStudent1) await NewStudent.findByIdAndUpdate(matchingStudent1._id, { registered: true });
+            if (matchingStudent2) await NewStudent.findByIdAndUpdate(matchingStudent2._id, { registered: true });
 
-            // Update registration status for matching students
-            if (matchingStudent1) {
-                await NewStudent.findByIdAndUpdate(
-                    matchingStudent1._id,
-                    { registered: true },
-                    { new: true }
-                );
-                console.log(`Updated NewStudent registration status for student 1: ${matchingStudent1.email}`);
-            }
-
-            if (matchingStudent2) {
-                await NewStudent.findByIdAndUpdate(
-                    matchingStudent2._id,
-                    { registered: true },
-                    { new: true }
-                );
-                console.log(`Updated NewStudent registration status for student 2: ${matchingStudent2.email}`);
-            }
-
-            // Add zone based on state
+            // 2. Prepare Data
             const zone = getZone(state);
             
-            // Create a new team document with zone
+            // 3. Create Team WITHOUT Roll Number or Password
+            // Ensure your Mongoose Schema allows rollNumber and password to be optional/null initially
             const newTeam = new Onlinereg({
                 ...req.body,
-                zone
+                zone,
+                isPaid: false,
+                rollNumber: null, // Placeholder
+                password: null    // Placeholder
             });
-            const City = newTeam.city;
-            const cityID = cityToID[City];
 
-             // If found, update their registered status
-            
-            // Update city info with student count
-            const cityInfo = await CityStudentCount.findOneAndUpdate(
-                { cityID },
-                { $set: { city: City }, $inc: { studentCount: 1 } },
-                { new: true, upsert: true }
-            );
+            // 4. Save the "Draft" Team
+            const savedTeam = await newTeam.save();
 
-           
+            // 5. Generate Payment URL using the Database ID (_id) instead of RollNumber
+            // We pass the unique _id so we can find them later in handlePayment
+            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=268933&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
 
+            // Return the _id (registrationId) to frontend so it can handle the redirect
+            res.status(201).json({ 
+                message: "Team registered successfully. Proceed to payment.", 
+                registrationId: savedTeam._id, 
+                paymentUrl: paymentPortalURL 
+            });
 
-            // Generate roll number
-            const rollNumber = generateRollNumber(newTeam.squad, newTeam.language, newTeam.city, cityInfo.studentCount);
-            newTeam.rollNumber = rollNumber;
-
-            // Save the team to the database
-            await newTeam.save();
-
-            // Send an email to the team members with the payment portal link
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=262881&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${rollNumber}&theme=1&t=1`;
-
-            // await transporter.sendMail({
-            //     from: '"Technothlon" <technothloniitg@gmail.com>',
-            //     to: [email1, email2],
-            //     subject: 'Complete your payment',
-            //     html: `
-            //         <p>Hey Champs!</p>
-            //         <p>We appreciate your interest in registering for Technothlon '25.</p>
-            //         <p>You will be redirected to the payment portal automatically. If not, click <a href="${paymentPortalURL}">here</a> to complete the payment.</p>
-            //         <p><strong>Warm regards,</strong></p>
-            //         <p>Team Technothlon</p>
-            //     `
-            // });
-
-            res.status(201).json({ message: "Team created successfully", rollNumber });
         } catch (error) {
             console.error("Error creating team:", error);
             res.status(500).json({ error: error.message });
@@ -114,63 +80,97 @@ const TeamController = {
 
     handlePayment: async (req, res) => {
         try {
-            const { rollNumber, paymentStatus } = req.body;
+            const { registrationId, paymentStatus } = req.body;
 
-            // Find the team by roll number
-            const team = await Onlinereg.findOne({ rollNumber });
+            const team = await Onlinereg.findById(registrationId);
 
             if (!team) {
                 return res.status(404).json({ error: "Team not found" });
             }
 
-            // Handle payment failure
-            if (paymentStatus !== "success") {
-                await transporter.sendMail({
-                    from: '"Technothlon" <technothloniitg@gmail.com>',
-                    to: [team.email1],
-                    subject: "Payment Unsuccessful",
-                    html: `
-                        <p>Hey Champs!</p>
-                        <p>Your payment for Technothlon '25 was not processed successfully. Please retry or contact us if the payment is reflected on your bank account.</p>
-                        <p>Warm regards,</p>
-                        <p>Team Technothlon</p>
-                    `
+            // Idempotency check
+            if (team.isPaid) {
+                return res.status(200).json({ 
+                    message: "Already paid", 
+                    rollNumber: team.rollNumber,
+                    password: team.password 
                 });
+            }
 
+            if (paymentStatus !== "success") {
+                // ... (Keep your payment failure logic here)
                 return res.status(400).json({ error: "Payment failed" });
             }
 
-            // Update the team to set isPaid to true
-            const updatedTeam = await Onlinereg.findOneAndUpdate(
-                { rollNumber },
-                { isPaid: true },
+            // --- PAYMENT SUCCESSFUL ---
+
+            // 1. Increment Student Count
+            const cityID = cityToID[team.city];
+            const cityInfo = await CityStudentCount.findOneAndUpdate(
+                { cityID },
+                { $set: { city: team.city }, $inc: { studentCount: 1 } },
+                { new: true, upsert: true }
+            );
+
+            // 2. Generate Credentials
+            const rollNumber = generateRollNumber(team.squad, team.language, team.city, cityInfo.studentCount);
+            
+            const pass1 = formatDateForPassword(team.dob1);
+            const pass2 = formatDateForPassword(team.dob2);
+            const generatedPassword = `${pass1}${pass2}`;
+
+            // 3. Update Database (CRITICAL STEP)
+            const updatedTeam = await Onlinereg.findByIdAndUpdate(
+                registrationId,
+                { 
+                    isPaid: true,
+                    rollNumber: rollNumber,
+                    password: generatedPassword
+                },
                 { new: true }
             );
 
-            if (!updatedTeam) {
-                return res.status(500).json({ error: "Failed to update payment status" });
-            }
-
-            // Send a confirmation email
-            await transporter.sendMail({
-                from: '"Technothlon" <technothloniitg@gmail.com>',
-                to: [team.email1, team.email2],
-                subject: "Registration Confirmation for Technothlon '25",
-                html: `
-                    <p>Hey Champs!</p>
-                    <p>Your registration for Technothlon '25 has been successfully confirmed.</p>
-                    <p><strong>Your roll number is: ${team.rollNumber}</strong></p>
-                    <p>Follow the Technothlon - IIT Guwahati channel on WhatsApp to stay updated: <a href="${whatsapp}">${whatsapp}</a></p>
-                    <p>Warm regards,</p>
-                    <p>Team Technothlon</p>
-                `
+            // 4. Send Response to Frontend IMMEDIATELY
+            // We prepare the response here so the user gets their data no matter what happens next.
+            res.status(200).json({ 
+                success: true, 
+                rollNumber: updatedTeam.rollNumber,
+                password: updatedTeam.password
             });
 
-            // Redirect the user to the confirmation page
-            res.redirect(`${redirectUrl}/confirmPayment/${rollNumber}`);
+            // 5. Send Email in the BACKGROUND (Independent Step)
+            // We use a separate try-catch so email errors don't crash the server or stop the response
+            try {
+                await transporter.sendMail({
+                    from: '"Technothlon" <technothlon.iitg@gmail.com>',
+                    to: [team.email1, team.email2],
+                    subject: "Registration Confirmation for Technothlon '25",
+                    html: `
+                        <div style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2 style="color: #4CAF50;">Registration Successful!</h2>
+                            <p>Hey Champs!</p>
+                            <p>Your registration for Technothlon '25 has been confirmed.</p>
+                            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                                <p><strong>Roll Number:</strong> ${updatedTeam.rollNumber}</p>
+                                <p><strong>Password:</strong> ${updatedTeam.password}</p>
+                            </div>
+<p><em>(Your password is a fixed combination of your birth dates in DDMMYYYY format and cannot be changed later.)</em></p>                            <p>Follow us on WhatsApp: <a href="${whatsapp}">Join Channel</a></p>
+                            <p>Warm regards,<br>Team Technothlon</p>
+                        </div>
+                    `
+                });
+                console.log(`Email sent successfully to ${team.email1}`);
+            } catch (emailError) {
+                // Log the error for you to fix later, but DO NOT stop the process
+                console.error("⚠️ Email Failed to Send (But Registration is Complete):", emailError.message);
+            }
+
         } catch (error) {
-            console.error("Error handling payment:", error);
-            res.status(500).json({ error: "Internal server error" });
+            console.error("Critical Error handling payment:", error);
+            // This only catches database errors now, not email errors
+            if (!res.headersSent) {
+                res.status(500).json({ error: "Internal server error" });
+            }
         }
     }
 };

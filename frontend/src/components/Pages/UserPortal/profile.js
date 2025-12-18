@@ -202,7 +202,7 @@ const Profile = () => {
             </div>
           )}
         </div>
-        <div className='pwd-change-wrapper'>
+        {/* <div className='pwd-change-wrapper'>
           <div className='pwd-change-heading'>Change Password</div>
           <div className='pwd-change-form'>
             <form onSubmit={handlePasswordChange}>
@@ -242,7 +242,7 @@ const Profile = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div> */}
         {updateError && <div className='error-message'>{updateError}</div>}
         {successMessage && <div className='success-message'>{successMessage}</div>}
       </div>

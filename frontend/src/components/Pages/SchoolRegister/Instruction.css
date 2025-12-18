@@ -1,9 +1,6 @@
 /* Base styles */
 .instruction-btn {
-  /* background-color: #007bff; */
- background-color: #707070;
-  
-
+  background-color: #707070;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -19,7 +16,7 @@
 
 /* Instruction panel styles */
 .reg-instr {
-  position:fixed;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -31,30 +28,16 @@
   max-width: 600px;
   z-index: 1000;
   display: none;
-  overflow-y: auto; /* Enable scrolling */
-
+  overflow-y: auto;
+  max-height: 85vh; /* Increased slightly to fit checkboxes */
 }
 
 @media (max-width: 768px) {
   .reg-instr {
-      position: fixed;
-      top: 60%; /* Keep it centered vertically */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 20px;
-      width: 90%;
-      max-width: 600px;
-      z-index: 1000;
-      display: none;
-      overflow-y: auto; /* Enable scrolling */
-      max-height: 80vh; /* Limit height for mobile screens */
+    top: 50%; /* Adjusted for better mobile center */
+    max-height: 80vh;
   }
 }
-
-
 
 .reg-instr.expanded {
   display: block;
@@ -67,7 +50,7 @@
 }
 
 .reg-instr ul {
-  padding: 0;
+  padding: 0 20px; /* Added padding for better bullet alignment */
   list-style-type: disc;
 }
 
@@ -83,11 +66,77 @@
 .close-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 20px;
   cursor: pointer;
   color: red;
   font-size: 2rem;
+  line-height: 1;
+}
+
+/* --- NEW STYLES FOR CHECKBOXES --- */
+
+.checkbox-section {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.req {
+  color: red;
+  font-weight: bold;
+  margin-left: 3px;
+}
+
+.action-area {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.proceed-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* Style when button is disabled */
+.proceed-btn.disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Style when button is active */
+.proceed-btn.active {
+  background-color: #28a745; /* Green */
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.proceed-btn.active:hover {
+  background-color: #218838;
 }

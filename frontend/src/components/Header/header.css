@@ -85,6 +85,7 @@ margin-top: 20px;
   justify-content: center;
   align-items: center;
   padding-left: 5%;
+  gap: 15px;
 }
 .regist{
   background-color: rgb(75, 75, 239);
@@ -101,12 +102,31 @@ margin-top: 20px;
   justify-content: center;
   border-radius:5px;
   font-weight: bold;
- 
+}
 
-  
- 
+.login-btn {
+  background-color: white;
+  color: rgb(75, 75, 239);
+  border: 2px solid rgb(75, 75, 239);
+  text-decoration: none;
+  width: 50%;
+  height: 5vh;
+  min-height: 40px;
+  max-height: 60px;
+  min-width: 100px;
+  max-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-weight: bold;
   
 }
+
+.login-btn p {
+  font-size: calc(.6em + .4vw);
+}
+
 .hlinkss{
   
   width:50%;
@@ -308,12 +328,11 @@ margin-top: 20px;
   .regggg{
     width:30%;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-left: 0%;
-    margin-top: 10%;
-
+    padding-left: 5%;
+    gap: 15px;
   }
   .regist{
     margin-top: 0vh;
@@ -397,5 +416,15 @@ margin-top: 20px;
     font-size: 0.9rem;
     margin: 12px 0;
     border-radius: 16px;
+  }
+  .regggg{
+    width:30%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0%;
+    margin-top: 10%;
+    gap: 15px;
   }
 }

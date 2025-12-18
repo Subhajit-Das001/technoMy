@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const csv = require('csvtojson');
 const cors = require('cors');
-const UploadOffTeam = require('../models/offTeaminfo');
+// const UploadOffTeam = require('../models/offTeaminfo');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const cityToID = require('../utils/cityToID.json');
@@ -20,8 +20,10 @@ const bodyParser = require('body-parser');
 const pdfTemplate = require('./document.js');
 const path = require('path');
 const Teams = require('../models/teamModel.js');
-const Onlinereg = require("../models/onlineReg.js")
-const Offline25 = require("../models/Offline25.js")
+const Online25=require('../models/online25');
+const Offline25=require('../models/Offline25');
+const Online26 = require('../models/online26');
+const Offline26=require('../models/offline26');
 const { parse } = require('json2csv');
 const Cityrep_portal = require('../models/cityrep_portal.js');
 const CityRep_portal = require('../models/cityrep_portal.js');
@@ -66,7 +68,7 @@ router.use(cors(corsOptions));
 const EXPECTED_COLUMNS = [
   'name1', 'email1', 'contact1', 'school1',
   'name2', 'email2', 'contact2', 'school2',
-  'squad', 'language', 'city','state'
+  'squad', 'language', 'city','state','centre'
 ];
 
 // Update the upload configuration
@@ -125,14 +127,17 @@ router.post('/login', async (req, res) => {
 
   try {
     let user = null;
-
-
     user = await Offline25.findOne({ rollNumber: roll });
 
     if (!user) {
-      user = await Onlinereg.findOne({ rollNumber: roll });
+      user = await Online25.findOne({ rollNumber: roll });
     }
-
+     if (!user) {
+      user = await Online26.findOne({ rollNumber: roll });
+    }
+     if (!user) {
+      user = await Offline26.findOne({ rollNumber: roll });
+    }
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -144,7 +149,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ roll: User, source: user.source || 'Onlinereg' }, process.env.KEY, { expiresIn: '7h' });
+    const token = jwt.sign({ roll: User, source: user.source || 'Online25' }, process.env.KEY, { expiresIn: '7h' });
     res.cookie('token', token, { maxAge: 3600000 });
     return res.json({ status: true, message: "Login successful" });
 
@@ -179,10 +184,16 @@ router.get('/user', verifyToken, async (req, res) => {
 
   try {
     let user = null;
-    user = await Onlinereg.findOne({ rollNumber: roll });
+    user = await Online25.findOne({ rollNumber: roll });
 
     if (!user) {
       user = await Offline25.findOne({ rollNumber: roll });
+    }
+     if (!user) {
+      user = await Online26.findOne({ rollNumber: roll });
+    }
+     if (!user) {
+      user = await Offline26.findOne({ rollNumber: roll });
     }
 
     // if (!user) {
@@ -212,54 +223,46 @@ router.get('/logout', (req, res) => {
 
 
 
-router.post('/change-password', verifyToken, async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-  const { roll } = req;
+// router.post('/change-password', verifyToken, async (req, res) => {
+//   const { oldPassword, newPassword } = req.body;
+//   const { roll } = req;
 
-  try {
-    let user = await Onlinereg.findOne({ rollNumber: roll });
+//   try {
+//     let user = await Online25.findOne({ rollNumber: roll });
 
-    if (!user) {
-      user = await Offline25.findOne({ rollNumber: roll });
-    }
-    if (!user) {
-      user = await Teams.findOne({ roll });
-    }
-    if (!user) {
-      user = await UploadOffTeam.findOne({ roll });
-    }
+//     if (!user) {
+//       user = await Offline25.findOne({ rollNumber: roll });
+//     }
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    // Ensure the new password is unique
-    if (oldPassword === newPassword) {
-      return res.status(400).json({ message: "New password must be different from the old password" });
-    }
+//     // Ensure the new password is unique
+//     if (oldPassword === newPassword) {
+//       return res.status(400).json({ message: "New password must be different from the old password" });
+//     }
 
-    // Direct comparison for both models
-    if (oldPassword !== user.password) {
-      return res.status(401).json({ message: "Incorrect old password" });
-    }
+//     // Direct comparison for both models
+//     if (oldPassword !== user.password) {
+//       return res.status(401).json({ message: "Incorrect old password" });
+//     }
+//     user.password = newPassword;
+//     await user.save();
 
-    user.password = newPassword;
-
-    await user.save();
-
-    res.status(200).json({ message: "Password changed successfully" });
-  } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+//     res.status(200).json({ message: "Password changed successfully" });
+//   } catch (error) {
+//     console.error('Error changing password:', error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
 
 router.post('/update-details', verifyToken, async (req, res) => {
   const { email1, contact1, email2, contact2 } = req.body;
   const { roll } = req;
 
   try {
-    let user = await Onlinereg.findOne({ rollNumber: roll });
+    let user = await Online25.findOne({ rollNumber: roll });
     if (!user) {
       user = await Offline25.findOne({ rollNumber: roll });
     }
@@ -267,8 +270,11 @@ router.post('/update-details', verifyToken, async (req, res) => {
     if (!user) {
       user = await Teams.findOne({ roll });
     }
-    if (!user) {
-      user = await UploadOffTeam.findOne({ roll });
+     if (!user) {
+      user = await Online26.findOne({ rollNumber: roll });
+    }
+     if (!user) {
+      user = await Offline26.findOne({ rollNumber: roll });
     }
 
     if (!user) {
@@ -290,17 +296,248 @@ router.post('/update-details', verifyToken, async (req, res) => {
 });
 
 router.get('/results', async (req, res) => {
-  const roll = req.query.Roll;
-  console.log(roll);
+  const roll = req.query.rollNumber;
+  console.log('Searching for rollNumber:', roll);
+  
+  if (!roll) {
+    return res.status(400).json({ message: 'rollNumber is required' });
+  }
+  
   try {
-    const result = await results.findOne({ Roll: roll });
-    if (result) {
-      res.status(200).json({ user: result });
+    // First try to find in Offline25 database
+    let user = await Offline25.findOne({ rollNumber: roll });
+    console.log('Offline25 search result:', user ? 'Found' : 'Not found');
+    
+    // If not found in Offline25, try Online25 database
+    if (!user) {
+      user = await Online25.findOne({ rollNumber: roll });
+      console.log('Online25 search result:', user ? 'Found' : 'Not found');
+    }
+    
+    if (user) {
+      console.log('User found with Rank:', user.Rank);
+      console.log('Full user object:', JSON.stringify(user, null, 2));
+      res.status(200).json({ user: user });
+    } else {
+      console.log('No user found for rollNumber:', roll);
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Error in /results route:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Debug route to check if any users have ranks
+router.get('/debug-ranks', async (req, res) => {
+  try {
+    const offlineUsersWithRanks = await Offline25.find({ Rank: { $exists: true, $ne: null } }).limit(5);
+    const onlineUsersWithRanks = await Online25.find({ Rank: { $exists: true, $ne: null } }).limit(5);
+    
+    res.json({
+      offlineUsersWithRanks: offlineUsersWithRanks.length,
+      onlineUsersWithRanks: onlineUsersWithRanks.length,
+      sampleOffline: offlineUsersWithRanks,
+      sampleOnline: onlineUsersWithRanks
+    });
+  } catch (err) {
+    console.error('Error in debug-ranks route:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Test route to set a rank for a specific roll number (for testing purposes)
+router.post('/set-test-rank', async (req, res) => {
+  try {
+    const { rollNumber, rank } = req.body;
+    
+    if (!rollNumber || !rank) {
+      return res.status(400).json({ message: 'rollNumber and rank are required' });
+    }
+    
+    // Try to update in Offline25 first
+    let user = await Offline25.findOneAndUpdate(
+      { rollNumber: rollNumber },
+      { Rank: rank },
+      { new: true }
+    );
+    
+    // If not found in Offline25, try Online25
+    if (!user) {
+      user = await Online25.findOneAndUpdate(
+        { rollNumber: rollNumber },
+        { Rank: rank },
+        { new: true }
+      );
+    }
+    
+    if (user) {
+      res.json({ message: 'Rank updated successfully', user });
     } else {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (err) {
+    console.error('Error setting test rank:', err);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Route to get results table data
+router.get('/results-table', async (req, res) => {
+  try {
+    // Get Top 25 Juniors (squad: 'Juniors')
+    const top25Juniors = await Offline25.find({ 
+      squad: 'Juniors',
+      Rank: { $exists: true, $ne: null, $ne: 'NA' }
+    })
+    .sort({ Rank: 1 })
+    .limit(25)
+    .select('name1 name2 rollNumber Rank city squad')
+    .lean();
+
+    // Get Top 25 Hauts (squad: 'Hauts')
+    const top25Hauts = await Offline25.find({ 
+      squad: 'Hauts',
+      Rank: { $exists: true, $ne: null, $ne: 'NA' }
+    })
+    .sort({ Rank: 1 })
+    .limit(25)
+    .select('name1 name2 rollNumber Rank city squad')
+    .lean();
+
+    // Also check online registrations for both squads
+    const onlineTop25Juniors = await Online25.find({ 
+      squad: 'Juniors',
+      Rank: { $exists: true, $ne: null, $ne: 'NA' }
+    })
+    .sort({ Rank: 1 })
+    .limit(25)
+    .select('name1 name2 rollNumber Rank city squad')
+    .lean();
+
+    const onlineTop25Hauts = await Online25.find({ 
+      squad: 'Hauts',
+      Rank: { $exists: true, $ne: null, $ne: 'NA' }
+    })
+    .sort({ Rank: 1 })
+    .limit(25)
+    .select('name1 name2 rollNumber Rank city squad')
+    .lean();
+
+    // Combine offline and online results and get top 25 for each squad
+    const allJuniors = [...top25Juniors, ...onlineTop25Juniors]
+      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+      .slice(0, 25);
+
+    const allHauts = [...top25Hauts, ...onlineTop25Hauts]
+      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+      .slice(0, 25);
+
+    // Get City Toppers for Juniors (top rank from each city)
+    const cityToppersJuniors = await Offline25.aggregate([
+      { $match: { 
+        squad: 'Juniors',
+        Rank: { $exists: true, $ne: null, $ne: 'NA' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $group: { 
+        _id: '$city', 
+        name1: { $first: '$name1' },
+        name2: { $first: '$name2' },
+        rollNumber: { $first: '$rollNumber' },
+        Rank: { $first: '$Rank' },
+        city: { $first: '$city' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $limit: 50 }
+    ]);
+
+    // Get City Toppers for Hauts (top rank from each city)
+    const cityToppersHauts = await Offline25.aggregate([
+      { $match: { 
+        squad: 'Hauts',
+        Rank: { $exists: true, $ne: null, $ne: 'NA' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $group: { 
+        _id: '$city', 
+        name1: { $first: '$name1' },
+        name2: { $first: '$name2' },
+        rollNumber: { $first: '$rollNumber' },
+        Rank: { $first: '$Rank' },
+        city: { $first: '$city' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $limit: 50 }
+    ]);
+
+    // Also get city toppers from online registrations
+    const onlineCityToppersJuniors = await Online25.aggregate([
+      { $match: { 
+        squad: 'Juniors',
+        Rank: { $exists: true, $ne: null, $ne: 'NA' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $group: { 
+        _id: '$city', 
+        name1: { $first: '$name1' },
+        name2: { $first: '$name2' },
+        rollNumber: { $first: '$rollNumber' },
+        Rank: { $first: '$Rank' },
+        city: { $first: '$city' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $limit: 50 }
+    ]);
+
+    const onlineCityToppersHauts = await Online25.aggregate([
+      { $match: { 
+        squad: 'Hauts',
+        Rank: { $exists: true, $ne: null, $ne: 'NA' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $group: { 
+        _id: '$city', 
+        name1: { $first: '$name1' },
+        name2: { $first: '$name2' },
+        rollNumber: { $first: '$rollNumber' },
+        Rank: { $first: '$Rank' },
+        city: { $first: '$city' }
+      }},
+      { $sort: { Rank: 1 } },
+      { $limit: 50 }
+    ]);
+
+    // Combine offline and online city toppers and get the best from each city
+    const allCityToppersJuniors = [...cityToppersJuniors, ...onlineCityToppersJuniors]
+      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+      .filter((item, index, self) => 
+        index === self.findIndex(t => t.city === item.city)
+      )
+      .slice(0, 50);
+
+    const allCityToppersHauts = [...cityToppersHauts, ...onlineCityToppersHauts]
+      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+      .filter((item, index, self) => 
+        index === self.findIndex(t => t.city === item.city)
+      )
+      .slice(0, 50);
+
+    res.json({
+      success: true,
+      top25Juniors: allJuniors,
+      top25Hauts: allHauts,
+      cityToppersJuniors: allCityToppersJuniors,
+      cityToppersHauts: allCityToppersHauts
+    });
+
+  } catch (err) {
+    console.error('Error fetching results table:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error',
+      error: err.message 
+    });
   }
 });
 
@@ -367,7 +604,7 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
 
     // Process all entries
     for (let entry of uniqueEntries) {
-      const { squad, language, city, state, email1, email2 } = entry;
+      const { squad, language, city, state, email1, email2,centre } = entry;
 
       // 1) Get cityID
       const cityID = cityToID[city] || getCityID(city);
@@ -388,10 +625,13 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
       try {
         const emailPromises = [];
         if (email1) {
-          emailPromises.push(sendEmail(email1, rollNumber, password));
+          // emailPromises.push(sendEmail(email1, rollNumber, password));
+          console.log("hi");
         }
         if (email2) {
-          emailPromises.push(sendEmail(email2, rollNumber, password));
+          // emailPromises.push(sendEmail(email2, rollNumber, password));
+                    console.log("hi");
+
         }
 
         // Send emails concurrently and wait for all to complete
@@ -412,6 +652,7 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
         mail_sent,
         view: 'school',
         mode: 'offline',
+        center:centre,
         isPaid: true,
         batchId,
       };
@@ -513,6 +754,7 @@ router.get("/downloadcsv", async (req, res) => {
       state: team.state,
       rollNumber: team.rollNumber,
       password: team.password,
+      centre:team.centre
     }));
 
     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -606,7 +848,6 @@ router.get("/downloadcsv", async (req, res) => {
     return res.status(500).json({ error: "Failed to generate Excel file" });
   }
 });
-
 
 // ✅ Separate route to handle file download
 router.get("/downloadcsv/file/:filename", (req, res) => {
@@ -744,8 +985,8 @@ router.post('/fetch-data', async (req, res) => {
     const [offlineDocuments, onlineDocuments] = await Promise.all([
       Offline25.find(offlineQuery).lean(),
       Object.keys(matchConditions).some(key => key.includes('contact')) 
-        ? Onlinereg.aggregate(onlineAggregation)
-        : Onlinereg.find(onlineQuery).lean()
+        ? Online25.aggregate(onlineAggregation)
+        : Online25.find(onlineQuery).lean()
     ]);
 
     console.log(`Found ${offlineDocuments.length} offline documents`);

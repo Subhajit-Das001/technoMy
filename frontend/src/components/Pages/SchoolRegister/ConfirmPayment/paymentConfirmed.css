@@ -1,17 +1,174 @@
+/* GLOBAL RESET for this component to prevent padding issues */
+.team-verified-container * {
+    box-sizing: border-box;
+}
+
+
+/* 1. Main Layout */
 .team-verified-container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
-  
-  .content {
+    background-color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* 2. Middle Section */
+.message-container {
     flex-grow: 1;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    width: 100%;
+}
+
+/* 3. Success Card */
+.success-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%; /* Responsive width */
     text-align: center;
-  }
-  
-  .footer {
-    margin-top: auto;
-  }
+    border-top: 6px solid #22c55e;
+    margin: 20px 0;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.success-box h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #15803d;
+}
+
+.success-box p {
+    color: #4b5563;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* 4. Roll Number Box */
+.roll-number-box {
+    margin-top: 20px;
+    padding: 25px;
+    background-color: #f0fdf4;
+    border: 2px dashed #86efac;
+    border-radius: 12px;
+}
+
+.roll-number-box h3 {
+    margin: 0;
+    color: #16a34a;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.roll-number-text {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 15px 0;
+    color: #14532d;
+    line-height: 1;
+    word-break: break-all; /* Prevents overflow on mobile */
+}
+
+.divider {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #bbf7d0;
+}
+
+/* 5. Password Section */
+.password-section {
+    text-align: left;
+}
+
+.password-label {
+    font-size: 0.85rem;
+    color: #374151;
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.password-display {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: center;
+    letter-spacing: 1px;
+    word-break: break-all; /* Critical for mobile responsiveness */
+}
+
+.password-hint {
+    font-size: 0.85rem !important; /* Force override generic p styles */
+    color: #6b7280 !important;
+    font-style: italic;
+    margin-top: 10px !important;
+}
+
+/* 6. Error Box */
+.error-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #fee2e2;
+    border-top: 6px solid #ef4444;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+}
+
+.error-box h1 {
+    color: #b91c1c;
+    font-size: 1.5rem;
+}
+
+.contact-support a {
+    color: #dc2626;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MOBILE OPTIMIZATIONS */
+@media (max-width: 600px) {
+    .success-box {
+        padding: 20px;
+    }
+    
+    .success-box h1 {
+        font-size: 1.5rem;
+    }
+    
+    .roll-number-text {
+        font-size: 2.2rem; /* Smaller font for mobile */
+    }
+    
+    .password-display {
+        font-size: 1rem;
+        padding: 10px;
+        letter-spacing: 0;
+    }
+
+    .roll-number-box {
+        padding: 15px;
+    }
+}

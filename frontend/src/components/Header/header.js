@@ -122,6 +122,13 @@ function Header() {
           >
             <p>Contact Us</p>
           </Link>
+          <Link
+            to="/results"
+            className={`hlinks ${clickedLink === "results" ? "clicked" : ""}`}
+            onClick={() => setClickedLink("results")}
+          >
+            <p>Results</p>
+          </Link>
         </div>
         <div className="regggg">
          <Link
@@ -135,18 +142,18 @@ function Header() {
         
         <Link
           to="/login"
-          className={`hlinkss ${clickedLink === "login" ? "clicked" : ""}`}
+          className={`login-btn ${clickedLink === "login" ? "clicked" : ""}`}
           onClick={() => setClickedLink("login")}
         >
           <p>Login</p>
         </Link>
-        <Link
+        {/* <Link
             to="/Technothlon-Merch"
             className={`hlinks merch-highlight ${clickedLink === "merch" ? "clicked" : ""}`}
             onClick={handleMerchNavClick}
           >
             <p>TechnoMerch</p>
-          </Link>
+          </Link> */}
         
         {showContest  && (
           <Link

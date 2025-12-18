@@ -7,9 +7,11 @@ const Technopedia=require('../models/technoped-question')
 const TechnoScore=require('../models/technopedia_user')
 const crypto = require('crypto');
 const Announcement = require('../models/announcement');
-const Online25=require('../models/onlineReg');
 const { convertToIST } = require('../utils/timeUtils');
-const Offline25 = require('../models/offline25');
+const Online25=require('../models/online25');
+const Offline25=require('../models/Offline25');
+const Online26 = require('../models/online26');
+const Offline26=require('../models/offline26');
 const newStudent = require('../models/newStudent');
 
 // Test endpoint to check database connection
@@ -63,141 +65,84 @@ router.get('/test-db', async (req, res) => {
     }
 });
 
+// Helper function to check a specific database model
+const checkModelForStudent = async (Model, rollNumber, secondValue, type) => {
+    const student = await Model.findOne({ rollNumber: rollNumber });
+
+    if (!student) return null;
+
+    // Check matches for Contact
+    const isContact1 = student.contact1 === secondValue;
+    const isContact2 = student.contact2 === secondValue;
+
+    // Check matches for Email
+    const isEmail1 = student.email1 && student.email1.toLowerCase() === secondValue;
+    const isEmail2 = student.email2 && student.email2.toLowerCase() === secondValue;
+
+    // If any match is found
+    if (isContact1 || isContact2 || isEmail1 || isEmail2) {
+        // Determine which student (1 or 2) matched
+        const isStudent1 = isContact1 || isEmail1;
+
+        return {
+            exists: true,
+            name: isStudent1 ? student.name1 : student.name2,
+            email: isStudent1 ? student.email1 : student.email2,
+            phone: isStudent1 ? student.contact1 : student.contact2,
+            school: isStudent1 ? student.school1 : student.school2,
+            studentType: type, // "offline" or "online"
+            rollNumber: rollNumber,
+            batch: type.includes('26') ? '2026' : '2025' // Optional: helpful to know which batch
+        };
+    }
+
+    return null;
+};
+
 router.post('/check-student', async (req, res) => {
     try {
-      const { rollNumber, second } = req.body;
-      console.log('Raw input:', { rollNumber, second});
-  
-      // Clean up the inputs
-      const cleansecond = second.trim().toLowerCase(); // toLowerCase for email safety
-      const cleanRollNumber = rollNumber ? rollNumber.trim().toUpperCase() : '';
-      
-      console.log('Cleaned input:', { cleansecond, cleanRollNumber });
-  
-      // Check Offline25 database first
-      const offlineStudent = await Offline25.findOne({ rollNumber: cleanRollNumber });
-      
-      if (offlineStudent) {
-        // Check if phone matches either contact
-        const isContact1 = offlineStudent.contact1 === cleansecond;
-        const isContact2 = offlineStudent.contact2 === cleansecond;
-  
+        const { rollNumber, second } = req.body;
         
-  
-        if (isContact1 || isContact2) {
-          const selectedSchool = isContact1 ? offlineStudent.school1 : offlineStudent.school2;
-          
-          console.log('Returning student data (offline):', {
-            name: isContact1 ? offlineStudent.name1 : offlineStudent.name2,
-            phone: (isContact1 || isContact2),
-            school: selectedSchool,
-            studentType: "offline"
-          });
-          
-          return res.json({
-            exists: true,
-            name: isContact1 ? offlineStudent.name1 : offlineStudent.name2,
-            email: isContact1 ? offlineStudent.email1 : offlineStudent.email2,
-            phone: (isContact1 || isContact2),
-            school: selectedSchool,
-            studentType: "offline",
-            rollNumber:cleanRollNumber
-          });
+        // Validation
+        if (!rollNumber || !second) {
+            return res.status(400).json({ exists: false, message: "Missing Roll Number or Contact/Email" });
         }
-        if (!isContact1 && !isContact2) {
-            // Check if phone matches either contact
-            const isemail1 = offlineStudent.email1 === cleansecond;
-            const isemail2 = offlineStudent.email2 === cleansecond;
-      
-            
-      
-            if (isemail1 || isemail2) {
-              const selectedSchool = isemail1 ? offlineStudent.school1 : offlineStudent.school2;
-              
-              return res.json({
-                exists: true,
-                name: isemail1 ? offlineStudent.name1 : offlineStudent.name2,
-                email: isemail1 ? offlineStudent.email1 : offlineStudent.email2,
-                phone: isemail1 ? offlineStudent.contact1 : offlineStudent.contact2,
-                school: selectedSchool,
-                studentType: "offline",
-                            rollNumber:cleanRollNumber
 
-              });
-            }
-        }
-      } 
-  
-      else{
-      // If not found in Offline25, check Online25 database
-      const onlineStudent = await Online25.findOne({ rollNumber: cleanRollNumber });
-      
-      if (onlineStudent ) {
-        // Check if phone matches either contact
-        const isContact1 = onlineStudent.contact1 === cleansecond;
-        const isContact2 = onlineStudent.contact2 === cleansecond;
-  
-        
-  
-        if (isContact1 || isContact2) {
-          const selectedSchool = isContact1 ? onlineStudent.school1 : onlineStudent.school2;
-          
-          console.log('Returning student data (online):', {
-            name: isContact1 ? onlineStudent.name1 : onlineStudent.name2,
-            phone: (isContact1 || isContact2),
-            school: selectedSchool,
-            studentType: "online"
-          });
-          
-          return res.json({
-            exists: true,
-            name: isContact1 ? onlineStudent.name1 : onlineStudent.name2,
-            email: isContact1 ? onlineStudent.email1 : onlineStudent.email2,
-            phone: (isContact1 || isContact2),
-            school: selectedSchool,
-            studentType: "online",
-            rollNumber:cleanRollNumber
-          });
-        }
-        if (!isContact1 && !isContact2) {
-            // Check if phone matches either contact
-            const isemail1 = onlineStudent.email1 === cleansecond;
-            const isemail2 = onlineStudent.email2 === cleansecond;
-      
-            
-      
-            if (isemail1 || isemail2) {
-              const selectedSchool = isemail1 ? onlineStudent.school1 : onlineStudent.school2;
-              
-              return res.json({
-                exists: true,
-                name: isemail1 ? onlineStudent.name1 : onlineStudent.name2,
-                email: isemail1 ? onlineStudent.email1 : onlineStudent.email2,
-                phone: isemail1 ? onlineStudent.contact1: onlineStudent.contact2,
-                school: selectedSchool,
-                studentType: "online",
-                            rollNumber:cleanRollNumber
+        console.log('Raw input:', { rollNumber, second });
 
-              });
-            }
-        }
-      }
-      }
-      
-      // If not found in either database, return false
-      return res.json({
-        exists: false,
-        message: 'Student not found in registration records'
-      });
-      
-    }catch (error) {
-        console.error('Error details:', error);
-        res.status(500).json({ 
-          exists: false, 
-          message: 'Server error while checking student details' 
+        // Clean up the inputs
+        const cleanSecond = second.trim().toLowerCase(); // Normalize email/contact
+        const cleanRollNumber = rollNumber.trim().toUpperCase();
+
+        // 1. Check Offline26 (New Batch First)
+        let result = await checkModelForStudent(Offline26, cleanRollNumber, cleanSecond, "offline");
+        if (result) return res.json(result);
+
+        // 2. Check Online26
+        result = await checkModelForStudent(Online26, cleanRollNumber, cleanSecond, "online");
+        if (result) return res.json(result);
+
+        // 3. Check Offline25 (Old Batch)
+        result = await checkModelForStudent(Offline25, cleanRollNumber, cleanSecond, "offline");
+        if (result) return res.json(result);
+
+        // 4. Check Online25
+        result = await checkModelForStudent(Online25, cleanRollNumber, cleanSecond, "online");
+        if (result) return res.json(result);
+
+        // If no match found in any DB
+        return res.json({ 
+            exists: false, 
+            message: "Student not found or details do not match." 
         });
-      }
-})
+
+    } catch (error) {
+        console.error("Error in check-student:", error);
+        res.status(500).json({ exists: false, message: "Internal server error" });
+    }
+});
+
+
 
 // Start contest
 router.post('/techno/start', async (req, res) => {
@@ -1116,3 +1061,6 @@ router.get('/techno/submission-count/:questionId', async (req, res) => {
 });
 
 module.exports = router;
+
+
+

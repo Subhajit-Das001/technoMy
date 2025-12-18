@@ -42,6 +42,7 @@ import TechnopediaQuestion from './components/Pages/Technopedia/technopedia-ques
 
 import CenterTable from './components/Pages/Center/CenterTable';
 import Merch from './components/Pages/Merch/merch';
+import ResultTable from './components/Pages/ResultTable/ResultTable';
 
 const AppRoutes = () => {
   return (
@@ -95,8 +96,8 @@ const AppRoutes = () => {
       <Route path="/technopedia-login" element={<TechnopediaLogin />} />
       <Route path="/technopedia" element={<Technopedia />} />
       <Route path="/techno/:id/:letter" element={<TechnopediaQuestion />} />
-      <Route path="/Technothlon-Merch" element={<Merch/>} />
-
+      <Route path="/Technothlon-Merch" element={<Merch/>} />    
+        <Route path="/results" element={<ResultTable />} />
        </Routes>
   );
 };

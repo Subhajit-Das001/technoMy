@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Online25=require('../models/onlineReg');
-const Offline25 =require('../models/offline25');
+const Online25=require('../models/online25');
+const Offline25 =require('../models/Offline25');
 const NewStudent = require('../models/newStudent');
 const jwt = require('jsonwebtoken');
 

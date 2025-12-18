@@ -6,7 +6,7 @@ function generateRollNumber(squad, language, city, studentCount) {
 
     const medium = (language === "Hindi") ? "H" : "E";
     const squadCode = (squad === "Hauts") ? "HE" : "JR";
-    const year =25;
+    const year =26;
     const cityID = cityToID[city];
     const mode="N";
     // Format student count to always have 4 digits
