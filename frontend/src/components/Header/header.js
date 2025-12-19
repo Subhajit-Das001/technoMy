@@ -127,7 +127,7 @@ function Header() {
             className={`hlinks ${clickedLink === "results" ? "clicked" : ""}`}
             onClick={() => setClickedLink("results")}
           >
-            <p>Results</p>
+            <p>Result</p>
           </Link>
         </div>
         <div className="regggg">

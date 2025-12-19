@@ -11,8 +11,8 @@ import Footer from "../../Footer/footer";
 import dp from '../../Assets/heads/dp.jpg';
 import mf from '../../Assets/heads/mf.jpg';
 import po from '../../Assets/heads/po.jpg';
-import ri from '../../Assets/heads/image.png';
-import ud from '../../Assets/heads/ud.jpg';
+import ri from '../../Assets/heads/ri.png';
+import ud from '../../Assets/heads/ud.png';
 import sr from '../../Assets/heads/sr.jpg';
 
 function ContactUs() {
@@ -63,7 +63,7 @@ function ContactUs() {
       linkedin: "https://www.linkedin.com/in/uday-kiran-battula-435054250?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       email: "k.battula@iitg.ac.in",
       contact: "8978909914",
-      position: "top center"
+      position: "center center"
     },
       { 
       id: 5, 

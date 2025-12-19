@@ -326,10 +326,11 @@ const postData = async (e) => {
       </div>
 
       <div className="containe">
-<div className="form-header">
-           <div className="header-left">
+        <div className="header-left">
               <InstructionPanel />
            </div>
+<div className="form-header">
+           
            <h1 className="form-title">Student Registration Form</h1>
            {/* Spacer div to help keep title perfectly centered if needed */}
            <div className="header-spacer"></div>
@@ -420,13 +421,23 @@ const postData = async (e) => {
             ))}
           </datalist>
           
-          <label htmlFor="state">State:</label>
-          <input type="text" name="state" id="state" list="states" value={team.state} onChange={handleStateChange} required />
-          <datalist id="states">
-            {filteredStates.map((state, index) => (
-              <option key={index} value={state} />
-            ))}
-          </datalist>
+         <label htmlFor="state">State:</label>
+<input 
+  type="text" 
+  name="state" 
+  id="state" 
+  list="states" 
+  value={team.state} 
+  onChange={handleStateChange} 
+  placeholder="Select State"  // Add placeholder here
+  required 
+/>
+
+<datalist id="states">
+  {filteredStates.map((state, index) => (
+    <option key={index} value={state} />
+  ))}
+</datalist>
 
           <label htmlFor="city">City:</label>
           <input type="text" autoComplete="off" list="cities" name="city" id="city" placeholder="City" required value={team.city} onChange={handleCityChange} />

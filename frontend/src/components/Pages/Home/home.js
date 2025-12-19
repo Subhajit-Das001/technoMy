@@ -79,12 +79,12 @@ prizeImages.forEach(img => {
 
 
       
-      <div className="center">
+      {/* <div className="center">
           <div className="check-center">Click here for viewing Registered Centers
           <Link  to='/center-list'><button className='btn1'>Centers</button></Link>
           </div>
           
-      </div> 
+      </div>  */}
       </div>
       <div className="Hero-img">
         <img src={HeroImg}  />
@@ -148,7 +148,7 @@ prizeImages.forEach(img => {
 
       <h4 className="h4-updates">RECENT UPDATES</h4>
       <div className="slick-update ">
-        <a href="/center-list" className="update-card">
+        <a href="/login" className="update-card">
           <div className="update-card-icon">
             <img src={IITG} alt="IIT Guwahati Icon" />
           </div>
@@ -158,7 +158,7 @@ prizeImages.forEach(img => {
           </div>
         </a>
         <a href="/technopedia-login" className="update-card">
-          <div className="update-card-icon ">
+          <div className="update-card-icon">
             <img src={Technoped} alt="Technopedia Icon" />
           </div>
           <div className="update-card-content">

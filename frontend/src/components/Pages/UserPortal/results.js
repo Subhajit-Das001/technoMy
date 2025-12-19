@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Confetti from 'react-confetti'; // <--- IMPORT THIS
+import Confetti from 'react-confetti';
 import './result.css';
 import { Document, Page, Text, Image, PDFDownloadLink, StyleSheet } from '@react-pdf/renderer';
 
-// ... (Keep your existing image imports and PDF styles) ...
 // Import Images
 import GoldHaut from '../../Assets/certificate/Gold_Hauts.png';
 import SilverHaut from '../../Assets/certificate/Silver_Hauts.png';
@@ -15,9 +14,9 @@ import ParticipationJunior from '../../Assets/certificate/participation_Juniors.
 import CityTopperHauts from '../../Assets/certificate/CITY_TOPPER_Hauts.png';
 import CityTopperJuniors from '../../Assets/certificate/CITY_TOPPER_Juniors.png';
 
-const styles = StyleSheet.create({
-    // ... (Keep your existing styles)
-      page: {
+// --- STYLE 1: STANDARD CERTIFICATE STYLES ---
+const standardStyles = StyleSheet.create({
+  page: {
     position: 'relative',
     width: '100%',
     height: '100%',
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
   },
   name: {
     position: 'absolute',
-    top: '48.3%',
+    top: '48.5%',
     transform: 'translate(-50%, -50%)',
     fontSize: 48,
     color: '#000',
@@ -52,16 +51,58 @@ const styles = StyleSheet.create({
   },
 });
 
+// --- STYLE 2: CITY TOPPER SPECIFIC STYLES ---
+const cityTopperStyles = StyleSheet.create({
+  page: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0,
+  },
+  image: {
+    width: '100%',
+    height: 'auto',
+  },
+  name: {
+    position: 'absolute',
+    top: '48.8%',          
+    left: '43%',         
+    transform: 'translate(-50%, -50%)',
+    fontSize: 48,      // Standard Font Size
+    fontWeight: 'bold', // Standard Bold
+    color: '#000',
+  },
+  cityName: {
+    position: 'absolute',
+    top: '65%',          
+    left: '40%',         
+    transform: 'translate(-50%, -50%)',
+    fontSize: 35,
+    fontWeight: 'bold',
+    color: '#000', 
+    textTransform: 'uppercase'
+  }
+  // Rank style completely removed
+});
+
 const Results = () => {
-  // ... (Keep your existing state)
   const [displayedName, setDisplayedName] = useState('');
   const [results, setResults] = useState('');
   const [user, setUser] = useState(null);
+  
+  // Normal Certificate State
   const [certificateImage, setCertificateImage] = useState(GoldHaut);
+  
+  // City Topper State
   const [isCityTopper, setIsCityTopper] = useState(false);
   const [cityTopperImage, setCityTopperImage] = useState(null);
+  const [cityTopperDetails, setCityTopperDetails] = useState({ city: '' });
 
-  // --- NEW STATE FOR CONFETTI ---
+  // Confetti State
   const [showConfetti, setShowConfetti] = useState(false);
   const [windowDimension, setWindowDimension] = useState({ width: window.innerWidth, height: window.innerHeight });
 
@@ -69,7 +110,6 @@ const Results = () => {
     ? "https://technothlon.techniche.org.in/api/" 
     : "http://localhost:3001/api/";
 
-  // Helper to detect window resize for confetti
   const detectSize = () => {
       setWindowDimension({ width: window.innerWidth, height: window.innerHeight });
   }
@@ -81,8 +121,7 @@ const Results = () => {
       }
   }, []);
 
-  // ... (Keep your existing useEffects for fetching user and results) ...
-    // 1. Fetch User Details
+  // 1. Fetch User
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -97,22 +136,19 @@ const Results = () => {
     fetchUserDetails();
   }, [baseURL]);
 
-  // 2. Fetch Results & Determine Normal Certificate
+  // 2. Fetch Results
   useEffect(() => {
     if (user) {
         const commonRoll = user.rollNumber || user.roll;
         
-        // Fetch Result Rank
         const fetchResults = async () => {
             try {
                 const response = await axios.get(`${baseURL}uploadcsv/results?rollNumber=${commonRoll}`, { withCredentials: true });
                 const userData = response.data.user || { Rank: 'NA' };
                 setResults(userData);
                 
-                // --- TRIGGER CELEBRATION IF RANK EXISTS ---
                 if (userData.Rank && userData.Rank !== 'NA' && userData.Rank !== 'Disqualify') {
                     setShowConfetti(true);
-                    // Optional: Stop confetti after 8 seconds to save performance
                     setTimeout(() => setShowConfetti(false), 8000); 
                 }
 
@@ -122,27 +158,20 @@ const Results = () => {
             }
         };
         fetchResults();
-
-        // Determine Normal Certificate Image
-        if (commonRoll.startsWith('JRF')) {
-            // Juniors Logic
-             // We wait for 'results' to populate, but for image pre-load we can check logic inside the next useEffect
-        }
     }
   }, [baseURL, user]);
-  
-  // ... (Keep your certificate logic useEffects) ...
-    // 3. Set Normal Certificate Image when Results change
+
+  // 3. Determine Standard Certificate Image
   useEffect(() => {
     if (results && user) {
       const { Rank } = results;
       const rollNumber = user.rollNumber || user.roll;
 
-      if (rollNumber.startsWith('JRF')) {
+      if (rollNumber.startsWith('JR')) {
         if (Rank <= 25) setCertificateImage(GoldJunior);
         else if (Rank > 25 && Rank <= 225) setCertificateImage(SilverJunior);
         else setCertificateImage(ParticipationJunior);
-      } else if (rollNumber.startsWith('HEF')) {
+      } else if (rollNumber.startsWith('HE')) {
         if (Rank <= 25) setCertificateImage(GoldHaut);
         else if (Rank > 25 && Rank <= 225) setCertificateImage(SilverHaut);
         else setCertificateImage(ParticipantHaut);
@@ -161,16 +190,17 @@ const Results = () => {
             if (response.data.success) {
                 const { cityToppersJuniors, cityToppersHauts } = response.data;
                 
-                // Check if user's roll number is in the lists
-                const isJuniorTopper = cityToppersJuniors.find(student => student.rollNumber === rollNumber);
-                const isHautTopper = cityToppersHauts.find(student => student.rollNumber === rollNumber);
+                const juniorStudent = cityToppersJuniors.find(student => student.rollNumber === rollNumber);
+                const hautStudent = cityToppersHauts.find(student => student.rollNumber === rollNumber);
 
-                if (isJuniorTopper) {
+                if (juniorStudent) {
                     setIsCityTopper(true);
                     setCityTopperImage(CityTopperJuniors);
-                } else if (isHautTopper) {
+                    setCityTopperDetails({ city: juniorStudent.city });
+                } else if (hautStudent) {
                     setIsCityTopper(true);
                     setCityTopperImage(CityTopperHauts);
+                    setCityTopperDetails({ city: hautStudent.city });
                 }
             }
         } catch (err) {
@@ -182,14 +212,28 @@ const Results = () => {
 
   if (!results || results.Rank === 'NA' || results.Rank === 'Disqualify') return null;
 
-  // ... (Keep PDF Components) ...
-    const CertificatePDF = ({ name, rank, bgImage }) => (
+  // --- PDF COMPONENT 1: STANDARD ---
+  const StandardCertificatePDF = ({ name, rank, bgImage }) => (
     <Document>
-      <Page size={{ width: 1849, height: 1307 }} style={styles.page}>
-        <Image src={bgImage} style={styles.image} />
-        <Text style={styles.name}>{name}</Text>
-        {/* Only show rank if it's NOT a City Topper cert (assuming City Topper cert doesn't need AIR printed) */}
-        {rank && <Text style={styles.rank}>{rank}</Text>}
+      <Page size={{ width: 1849, height: 1307 }} style={standardStyles.page}>
+        <Image src={bgImage} style={standardStyles.image} />
+        <Text style={standardStyles.name}>{name}</Text>
+        {rank && <Text style={standardStyles.rank}>{rank}</Text>}
+      </Page>
+    </Document>
+  );
+
+  // --- PDF COMPONENT 2: CITY TOPPER (No Rank) ---
+  const CityTopperCertificatePDF = ({ name, city, bgImage }) => (
+    <Document>
+      <Page size={{ width: 1849, height: 1307 }} style={cityTopperStyles.page}>
+        <Image src={bgImage} style={cityTopperStyles.image} />
+        
+        {/* Name */}
+        <Text style={cityTopperStyles.name}>{name}</Text>
+        
+        {/* City Name */}
+        <Text style={cityTopperStyles.cityName}>{city}</Text>
       </Page>
     </Document>
   );
@@ -198,17 +242,15 @@ const Results = () => {
     setDisplayedName(name);
   };
 
-
   return (
     <div className="results-container">
       
-      {/* --- CONFETTI COMPONENT --- */}
       {showConfetti && (
         <Confetti 
             width={windowDimension.width} 
             height={windowDimension.height} 
             tweenDuration={1000}
-            numberOfPieces={400} // Lots of confetti!
+            numberOfPieces={400}
             gravity={0.2}
         />
       )}
@@ -219,12 +261,9 @@ const Results = () => {
 
       <div className="result-content text-center">
         <h2>Roll Number: {user?.roll || user?.rollNumber}</h2>
-        
-        {/* ADDED POP ANIMATION CLASS */}
         <p className="congrats-message pop-animation">
             Congratulations! You have secured
         </p>
-        
         <h3 className="rank-display">AIR: <span>{results.Rank}</span></h3>
       </div>
 
@@ -246,28 +285,41 @@ const Results = () => {
           </button>
         </div>
 
-        {/* Certificate Sections (No changes needed) */}
+        {/* --- SECTION 1: Standard Certificate --- */}
         <div className="certificate-section">
-            <h3 className="text-xl mb-3 text-center">Participation / Merit Certificate</h3>
+            {/* <h3 className="text-xl mb-3 text-center"> Merit Certificate</h3> */}
             <div className="result-btn-download">
             <PDFDownloadLink
-                document={<CertificatePDF name={displayedName} rank={results.Rank} bgImage={certificateImage} />}
+                document={
+                    <StandardCertificatePDF 
+                        name={displayedName} 
+                        rank={results.Rank} 
+                        bgImage={certificateImage} 
+                    />
+                }
                 fileName={`Certificate_${displayedName}.pdf`}
             >
-                {({ loading }) => (loading ? 'Generating PDF...' : 'Download')}
+                {({ loading }) => (loading ? 'Generating...' : 'Download')}
             </PDFDownloadLink>
             </div>
         </div>
 
-        {isCityTopper && (
+        {/* --- SECTION 2: City Topper Certificate --- */}
+        {isCityTopper && cityTopperDetails.city && (
             <div className="certificate-section mt-8">
                 <h3 className="text-xl mb-3 text-center text-green-600 font-bold">🌟 City Topper Certificate 🌟</h3>
                 <div className="result-btn-download city-topper-btn">
                     <PDFDownloadLink
-                        document={<CertificatePDF name={displayedName} rank="" bgImage={cityTopperImage} />}
+                        document={
+                            <CityTopperCertificatePDF 
+                                name={displayedName || "Student"} 
+                                city={cityTopperDetails.city}
+                                bgImage={cityTopperImage} 
+                            />
+                        }
                         fileName={`CityTopper_${displayedName}.pdf`}
                     >
-                        {({ loading }) => (loading ? 'Generating...' : 'Download ')}
+                        {({ loading }) => (loading ? 'Generating...' : 'Download')}
                     </PDFDownloadLink>
                 </div>
             </div>
