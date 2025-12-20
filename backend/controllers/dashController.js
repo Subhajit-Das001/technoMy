@@ -1,5 +1,5 @@
 // const TeamModel = require('../models/teamModel');
-const Onlinereg=require('../models/onlineReg')
+const Onlinereg=require('../models/online26')
 
 const dashController = {
     listTeam: async (req, res) => {

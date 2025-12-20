@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define a schema for the feedback data
 const feedbackSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -11,13 +10,17 @@ const feedbackSchema = new mongoose.Schema({
         required: true
     },
     feedbackType: {
-        type: String,
-        enum: ['complain', 'suggestion'], 
-        required: true
+        type: String, 
+        required: true 
+        // REMOVED 'enum' so that all dropdown options are accepted
     },
     feedbackContent: {
         type: String,
         required: true
+    },
+    resolve:{
+        type: Boolean,
+        default: false
     },
     createdAt: {
         type: Date,

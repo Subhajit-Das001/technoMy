@@ -20,20 +20,11 @@ const OnlineteamModel = mongoose.Schema(
         country: { type: String, require: true },
         state: { type: String, require: true },
         city: { type: String, require: true },
-        zone: { 
-            type: String, 
-            enum: ['North', 'South', 'East', 'West', 'Unknown'],
-            required: true 
-        },
-        center: { 
-        type: String, 
-        default: "Indian Institute of Technology Guwahati, Guwahati 781039, Assam, India" 
-    },
         view:{type: String, require: true},
         cityrepID: { type: String },
         rollNumber: { type: String },
         password: { type: String, require: true },
-        // isVerified: { type: Boolean, default: false },
+        isVerified: { type: Boolean, default: false },
         isPaid: { type: Boolean, default: false },
         createdAt: {
             type: Date,
@@ -74,6 +65,5 @@ const OnlineteamModel = mongoose.Schema(
 // });
 
 
-const Onlinereg = mongoose.model("OnlineRegistration", OnlineteamModel);
-
+const Onlinereg = mongoose.model("Online25", OnlineteamModel, "online25");
 module.exports = Onlinereg;

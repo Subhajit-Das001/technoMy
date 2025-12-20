@@ -1,23 +1,96 @@
 import './contactus.css';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+// Import Icons
+import { FaLinkedinIn, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 
 import Header from "../../Header/header"; 
 import Footer from "../../Footer/footer";
-import Button from '../../Assets/Button/button';
-import cv from '../../Assets/heads/charvi3.jpeg';
-import sk from '../../Assets/heads/shubham2.jpeg';
-import pj from '../../Assets/heads/Poojitha.jpg';
-import vr from '../../Assets/heads/Varshini.jpg';
-import lb from '../../Assets/heads/lalith1.jpeg';
-import jk from '../../Assets/heads/jayant1.jpeg';
-import ek from '../../Assets/heads/Ekshit.jpeg';
+
+// Images
+import dp from '../../Assets/heads/dp.jpg';
+import mf from '../../Assets/heads/mf.jpg';
+import po from '../../Assets/heads/po.jpg';
+import ri from '../../Assets/heads/ri.png';
+import ud from '../../Assets/heads/ud.png';
+import sr from '../../Assets/heads/sr.jpg';
 
 function ContactUs() {
   const [northZone, setNorthZone] = useState([]);
   const [southZone, setSouthZone] = useState([]);
   const [eastZone, setEastZone] = useState([]);
   const [westZone, setWestZone] = useState([]);
+
+  // --- HEADS DATA ---
+  // FILL IN THE ACTUAL DETAILS BELOW
+  const headsData = [
+     { 
+      id: 1, 
+      name: "Shreshtha Rastogi", 
+      role: "South Zone Head", 
+      img: sr,
+      linkedin: "https://www.linkedin.com/in/shreshtha-rastogi-24422a313/",
+      email: "shreshtharastogi555@gmail.com",
+      contact: "7233951978",
+      position: "top center"
+    },
+        { 
+      id: 2, 
+      name: "Ritik Raj", 
+      role: "North Zone Head", 
+      img: ri,
+      linkedin: "https://www.linkedin.com/in/ritik-raj-0117b5338/",
+      email: "ritikraj620071@gmail.com",
+      contact: "6200716689",
+      position: "left center"
+    },
+
+    { 
+      id: 3, 
+      name: "Deep", 
+      role: "West Zone Head", 
+      img: dp,
+      linkedin: "https://www.linkedin.com/in/deep-shah-b69b89312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      email: "deeps01122006@gmail.com",
+      contact: "8511107997",
+      position: "top center"
+    },
+       { 
+      id: 4, 
+      name: "Uday kiran", 
+      role: "South Zone Head", 
+      img: ud,
+      linkedin: "https://www.linkedin.com/in/uday-kiran-battula-435054250?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      email: "k.battula@iitg.ac.in",
+      contact: "8978909914",
+      position: "center center"
+    },
+      { 
+      id: 5, 
+      name: "Poulomi", 
+      role: "East Zone Head", 
+      img: po,
+      linkedin: "https://www.linkedin.com/in/poulomi-chakraborty-76b97a322?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      email: "poulomichakraborty750@gmail.com",
+      contact: "9954704388",
+      position: "center center"
+    },
+
+  
+   
+    
+    { 
+      id: 6, 
+      name: "Md Mahroof", 
+      role: "West Zone Head", 
+      img: mf,
+      linkedin: "https://www.linkedin.com/in/mahroof-imtiaz-b475a5370?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      email: "imtiazmahroof@gmail.com",
+      contact: "9954083559",
+      position: "right center"
+    },
+ 
+  ];
 
   const baseURL = process.env.NODE_ENV === "production" 
     ? "https://technothlon.techniche.org.in/api/" 
@@ -58,7 +131,9 @@ function ContactUs() {
         {contacts.length > 0 ? (
           contacts.map((contact) => (
             <div key={contact.cityRepID}>
-              <p style={{ fontWeight: "600",whiteSpace: "pre-line"}}>{contact.name.replace(/\\n/g, "\n")}</p>
+              <p style={{ fontWeight: "600", whiteSpace: "pre-line"}}>
+                {contact.name.replace(/\\n/g, "\n")}
+              </p>
               <p>{contact.contact}</p>
             </div>
           ))
@@ -76,9 +151,7 @@ function ContactUs() {
       <div className="cityrp-main">
         <div className="navy">
           <h1>Contact Us</h1>
-          <h2>
-            You can contact cityreps of your zone through their contacts given below : - 
-          </h2>
+          <h2>You can contact cityreps of your zone through their contacts given below : -</h2>
           <button onClick={cityreplogin} className="cityrep-login-btn">
             Login for Cityreps
           </button>
@@ -90,7 +163,6 @@ function ContactUs() {
           <p>City Representatives</p>
         </div>
         <div className="cityrp">
-          {/* Render Zones dynamically based on the fetched data */}
           {renderZone("North", northZone)}
           {renderZone("South", southZone)}
           {renderZone("East", eastZone)}
@@ -98,92 +170,45 @@ function ContactUs() {
         </div>
       </div>
 
+      {/* --- HEADS SECTION WITH SOCIAL ICONS --- */}
       <div className="contact">
         <div className="head-heading">
           <p>Meet Our Heads</p>
         </div>
-        <div className="main-head">
-          <div className="heads">
-            <div className="head-pic">
-              <img src={cv} alt="Charvi Sri Koppisetti" />
+        
+        <div className="heads-grid-container">
+          {headsData.map((head) => (
+            <div className="head-card" key={head.id}>
+              <div className="head-img-wrapper">
+                <img src={head.img} alt={head.name}                 style={{ objectPosition: head.position || 'center center' }}
+ />
+              </div>
+              <div className="head-info">
+                <h2>{head.name}</h2>
+                <div className="divider"></div>
+                <p className="role-text">{head.role}</p>
+                
+                {/* Social Icons Container */}
+                <div className="social-links">
+                  {head.linkedin && (
+                    <a href={head.linkedin} target="_blank" rel="noreferrer" className="social-icon linkedin">
+                      <FaLinkedinIn />
+                    </a>
+                  )}
+                  {head.email && (
+                    <a href={`mailto:${head.email}`} className="social-icon email">
+                      <FaEnvelope />
+                    </a>
+                  )}
+                  {head.contact && (
+                    <a href={`tel:${head.contact}`} className="social-icon phone">
+                      <FaPhoneAlt />
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="abt-head">
-              <h2>Charvi Sri Koppisetti</h2>
-            {/* <h3>9963249409</h3> */}
-              <p>North Zone Head</p>
-            </div>
-          </div>
-
-          <div className="heads">
-            <div className="head-pic">
-              <img src={vr} alt="Varshini Sathineni" />
-            </div>
-            <div className="abt-head">
-              <h2>Varshini Sathineni</h2>
-              {/* <h3>8106226713</h3> */}
-
-              <p>West Zone Head</p>
-            </div>
-          </div>
-
-          <div className="heads">
-            <div className="head-pic">
-              <img src={pj} alt="Poojitha Reddy" />
-            </div>
-            <div className="abt-head">
-              <h2>Poojitha Reddy</h2>
-              {/* <h3>9063910805</h3> */}
-              <p>South Zone Head</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="main-head">
-          <div className="heads">
-            <div className="head-pic">
-              <img src={lb} alt="Lalithkumar Banglore Sreenivasan" />
-            </div>
-            <div className="abt-head">
-              <h2>Lalithkumar Banglore Sreenivasan</h2>
-              {/* <h3>6379749909</h3> */}
-              <p>North Zone Head</p>
-            </div>
-          </div>
-
-          <div className="heads">
-            <div className="head-pic">
-              <img src={jk} alt="Jayant Kumar" />
-            </div>
-            <div className="abt-head">
-              <h2>Jayant Kumar</h2>
-              {/* <h3>8003674745</h3> */}
-              <p>West Zone Head</p>
-            </div>
-          </div>
-
-          <div className="heads">
-            <div className="head-pic">
-              <img src={ek} alt="Ekshith sai Gunakar Pasala" />
-            </div>
-            <div className="abt-head">
-              <h2>Ekshith sai Gunakar Pasala</h2>
-              {/* <h3>9515364418</h3> */}
-              <p>South Zone Head</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="main-head">
-          <div className="heads">
-            <div className="head-pic">
-              <img src={sk} alt="Shubham Kumar Soni" />
-            </div>
-            <div className="abt-head">
-              <h2>Shubham Kumar Soni</h2>
-              {/* <h3>9142244288</h3> */}
-              <p>East Zone Head</p>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="cont-description">

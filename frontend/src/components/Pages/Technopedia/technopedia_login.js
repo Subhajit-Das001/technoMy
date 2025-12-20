@@ -64,9 +64,9 @@ const TechnopediaLogin = () => {
         });
 
       } catch (error) {
-        console.error('Error fetching contest times:', error);
+        console.error('Error fetching Technopedia times:', error);
         // Set fallback message
-        setMessage('Unable to fetch contest timing. Please try again later.');
+        setMessage('Unable to fetch Technopedia timing. Please try again later.');
       }
     };
 
@@ -94,7 +94,7 @@ const TechnopediaLogin = () => {
 
     // Check contest timing for login
     if (!(now >= start && now <= end)) {
-      setError('Contest has not started yet or has ended. Please check the timing.');
+      setError('Technopedia has not started yet or has ended. Please check the timing.');
       return;
     }
 
@@ -156,7 +156,7 @@ const TechnopediaLogin = () => {
           </div>
           {!contestTime.isContestStarted && (
             <div className="TL-timing-info">
-              <small>Login will be available when the contest starts</small>
+              <small>Login will be available when the Technopedia starts</small>
             </div>
           )}
           {error && <div className="TL-error-message">{error}</div>}

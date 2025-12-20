@@ -30,11 +30,10 @@ const Updates = () => {
       <div className="updates-content-heading">TECHNOTHLON 2025 UPDATES</div>
       <div className="updates-contents">
         <ul>
-        <li>Admit Card is now available. Please check your examination centre and download your admit card at the earliest.</li>
-        <li>If you spot an error in any questions, email us at technothlon.iitg@gmail.com or technothlon@iitg.ac.in.</li>
-          <li>For technical issues with result access, contact our team promptly.</li>
-          <li>Stay tuned! Follow our social media handles for more updates. Good luck, champs!</li>
-        </ul>
+        <li>Certificates are now available. Make sure to download your corresponding certificate.</li>
+<li>Online registration for Technothlon '26 is now live! Register your team today.</li>
+<li>Technopedia is live! Join now using your roll number and registered email or contact number.</li>
+<li>Prepare for the exam by practicing with our past year resources and study materials.</li> </ul>
       </div>
     </div>
     <p className="footer-note">For more updates, check our website or reach out to us directly.</p>

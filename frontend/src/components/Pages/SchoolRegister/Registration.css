@@ -329,3 +329,97 @@ input, select, textarea {
     width: 16px;
   }
 }
+
+/* --- 1. NEW HEADER STYLES --- */
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-left {
+  flex: 0 0 auto; /* Do not grow/shrink */
+  z-index: 10;
+}
+
+/* Override the previous margin on the instruction button so it fits nicely */
+.instruction-btn {
+  margin-bottom: 0 !important; 
+  padding: 8px 15px; /* Slightly smaller to fit header */
+  font-size: 14px;
+}
+
+.form-title {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0; /* Remove default margins */
+  /* If the button pushes the title off-center too much, use absolute positioning:
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  pointer-events: none; 
+  */
+}
+
+.header-spacer {
+  width: 140px; /* Approximate width of button to balance center alignment */
+  display: none; /* Hidden on mobile usually */
+}
+
+@media (min-width: 768px) {
+  .header-spacer {
+    display: block;
+  }
+}
+
+
+/* --- 2. COMPACT CHECKBOX & PAY BUTTON SECTION --- */
+
+.payment-confirmation-section {
+  /* Use explicit small padding */
+  /* padding: 15px;  */
+  /* margin-top: 20px; */
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  
+  /* Flex settings to stack items tightly */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  gap: 8px; /* TIGHT GAP between checkboxes and button */
+}
+
+/* Override inline styles if present, or use this class */
+.checkbox-row {
+  display: flex;
+  align-items: flex-start; /* Align checkbox with top of text line */
+  justify-content: flex-start; /* Keep text left-aligned relative to checkbox */
+  gap: 10px;
+  
+  width: 100%;
+  max-width: 500px; /* Prevent it from getting too wide/messy */
+  margin-bottom: 0 !important; /* Remove huge margins */
+  padding: 0;
+  
+  font-size: 14px; /* Slightly smaller font saves space */
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 3px; /* Align nicely with text */
+  flex-shrink: 0; /* Prevent checkbox from squishing */
+}
+
+/* Compact the Pay Button margin */
+.form-submit {
+  margin-top: 10px !important; /* Small gap above button */
+  width: 100%;
+  max-width: 200px; /* Don't let it stretch too wide */
+  padding: 10px;
+}
