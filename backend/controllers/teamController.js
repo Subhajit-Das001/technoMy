@@ -9,7 +9,7 @@ const getZone = require('../utils/getZone');
 
 const baseURL = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3001/api";
 const redirectUrl = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3000";
-const whatsapp = "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S";
+const whatsapp = "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S"; // i have to change this 
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -63,7 +63,7 @@ const TeamController = {
 
             // 5. Generate Payment URL using the Database ID (_id) instead of RollNumber
             // We pass the unique _id so we can find them later in handlePayment
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=268933&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
+            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=269166&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
 
             // Return the _id (registrationId) to frontend so it can handle the redirect
             res.status(201).json({ 
