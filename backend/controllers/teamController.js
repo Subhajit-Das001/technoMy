@@ -25,11 +25,11 @@ const formatDateForPassword = (dateInput) => {
     const d = new Date(dateInput);
     // Add 5.5 hours to shift UTC back to Indian Time
     d.setTime(d.getTime() + (5.5 * 60 * 60 * 1000));
-    
+
     const day = String(d.getUTCDate()).padStart(2, '0');
     const month = String(d.getUTCMonth() + 1).padStart(2, '0');
     const year = d.getUTCFullYear();
-    
+
     return `${day}${month}${year}`;
 };
 
@@ -47,7 +47,7 @@ const TeamController = {
 
             // 2. Prepare Data
             const zone = getZone(state);
-            
+
             // 3. Create Team WITHOUT Roll Number or Password
             // Ensure your Mongoose Schema allows rollNumber and password to be optional/null initially
             const newTeam = new Onlinereg({
@@ -63,13 +63,13 @@ const TeamController = {
 
             // 5. Generate Payment URL using the Database ID (_id) instead of RollNumber
             // We pass the unique _id so we can find them later in handlePayment
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=269166&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
+            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=269204&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
 
             // Return the _id (registrationId) to frontend so it can handle the redirect
-            res.status(201).json({ 
-                message: "Team registered successfully. Proceed to payment.", 
-                registrationId: savedTeam._id, 
-                paymentUrl: paymentPortalURL 
+            res.status(201).json({
+                message: "Team registered successfully. Proceed to payment.",
+                registrationId: savedTeam._id,
+                paymentUrl: paymentPortalURL
             });
 
         } catch (error) {
@@ -90,10 +90,10 @@ const TeamController = {
 
             // Idempotency check
             if (team.isPaid) {
-                return res.status(200).json({ 
-                    message: "Already paid", 
+                return res.status(200).json({
+                    message: "Already paid",
                     rollNumber: team.rollNumber,
-                    password: team.password 
+                    password: team.password
                 });
             }
 
@@ -114,7 +114,7 @@ const TeamController = {
 
             // 2. Generate Credentials
             const rollNumber = generateRollNumber(team.squad, team.language, team.city, cityInfo.studentCount);
-            
+
             const pass1 = formatDateForPassword(team.dob1);
             const pass2 = formatDateForPassword(team.dob2);
             const generatedPassword = `${pass1}${pass2}`;
@@ -122,7 +122,7 @@ const TeamController = {
             // 3. Update Database (CRITICAL STEP)
             const updatedTeam = await Onlinereg.findByIdAndUpdate(
                 registrationId,
-                { 
+                {
                     isPaid: true,
                     rollNumber: rollNumber,
                     password: generatedPassword
@@ -132,8 +132,8 @@ const TeamController = {
 
             // 4. Send Response to Frontend IMMEDIATELY
             // We prepare the response here so the user gets their data no matter what happens next.
-            res.status(200).json({ 
-                success: true, 
+            res.status(200).json({
+                success: true,
                 rollNumber: updatedTeam.rollNumber,
                 password: updatedTeam.password
             });
