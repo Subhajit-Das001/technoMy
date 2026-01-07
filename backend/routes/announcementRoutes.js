@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Announcement = require('../models/Announcement');
+const Announcement = require('../models/announcement');
 
 // Get all announcements
 router.get('/', async (req, res) => {
