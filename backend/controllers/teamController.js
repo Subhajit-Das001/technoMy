@@ -63,7 +63,7 @@ const TeamController = {
 
             // 5. Generate Payment URL using the Database ID (_id) instead of RollNumber
             // We pass the unique _id so we can find them later in handlePayment
-            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=269204&ucode=organizer&wcode=9063CD-9063CD-333333-9063CD-&dateTime=1&location=1&directDetails=0&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
+            const paymentPortalURL = `https://www.meraevents.com/ticketWidget?eventId=269334&redirectUrl=${redirectUrl}/confirmPayment/${savedTeam._id}&theme=1&t=1`;
 
             // Return the _id (registrationId) to frontend so it can handle the redirect
             res.status(201).json({
@@ -80,7 +80,17 @@ const TeamController = {
 
     handlePayment: async (req, res) => {
         try {
-            const { registrationId, paymentStatus } = req.body;
+            const { registrationId, paymentStatus, orderId } = req.body;
+
+            // 0. Basic Validation
+            if (!orderId) {
+                return res.status(400).json({ error: "Stop Hacking bro!!!! " });
+            }
+
+            // Check for exactly 7 digits
+            if (!/^\d{7}$/.test(orderId)) {
+                return res.status(400).json({ error: "Stop Hacking bro!!!!" });
+            }
 
             const team = await Onlinereg.findById(registrationId);
 
@@ -95,6 +105,12 @@ const TeamController = {
                     rollNumber: team.rollNumber,
                     password: team.password
                 });
+            }
+
+            // Check if this Order ID is already used by ANOTHER team (Replay Attack Prevention)
+            const existingOrder = await Onlinereg.findOne({ orderId });
+            if (existingOrder && existingOrder._id.toString() !== registrationId) {
+                return res.status(409).json({ error: "This Ticket ID has already been used." });
             }
 
             if (paymentStatus !== "success") {
@@ -125,7 +141,8 @@ const TeamController = {
                 {
                     isPaid: true,
                     rollNumber: rollNumber,
-                    password: generatedPassword
+                    password: generatedPassword,
+                    orderId: orderId
                 },
                 { new: true }
             );

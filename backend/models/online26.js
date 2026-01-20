@@ -22,14 +22,14 @@ const OnlineteamModel = new mongoose.Schema(
         squad: { type: String, required: true },
         language: { type: String, required: true },
         mode: { type: String, required: true }, // e.g., 'online'
-        
+
         // --- Location ---
         country: { type: String, required: true },
         state: { type: String, required: true },
         city: { type: String, required: true },
-        zone: { 
-            type: String, 
-            required: true 
+        zone: {
+            type: String,
+            required: true
         },
         // center: { 
         //     type: String, 
@@ -42,17 +42,24 @@ const OnlineteamModel = new mongoose.Schema(
 
         // --- Auth & Identification (Generated AFTER Payment) ---
         // CRITICAL: These must NOT be required, or the first save will fail.
-        rollNumber: { type: String }, 
-        password: { type: String }, 
+        rollNumber: { type: String },
+        password: { type: String },
+
+        // --- Payment Security ---
+        orderId: {
+            type: String,
+            unique: true,
+            sparse: true // Allows multiple documents to have no orderId (null/undefined)
+        },
 
         // --- Status ---
         // Rank: { type: String, default: 'NA' },
         isPaid: { type: Boolean, default: false },
-        
+
         createdAt: {
             type: Date,
             // Sets time to IST (UTC + 5.5)
-            default: () => new Date(Date.now() + 5.5 * 60 * 60 * 1000), 
+            default: () => new Date(Date.now() + 5.5 * 60 * 60 * 1000),
         },
     },
     {
