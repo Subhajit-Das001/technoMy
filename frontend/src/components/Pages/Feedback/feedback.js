@@ -15,6 +15,8 @@ const Feedback = () => {
     
     // NEW: Loading State
     const [loading, setLoading] = useState(false);
+    // NEW: Success Message State
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,8 +43,11 @@ const Feedback = () => {
             setLoading(false);
 
             if (response.status === 201) {
-                // 3. Show Success Alert AFTER loading is done
-                alert('Thank you for your feedback! We have notified the team.');
+                // 3. Show Success Message AFTER loading is done
+                setSuccessMessage('Feedback Submitted');
+                
+                // Hide message after 5 seconds
+                setTimeout(() => setSuccessMessage(''), 5000);
                 
                 // Clear form
                 setName('');
@@ -63,6 +68,11 @@ const Feedback = () => {
     return (
         <div className="App">
             <Header />
+            {successMessage && (
+                <div className="feedback-success-message">
+                    ✓ {successMessage}
+                </div>
+            )}
             <div className="feedback-main">
                 <div className="feed-head">
                     <h1>FEEDBACK</h1>

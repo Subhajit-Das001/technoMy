@@ -95,7 +95,7 @@ const UserPortal = () => {
         { title: 'Profile', img: admin }, 
         { title: 'Updates', img: add }, 
         { title: 'Results', img: hat }, 
-        { title: 'Chess', img: Chess }, 
+        // { title: 'Chess', img: Chess }, 
         // { title: 'AdmitCard', img: Ac }
     ];
 
@@ -193,12 +193,12 @@ const User = ({ selectedSection, onChessFullscreenToggle, isChessFullscreen }) =
             {selectedSection === 'Updates' && <Updates />}
             {selectedSection === 'SignOut' && <SignOut />}
             {selectedSection === 'Results' && <Results />}
-            {selectedSection === 'Chess' && (
+            {/* {selectedSection === 'Chess' && (
                 <ChessGamePage 
                     onFullscreenToggle={onChessFullscreenToggle}
                     isFullscreen={isChessFullscreen}
                 />
-            )}
+            )} */}
             {/* {selectedSection === 'AdmitCard' && <AdmitCard />} */}
         </div>
     );

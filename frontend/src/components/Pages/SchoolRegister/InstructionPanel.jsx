@@ -57,7 +57,7 @@ const InstructionPanel = () => {
 
         <h2>INSTRUCTIONS</h2>
         <ul>
-          <li><strong>All fields are mandatory.</strong> Please fill in every detail carefully.</li>
+<li>The registration fee is <strong>₹200</strong> per team.</li>         
           <li>Please enter your <strong>correct Full Name, Email ID, and Phone Number</strong>. These details <strong>cannot be changed</strong> later.</li>
           <li>All communication, resources, and admit cards will be sent to your registered Email ID. <strong>Ensure your email is active and correct.</strong></li>
           <li><strong>Squad Eligibility (Academic Year 2026):</strong>

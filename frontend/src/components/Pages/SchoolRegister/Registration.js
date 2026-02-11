@@ -68,14 +68,6 @@ const TeamReg = () => {
   // Logic to check if button should be enabled
   const isPayEnabled = agreements.readInstructions && agreements.confirmDetails;
 
-  const allStates = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-    "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-    "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
-    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-    "Uttar Pradesh", "Uttarakhand", "West Bengal","Ladakh", "Jammu & Kashmir", "Puducherry", "Lakshadweep", "Delhi", "Chandigarh", "Dadra and Nagar Haveli and Daman & Diu", "Andaman and Nicobar"
-  ];
   // Helper object for Zone Mapping
   const stateToZoneMap = {
     // North
@@ -143,6 +135,47 @@ const TeamReg = () => {
     "Bangladesh", "Barbados", "Belarus", "Belgium", "India", "United States of America", 
     "United Kingdom", "Canada" 
     // ... Include the rest of your countries list here
+  ];
+
+  // All Indian states and union territories
+  const allStates = [
+    "Jammu & Kashmir",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Himachal Pradesh",
+    "Punjab",
+    "Chandigarh",
+    "Haryana",
+    "Uttarakhand",
+    "Delhi",
+    "Uttar Pradesh",
+    "Bihar",
+    "Telangana",
+    "Andhra Pradesh",
+    "Karnataka",
+    "Kerala",
+    "Tamil Nadu",
+    "Puducherry",
+    "Andaman and Nicobar",
+    "Lakshadweep",
+    "Jharkhand",
+    "Chhattisgarh",
+    "Odisha",
+    "West Bengal",
+    "Assam",
+    "Meghalaya",
+    "Manipur",
+    "Tripura",
+    "Mizoram",
+    "Nagaland",
+    "Arunachal Pradesh",
+    "Sikkim",
+    "Rajasthan",
+    "Madhya Pradesh",
+    "Gujarat",
+    "Maharashtra",
+    "Goa",
+    "Dadra and Nagar Haveli and Daman & Diu"
   ];
 
   let name, value;
