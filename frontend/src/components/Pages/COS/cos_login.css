@@ -1,0 +1,237 @@
+.cos_kv_login_wrapper {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cos_kv_login_container {
+  width: 100%;
+  max-width: 450px;
+}
+
+.cos_kv_login_box {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cos_kv_logo_container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.cos_kv_logo {
+  width: 300px;
+  height: 100px;
+  object-fit: contain;
+  /* border-radius: 50%; */
+  background: white;
+}
+
+.cos_kv_portal_title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.cos_kv_login_form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cos_kv_input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cos_kv_input_label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.cos_kv_input_field {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.cos_kv_input_field:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+}
+
+.cos_kv_error_message {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+  background-color: #fee;
+  border-radius: 4px;
+}
+
+.cos_kv_submit_button {
+  padding: 12px 24px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.cos_kv_submit_button:hover {
+  background-color: #0052a3;
+}
+
+.cos_kv_submit_button:active {
+  background-color: #003d7a;
+}
+
+.cos_kv_footer {
+  margin-top: 30px;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.cos_kv_copyright {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.cos_kv_recommendation {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.cos_kv_browser_icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cos_kv_browser_icon {
+  font-size: 11px;
+  color: #999;
+  padding: 4px 8px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .cos_kv_login_wrapper {
+    padding: 15px;
+  }
+
+  .cos_kv_login_box {
+    padding: 25px 20px;
+  }
+
+  .cos_kv_logo {
+    width: 250px;
+    height: 80px;
+  }
+
+  .cos_kv_portal_title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .cos_kv_login_form {
+    gap: 18px;
+  }
+
+  .cos_kv_submit_button {
+    width: 100%;
+    padding: 14px 24px;
+  }
+
+  .cos_kv_footer {
+    margin-top: 25px;
+    padding-top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cos_kv_login_wrapper {
+    padding: 10px;
+  }
+
+  .cos_kv_login_box {
+    padding: 20px 15px;
+  }
+
+  .cos_kv_logo_container {
+    margin-bottom: 15px;
+  }
+
+  .cos_kv_logo {
+    width: 200px;
+    height: 70px;
+  }
+
+  .cos_kv_portal_title {
+    font-size: 18px;
+    margin-bottom: 18px;
+  }
+
+  .cos_kv_input_label {
+    font-size: 13px;
+  }
+
+  .cos_kv_input_field {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .cos_kv_error_message {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .cos_kv_submit_button {
+    font-size: 14px;
+    padding: 12px 20px;
+  }
+
+  .cos_kv_footer {
+    margin-top: 20px;
+    padding-top: 15px;
+  }
+
+  .cos_kv_copyright,
+  .cos_kv_recommendation {
+    font-size: 11px;
+  }
+
+  .cos_kv_browser_icons {
+    gap: 10px;
+  }
+
+  .cos_kv_browser_icon {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}

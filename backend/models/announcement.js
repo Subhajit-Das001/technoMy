@@ -13,3 +13,4 @@ const announcementSchema = new mongoose.Schema({
 
 // Check if model exists before creating
 module.exports = mongoose.models.Announcement || mongoose.model('Announcement', announcementSchema);
+

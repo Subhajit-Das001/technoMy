@@ -10,6 +10,8 @@ import ContactUs from './components/Pages/ContactUs/contactus';
 
 import Cityreplogin from './components/Pages/cityrep/cityreplogin';
 import Cityrep_Portal from './components/Pages/cityrep/cityrep_portal';
+import COSLogin from './components/Pages/COS/cos_login';
+import COSPortal from './components/Pages/COS/cos_portal';
 
 import Leaderboard from './components/Pages/Contest/Leaderboard';
 
@@ -86,6 +88,10 @@ const AppRoutes = () => {
      
       <Route path="/cityreplogin" element={<Cityreplogin />} />
       <Route path="/cityrep_portal" element={<Cityrep_Portal />} />
+      
+      {/* Chain of Schools Portal Routes */}
+      <Route path="/cos_login" element={<COSLogin />} />
+      <Route path="/cos_portal" element={<COSPortal />} />
 
       {/* Contest Routes */}
       <Route path="/contest/login" element={<Contestlogin />} />

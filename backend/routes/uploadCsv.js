@@ -641,11 +641,11 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
       try {
         const emailPromises = [];
         if (email1) {
-          // emailPromises.push(sendEmail(email1, rollNumber, password));
+          emailPromises.push(sendEmail(email1, rollNumber, password));
           console.log("hi");
         }
         if (email2) {
-          // emailPromises.push(sendEmail(email2, rollNumber, password));
+          emailPromises.push(sendEmail(email2, rollNumber, password));
           console.log("hi");
 
         }

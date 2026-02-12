@@ -8,6 +8,18 @@ const cityRepSchema = new mongoose.Schema({
   contact: {
     type: String,
     required: true,
+    get: function(value) {
+      // Convert to string when retrieved
+      return String(value);
+    }
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+   state: {
+    type: String,
+    required: true,
   },
   zone: {
     type: String,

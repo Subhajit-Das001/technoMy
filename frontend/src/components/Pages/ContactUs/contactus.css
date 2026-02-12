@@ -1,339 +1,618 @@
-@import url("https://fonts.googleapis.com/css2?family=Karla&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
-
-* {
-  margin: 0;
-  box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+/* Container Layout */
+.contactus-page-wrapper {
+    background-color: #f0f2f5;
+    padding-top: 100px; /* Space for Header */
+    min-height: 100vh;
 }
 
-/* =========================================
-   1. NAVY HEADER SECTION
-   ========================================= */
-.navy {
-  width: 100vw;
-  height: 35vh;
-  min-height: 200px;
-  background-color: rgb(88, 64, 244);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  border-bottom-left-radius: 5vh;
-  border-bottom-right-radius: 5vh;
-  animation: slideFromTop 1s ease forwards;
+.contactus-dashboard-layout {
+    display: flex;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
+    gap: 20px;
 }
 
-@keyframes slideFromTop {
-  from {
-    margin-top: -35vh;
-  }
-  to {
-    margin-top: 10vh;
-  }
+/* Left Sidebar Styles */
+.contactus-left-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 380px;
 }
 
-.navy h1 {
-  font-size: calc(2em + 1.8vw);
-  font-weight: 600;
-  letter-spacing: 1px;
-  width: 100%;
-  text-align: center;
-  color: white;
+.contactus-zone-card {
+    padding: 15px 20px;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
 }
 
-.navy h2 {
-  color: rgb(224, 212, 212);
-  text-align: center;
+.contactus-zone-card:hover {
+    transform: translateY(-3px);
 }
 
-.cityrep-login-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: white;
-  color: rgb(88, 64, 244);
-  border: none;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.contactus-card-label { 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    font-size: 11px; 
+    letter-spacing: 1px; 
+    margin-bottom: 12px; 
+    opacity: 0.8; 
 }
 
-.cityrep-login-btn:hover {
-  background-color: rgb(205, 220, 252);
-  transform: scale(1.05);
+/* DBT Portal Colors */
+.contactus-bg-blue { background-color: #0054a6; }
+.contactus-bg-pink { background-color: #ed1c24; }
+.contactus-bg-green { background-color: #398439; }
+.contactus-bg-orange { background-color: #f7941d; }
+
+/* Mini Profile Styling inside Cards */
+.contactus-heads-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
 }
 
-/* =========================================
-   2. CITY REPRESENTATIVES SECTION
-   ========================================= */
-.cityrp-main {
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: rgb(205, 220, 252);
-  padding-bottom: 2rem;
+.contactus-heads-row { 
+    display: flex; 
+    flex-direction: row; 
+    gap: 10px; 
+    flex-wrap: wrap;
 }
 
-.head-headings {
-  width: 80%;
-  margin-top: 5vh;
-  font-size: calc(1.3em + 1.4vw);
-  font-weight: 700;
-  text-align: center;
+/* South and West zones display profiles side by side */
+.contactus-bg-pink .contactus-heads-row,
+.contactus-bg-orange .contactus-heads-row {
+    flex-direction: row;
 }
 
-.cityrp {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap; /* Wraps items on smaller screens */
+.contactus-mini-head-profile { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    background: rgba(255,255,255,0.15); 
+    padding: 10px; 
+    border-radius: 6px; 
 }
 
-.zone {
-  margin-top: 5vh;
-  width: 20%;
-  min-width: 200px; /* Prevents squishing */
-  display: flex;
-  flex-direction: column;
-  padding: 0 1%;
+/* South, West, North, and East zones - equal width profiles */
+.contactus-bg-pink .contactus-mini-head-profile,
+.contactus-bg-orange .contactus-mini-head-profile,
+.contactus-bg-blue .contactus-mini-head-profile,
+.contactus-bg-green .contactus-mini-head-profile {
+    flex: 1;
 }
 
-.zone h2 {
-  font-size: calc(.6em + 1.5vw);
-  font-weight: 700;
-  margin-bottom: 5%;
+.contactus-mini-avatar { 
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid white; 
 }
 
-.zone-name {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 5%;
+.contactus-mini-head-info h6 { 
+    margin: 0; 
+    font-size: 1rem; 
+    font-weight: 700; 
+    color: white;
 }
 
-.zone-name p {
-  font-size: calc(.5em + .8vw);
-  padding-top: 1vh;
+.contactus-mini-socials { 
+    display: flex; 
+    gap: 10px; 
+    margin-top: 4px; 
 }
 
-/* =========================================
-   3. HEADS SECTION (NEW GRID LAYOUT)
-   ========================================= */
-.contact {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 5vh;
-  background-color: #fff;
+.contactus-mini-socials a { 
+    color: white; 
+    font-size: 0.9rem; 
+    opacity: 0.9; 
+    transition: opacity 0.2s;
 }
 
-.head-heading {
-  margin-top: 8vh;
-  margin-bottom: 5vh;
-  font-weight: 700;
-  text-align: center;
+.contactus-mini-socials a:hover { opacity: 1; }
+
+.contactus-split-row { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
 }
 
-.head-heading p {
-  font-size: calc(1.5em + 1.2vw);
+.contactus-query-card { 
+    background: #5840f4; 
+    color: white; 
+    padding: 15px; 
+    border-radius: 8px; 
+    text-align: center; 
 }
 
-/* --- GRID CONTAINER --- */
-.heads-grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
-  gap: 40px; /* Space between cards */
-  width: 85%;
-  max-width: 1200px;
-  margin-bottom: 5vh;
-}
-
-/* --- INDIVIDUAL CARD --- */
-.head-card {
-  background: white;
-  border-radius: 20px;
-  padding: 35px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft shadow */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-
-.head-card:hover {
-  transform: translateY(-10px); /* Lift up effect */
-  box-shadow: 0 20px 40px rgba(88, 64, 244, 0.2); /* Colored shadow */
-}
-
-/* --- IMAGE STYLING --- */
-.head-img-wrapper {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 20px;
-}
-
-.head-img-wrapper img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  /* object-position: top center; Add this line to force centering */
-  border: 4px solid rgb(205, 220, 252);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* --- TEXT CONTENT --- */
-.head-info h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.head-info .divider {
-  width: 40px;
-  height: 3px;
-  background-color: rgb(88, 64, 244);
-  margin: 0 auto 12px auto;
-  border-radius: 2px;
-}
-
-.role-text {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 25px; /* Spacing before icons */
-}
-
-/* --- SOCIAL ICONS --- */
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: auto;
-}
-
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #f0f2f5;
-  color: #555;
-  font-size: 18px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-/* Hover Effects for Icons */
-.social-icon:hover {
-  color: white;
-  transform: scale(1.1);
-}
-
-.social-icon.linkedin:hover {
-  background-color: #0077b5; /* LinkedIn Blue */
-}
-
-.social-icon.email:hover {
-  background-color: #ea4335; /* Google Red */
-}
-
-.social-icon.phone:hover {
-  background-color: #34b7f1; /* Phone Blue */
-}
-
-/* --- FOOTER CONTACT INFO --- */
-.cont-description {
-  margin-top: 4vh;
-  padding: 20px;
-  text-align: center;
-}
-
-.cont-description h2 {
-  font-weight: 500;
-  font-size: calc(.8em + .7vw);
-  letter-spacing: 1px;
-  color: #444;
-}
-
-/* =========================================
-   4. RESPONSIVE DESIGN (TABLET & MOBILE)
-   ========================================= */
-
-/* Tablet (max-width: 1024px) */
-@media only screen and (max-width: 1024px) {
-  .heads-grid-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    width: 90%;
-  }
-}
-
-/* Mobile (max-width: 768px) */
-@media only screen and (max-width: 768px) {
-  
-  /* Adjust Navy Header */
-  .navy {
-    margin-top: 10vh;
-  }
-  
-  /* Adjust City Reps Layout */
-  .cityrp {
+/* Right Map Container */
+.contactus-right-map-container {
+    flex: 1;
+    min-width: 450px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .zone {
-    width: 80%;
-    margin-top: 2vh;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding-bottom: 2vh;
-  }
-  
-  .zone h2 {
-    border-bottom: none;
-  }
-
-  /* Adjust Heads Grid for Mobile */
-  .heads-grid-container {
-    grid-template-columns: 1fr; /* 1 column stack */
-    gap: 30px;
-    width: 85%;
-  }
-
-  .head-card {
-    padding: 25px 15px;
-  }
-
-  .head-img-wrapper {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .head-heading p {
-    font-size: 1.8rem;
-  }
-  
-  .cont-description h2 {
-    font-size: 0.9rem;
-  }
 }
+
+.contactus-map-heading { 
+    color: #666; 
+    font-size: 1rem; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-bottom: 20px; 
+}
+
+/* MAP VISIBILITY FIXES */
+.contactus-svg-box { 
+    width: 100%; 
+    height: auto; 
+    display: flex;
+    justify-content: center;
+}
+
+.contactus-svg-box svg { 
+    width: 100%; 
+    height: auto; 
+    max-height: 80vh; 
+    display: block; 
+}
+
+.contactus-state-path {
+    fill: #ffeb3b; /* Yellow */
+    stroke: #ffffff;
+    stroke-width: 1.2;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.contactus-state-path:hover {
+    fill: #333333 !important; /* Dark hover color from DBT portal */
+}
+
+/* Tooltip Styling */
+.contactus-map-tooltip {
+    position: fixed;
+    background: #1a1a1a;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    z-index: 9999;
+    min-width: 220px;
+    max-width: 90vw;
+    border-left: 5px solid #5840f4;
+    pointer-events: auto; /* ALLOWS CLICKING BUTTON */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    word-wrap: break-word;
+}
+
+.contactus-tt-call-btn {
+    display: inline-block;
+    margin-top: 5px;
+    color: #ffeb3b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border: 1px solid #ffeb3b;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.contactus-tt-call-btn:hover {
+    background: #ffeb3b;
+    color: #000;
+}
+
+.contactus-tt-state { margin: 0; font-size: 1.2rem; font-weight: 800; color: #ffeb3b; }
+.contactus-tt-zone { font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 700; }
+.contactus-tt-divider { height: 1px; background: #333; margin: 10px 0; }
+.contactus-tt-label { font-size: 0.7rem; color: #777; text-transform: uppercase; margin-bottom: 5px; }
+.contactus-tt-rep-item { margin-bottom: 8px; border-bottom: 1px dotted #333; padding-bottom: 5px; }
+.contactus-tt-rep-item p { margin: 0; font-size: 0.85rem; }
+
+/* Responsive Grid for Mobile */
+@media (max-width: 1100px) {
+    .contactus-dashboard-layout { 
+        flex-direction: column; 
+    }
+    .contactus-left-sidebar { 
+        min-width: 100%; 
+    }
+    .contactus-right-map-container {
+        min-width: 100%;
+    }
+}
+
+/* Tablet Styles */
+@media (max-width: 768px) {
+    .contactus-page-wrapper {
+        padding-top: 80px;
+    }
+    
+    .contactus-dashboard-layout {
+        padding: 15px;
+        gap: 15px;
+        margin: 15px auto;
+    }
+    
+    .contactus-left-sidebar {
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Hide desktop version, show mobile version on tablet */
+    .contactus-platform-desktop {
+        display: none;
+    }
+    
+    .contactus-platform-mobile {
+        display: block;
+        margin-top: 20px;
+    }
+    
+    .contactus-zone-card {
+        padding: 12px 15px;
+    }
+    
+    .contactus-card-label {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .contactus-mini-head-profile {
+        padding: 8px;
+        gap: 10px;
+    }
+    
+    .contactus-mini-avatar {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .contactus-mini-head-info h6 {
+        font-size: 0.9rem;
+    }
+    
+    .contactus-mini-socials {
+        gap: 8px;
+    }
+    
+    .contactus-mini-socials a {
+        font-size: 0.85rem;
+    }
+    
+    .contactus-split-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .contactus-right-map-container {
+        padding: 20px;
+    }
+    
+    .contactus-map-heading {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .contactus-svg-box svg {
+        max-height: 60vh;
+    }
+    
+    .contactus-map-tooltip {
+        min-width: 200px;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .contactus-tt-state {
+        font-size: 1.1rem;
+    }
+    
+    .contactus-platform-container {
+        padding: 12px;
+    }
+    
+    .contactus-platform-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .contactus-platform-btn {
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .contactus-platform-icon {
+        font-size: 1rem;
+    }
+    
+    .contactus-platform-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+    .contactus-page-wrapper {
+        padding-top: 70px;
+    }
+    
+    .contactus-dashboard-layout {
+        padding: 10px;
+        gap: 12px;
+        margin: 10px auto;
+        flex-direction: column;
+    }
+    
+    .contactus-left-sidebar {
+        gap: 8px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Hide desktop version, show mobile version on mobile */
+    .contactus-platform-desktop {
+        display: none;
+    }
+    
+    .contactus-platform-mobile {
+        display: block;
+        margin-top: 20px;
+    }
+    
+    .contactus-zone-card {
+        padding: 10px 12px;
+    }
+    
+    .contactus-card-label {
+        font-size: 9px;
+        margin-bottom: 8px;
+    }
+    
+    .contactus-heads-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .contactus-bg-pink .contactus-heads-row,
+    .contactus-bg-orange .contactus-heads-row {
+        flex-direction: column;
+    }
+    
+    .contactus-mini-head-profile {
+        flex-direction: row;
+        padding: 8px;
+        gap: 10px;
+    }
+    
+    .contactus-bg-pink .contactus-mini-head-profile,
+    .contactus-bg-orange .contactus-mini-head-profile,
+    .contactus-bg-blue .contactus-mini-head-profile,
+    .contactus-bg-green .contactus-mini-head-profile {
+        flex: none;
+    }
+    
+    .contactus-mini-avatar {
+        width: 60px;
+        height: 60px;
+        flex-shrink: 0;
+    }
+    
+    .contactus-mini-head-info h6 {
+        font-size: 0.85rem;
+    }
+    
+    .contactus-mini-socials {
+        gap: 6px;
+        margin-top: 2px;
+    }
+    
+    .contactus-mini-socials a {
+        font-size: 0.8rem;
+    }
+    
+    .contactus-split-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .contactus-query-card {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .contactus-right-map-container {
+        padding: 15px;
+    }
+    
+    .contactus-map-heading {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+    }
+    
+    .contactus-svg-box svg {
+        max-height: 50vh;
+    }
+    
+    .contactus-state-path {
+        stroke-width: 1;
+    }
+    
+    .contactus-map-tooltip {
+        min-width: 180px;
+        max-width: 90vw;
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .contactus-tt-state {
+        font-size: 1rem;
+    }
+    
+    .contactus-tt-zone {
+        font-size: 0.7rem;
+    }
+    
+    .contactus-tt-rep-item {
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+    }
+    
+    .contactus-tt-rep-item p {
+        font-size: 0.8rem;
+    }
+    
+    .contactus-tt-call-btn {
+        font-size: 0.75rem;
+        padding: 3px 6px;
+    }
+    
+    .contactus-platform-container {
+        padding: 10px;
+    }
+    
+    .contactus-platform-header {
+        font-size: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .contactus-platform-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .contactus-platform-btn {
+        padding: 10px;
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .contactus-platform-icon {
+        font-size: 1.1rem;
+    }
+    
+    .contactus-platform-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 360px) {
+    .contactus-dashboard-layout {
+        padding: 8px;
+    }
+    
+    .contactus-zone-card {
+        padding: 8px 10px;
+    }
+    
+    .contactus-mini-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .contactus-mini-head-info h6 {
+        font-size: 0.8rem;
+    }
+    
+    .contactus-right-map-container {
+        padding: 12px;
+    }
+    
+    .contactus-map-tooltip {
+        min-width: 160px;
+        padding: 8px;
+    }
+    
+    .contactus-tt-state {
+        font-size: 0.95rem;
+    }
+}
+
+/* These colors match the left-side cards */
+.contactus-map-north { fill: #0054a6 !important; }
+.contactus-map-south { fill: #ed1c24 !important; }
+.contactus-map-east  { fill: #398439 !important; }
+.contactus-map-west  { fill: #f7941d !important; }
+
+/* The hover effect should still be dark grey/black */
+.contactus-state-path:hover {
+    fill: #333333 !important;
+}
+
+/* Container for the platforms */
+.contactus-platform-container {
+    margin-top: 10px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Desktop: Show desktop version, hide mobile */
+.contactus-platform-desktop {
+    display: block;
+}
+
+.contactus-platform-mobile {
+    display: none;
+}
+
+.contactus-platform-header {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* Grid Layout: 2 columns for platforms */
+.contactus-platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+/* Individual Platform Button */
+.contactus-platform-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    text-decoration: none !important;
+    border-radius: 6px;
+    color: white;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.contactus-platform-btn:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+}
+
+.contactus-platform-icon { font-size: 1.2rem; }
+.contactus-platform-text { font-size: 0.85rem; font-weight: 600; }
+
+/* Particular Colors for Platforms */
+.contactus-bg-linkedin  { background-color: #0077b5; }
+.contactus-bg-mail      { background-color: #f7941d; }
+.contactus-bg-facebook  { background-color: #1877f2; }
+.contactus-bg-instagram { background: linear-gradient(45deg, #f09433, #bc1888); }
+.contactus-bg-medium     { background-color: #000000; }
+.contactus-bg-whatsapp  { background-color: #25d366; }
+

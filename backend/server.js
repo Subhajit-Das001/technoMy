@@ -28,6 +28,7 @@ const contestRoutes = require('./routes/contestRoutes');
 const centerListRoutes = require('./routes/center_list_route');
 const technopediaRoutes = require('./routes/Technopedia_Route');
 const merchAnalyticsRoutes = require('./routes/merchAnalytics');
+const cosPortalRoutes = require('./routes/cos_portal');
 
 // Configure event emitter
 EventEmitter.defaultMaxListeners = 20;
@@ -94,6 +95,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', centerListRoutes);
 app.use('/api/technopedia', technopediaRoutes);
 app.use('/api/merch', merchAnalyticsRoutes);
+app.use('/api/cos_portal', cosPortalRoutes);
 // Root route
 app.get('/', (req, res) => {
     res.send("Hello from Technothlon Server");
