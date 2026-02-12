@@ -84,12 +84,12 @@ const TeamController = {
 
             // 0. Basic Validation
             if (!orderId) {
-                return res.status(400).json({ error: "Stop Hacking bro!!!! " });
+                return res.status(400).json({ error: "Please Complete Payment or If already done please contact technothlon.iitg@gmail.com" });
             }
 
             // Check for exactly 7 digits
             if (!/^\d{7}$/.test(orderId)) {
-                return res.status(400).json({ error: "Stop Hacking bro!!!!" });
+                return res.status(400).json({ error: "Please Complete Payment or If already done please contact technothlon.iitg@gmail.com" });
             }
 
             const team = await Onlinereg.findById(registrationId);
