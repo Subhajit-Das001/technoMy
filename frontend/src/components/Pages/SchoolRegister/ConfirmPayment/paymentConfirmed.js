@@ -80,35 +80,11 @@ const PaymentConfirmed = () => {
                 {/* STATE: INPUT (Fallback if no URL param) */}
                 {status === 'input' && (
                     <div className="input-box" style={{ textAlign: 'center', padding: '2rem' }}>
-                        <h2>Final Step!</h2>
-                        <p>Please enter the <strong>Order ID / Ticket ID</strong> sent to your email by MeraEvents.</p>
-                        <form onSubmit={handleManualSubmit} style={{ marginTop: '20px' }}>
-                            <input
-                                type="text"
-                                placeholder="Enter 7-digit Order ID"
-                                value={manualOrderId}
-                                onChange={(e) => setManualOrderId(e.target.value)}
-                                style={{ padding: '10px', width: '250px', fontSize: '16px' }}
-                                maxLength={7}
-                                required
-                            />
-                            <br />
-                            <button
-                                type="submit"
-                                style={{
-                                    marginTop: '15px',
-                                    padding: '10px 20px',
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    fontSize: '16px'
-                                }}
-                            >
-                                Generate Roll Number
-                            </button>
-                        </form>
+                        <h2>Payment Incomplete</h2>
+                        <p style={{ fontSize: '18px', color: '#555', marginTop: '10px' }}>
+                            Please complete the payments. <br />
+                            If already done, then please contact us at <a href="mailto:technothlon.iitg@gmail.com" style={{ color: '#0056b3', textDecoration: 'underline' }}>technothlon.iitg@gmail.com</a>.
+                        </p>
                     </div>
                 )}
 
