@@ -104,10 +104,10 @@ function ContactUs() {
         ]);
 
         // DEBUG 2: Log the raw data received from backend
-        console.log("North Zone Data:", n.data);
-        console.log("South Zone Data:", s.data);
-        console.log("East Zone Data:", e.data);
-        console.log("West Zone Data:", w.data);
+        // console.log("North Zone Data:", n.data);
+        // console.log("South Zone Data:", s.data);
+        // console.log("East Zone Data:", e.data);
+        // console.log("West Zone Data:", w.data);
 
         setZones({ North: n.data, South: s.data, East: e.data, West: w.data });
       } catch (err) { 
@@ -198,7 +198,7 @@ function ContactUs() {
           {(() => {
              // DEBUG 3: specific logic for tooltip rendering
              const zoneReps = zones[tooltip.zone] || [];
-             console.log(`Hovering State: ${tooltip.state}, Total Reps in ${tooltip.zone}: ${zoneReps.length}`);
+            //  console.log(`Hovering State: ${tooltip.state}, Total Reps in ${tooltip.zone}: ${zoneReps.length}`);
              
              const filteredReps = zoneReps.filter((rep) => {
                  // Debug individual comparison

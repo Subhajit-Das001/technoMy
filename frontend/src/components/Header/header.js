@@ -54,15 +54,15 @@ function Header() {
         const announcements = response.data;
         
         // Log the announcements to debug
-        console.log('Received announcements:', announcements);
+        // console.log('Received announcements:', announcements);
         
         // Check for announcements with id 1 and 4
         const contestAnnouncement = announcements.find(ann => Number(ann.id) === 1);
         const leaderboardAnnouncement = announcements.find(ann => Number(ann.id) === 4);
         
         // Debug logs
-        console.log('Contest announcement:', contestAnnouncement);
-        console.log('Leaderboard announcement:', leaderboardAnnouncement);
+        // console.log('Contest announcement:', contestAnnouncement);
+        // console.log('Leaderboard announcement:', leaderboardAnnouncement);
         
         setShowContest(!!contestAnnouncement);
         setShowLeaderboard(!!leaderboardAnnouncement);

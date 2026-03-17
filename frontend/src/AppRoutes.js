@@ -88,10 +88,10 @@ const AppRoutes = () => {
      
       <Route path="/cityreplogin" element={<Cityreplogin />} />
       <Route path="/cityrep_portal" element={<Cityrep_Portal />} />
-      
+       
       {/* Chain of Schools Portal Routes */}
-      <Route path="/cos_login" element={<COSLogin />} />
-      <Route path="/cos_portal" element={<COSPortal />} />
+      <Route path="/school-registration" element={<COSLogin />} />
+      <Route path="/school-dashboard" element={<COSPortal />} />
 
       {/* Contest Routes */}
       <Route path="/contest/login" element={<Contestlogin />} />
