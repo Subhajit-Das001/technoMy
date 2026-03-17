@@ -14,6 +14,12 @@ import ud from '../../Assets/heads/ud.png';
 import sr from '../../Assets/heads/sr.jpg';
 
 function ContactUs() {
+  const [lockedTooltip, setLockedTooltip] = useState(false);
+  const [overlay, setOverlay] = useState({
+  visible: false,
+  state: "",
+  zone: ""
+});
   const [zones, setZones] = useState({ North: [], South: [], East: [], West: [] });
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, state: "", zone: "" });
 
@@ -118,20 +124,56 @@ function ContactUs() {
     };
     fetchCityReps();
   }, [baseURL]);
+ useEffect(() => {
+  const handleClickOutside = (e) => {
+    const clickedTooltip = e.target.closest(".contactus-map-tooltip");
+    const clickedMap = e.target.closest("svg");
+
+    // ❌ Do nothing if clicking tooltip or map
+    if (clickedTooltip || clickedMap) return;
+
+    // ✅ Otherwise close tooltip
+    setLockedTooltip(false);
+    setTooltip(prev => ({ ...prev, visible: false }));
+  };
+
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
 
   const handleMouseMove = (e) => {
-    const stateName = e.target.getAttribute("name");
-    if (stateName) {
-      setTooltip({
-        visible: true,
-        // Reduced offset to 10px to ensure the cursor stays "connected" to the tooltip
-        x: e.clientX + 10,
-        y: e.clientY + 10,
-        state: stateName,
-        zone: stateZoneMap[stateName] || "Unknown"
-      });
-    }
-  };
+  const stateName = e.target.getAttribute("name");
+  if (!stateName) return;
+
+  setTooltip(prev => ({
+    ...prev,
+    visible: true,
+    x: e.pageX + 10,
+    y: e.pageY + 10,
+    state: stateName,
+    zone: stateZoneMap[stateName] || "Unknown"
+  }));
+};
+ const handleStateClick = (e) => {
+  const stateName = e.target.getAttribute("name");
+  if (!stateName) return;
+
+  setLockedTooltip(false); // ❌ unlock tooltip
+  setTooltip(prev => ({ ...prev, visible: false })); // ❌ hide tooltip
+
+  setOverlay({
+    visible: true,
+    state: stateName,
+    zone: stateZoneMap[stateName] || "Unknown"
+  });
+};
+const closeOverlay = () => {
+  setOverlay({ visible: false, state: "", zone: "" });
+  document.body.style.overflow = "auto";
+};
 
   const getZoneClass = (stateName) => {
     const zone = stateZoneMap[stateName];
@@ -188,8 +230,13 @@ function ContactUs() {
         <div
           className="contactus-map-tooltip"
           style={{ left: tooltip.x, top: tooltip.y }}
+          onClick={(e) => e.stopPropagation()} 
           onMouseEnter={() => setTooltip(prev => ({ ...prev, visible: true }))}
-          onMouseLeave={() => setTooltip(prev => ({ ...prev, visible: false }))}
+          onMouseLeave={() => {
+            if (!lockedTooltip) {
+              setTooltip(prev => ({ ...prev, visible: false }));
+            }
+          }}
         >
           <h4 className="contactus-tt-state">{tooltip.state}</h4>
           <span className="contactus-tt-zone">{tooltip.zone} Zone</span>
@@ -213,11 +260,13 @@ function ContactUs() {
 
              return filteredReps.map((rep, i) => (
                 <div key={i} className="contactus-tt-rep-item">
-                  <p><strong>{rep.name}</strong></p>
-                  <span style={{fontSize: '11px', color: '#666'}}>({rep.city})</span>
-                  <a href={`tel:${rep.contact}`} className="contactus-tt-call-btn">
-                    <FaPhoneAlt size={10} /> {rep.contact}
-                  </a>
+                  <div className="contactus-tt-row">
+                    <span className="contactus-tt-name">{rep.name}</span>
+                    <a href={`tel:${rep.contact}`} className="contactus-tt-call-btn">
+                      <FaPhoneAlt size={10} /> {rep.contact}
+                    </a>
+                  </div>
+                  <span className="contactus-tt-city">({rep.city})</span>
                 </div>
              ));
           })()}
@@ -277,9 +326,68 @@ function ContactUs() {
         </div>
 
         <div className="contactus-right-map-container">
-          <h2 className="contactus-map-heading">Interactive Zone Explorer</h2>
+          <h2 className="contactus-map-heading">Find Your City Representative</h2>
+          {/* ✅ MAP-SCOPED OVERLAY */}
+  {overlay.visible && (
+    <div className="contactus-map-overlay">
+      <div className="contactus-map-overlay-content">
+        
+        <button
+          className="contactus-map-overlay-close"
+          onClick={closeOverlay}
+        >
+          ✕
+        </button>
+
+        <h2 className="contactus-map-overlay-title">
+          {overlay.state}
+        </h2>
+        <p className="contactus-map-overlay-zone">
+          {overlay.zone} Zone
+        </p>
+
+        <div className="contactus-map-overlay-divider"></div>
+
+        <div className="contactus-map-overlay-list">
+          {(() => {
+            const zoneReps = zones[overlay.zone] || [];
+            const filteredReps = zoneReps.filter(
+              (rep) =>
+                rep.state &&
+                rep.state.toLowerCase() === overlay.state.toLowerCase()
+            );
+
+            if (filteredReps.length === 0)
+              return <p>No rep found for {overlay.state}</p>;
+
+            return filteredReps.map((rep, i) => (
+              <div key={i} className="contactus-map-overlay-item">
+                <div>
+                  <h4>{rep.name}</h4>
+                  <p>{rep.city}</p>
+                </div>
+
+                <a
+                  href={`tel:${rep.contact}`}
+                  className="contactus-map-overlay-call"
+                >
+                  <FaPhoneAlt /> Call
+                </a>
+              </div>
+            ));
+          })()}
+        </div>
+      </div>
+    </div>
+  )}
           <div className="contactus-svg-box">
-            <svg viewBox="0 0 1000 1000" onMouseMove={handleMouseMove} onMouseOut={() => setTooltip({ ...tooltip, visible: false })}>
+            <svg viewBox="0 0 1000 1000" onMouseMove={handleMouseMove} onClick={(e) => {e.stopPropagation();handleStateClick(e);}} onMouseLeave={() => {
+  // hide tooltip
+  setTooltip(prev => ({ ...prev, visible: false }));
+
+  // hide overlay also
+  // setOverlay({ visible: false, state: "", zone: "" });
+}}>
               <g id="features">
                 <path d="M802.5 941.1l-0.2 0.4 0.3 0.4 0.5-0.1 0.4 0.8-0.1 0.3 0.2 0.7 0.1 0.8-0.1 1 0.4 0.2 0.4 0.8 0.1 1.1-0.2 0.3 0.4 0.4 0.2 0.6-0.5 0.5-0.2 0.6 0.2 0.3-0.6 0.3 0.2 0.5-0.3 0.4 0 0.6 0.5 0.2-0.4 1-0.3 0.2-0.4-0.5-0.5 0-0.2 0.4 0.1 0.5-0.5 0.7-0.6-0.2 0.2-1.2-0.4-0.2-0.4-0.6 0.2-0.4-0.5-0.4 0.1-0.5-0.4-0.7-0.4 0-0.2-0.5 0.3-0.3-0.2-0.7-0.4-0.2-0.2-0.6-0.4 0.1-0.3-0.6-0.3-0.2-0.5 0.1-0.1-0.8 0.1-1.1-0.2-0.1-0.2-1.1 0.6-0.4 0-1 0.3-0.4 0.7 0 0.6 0.1 0.6-0.7 1.4-0.1 0-0.3 0.5-0.3 0.6-0.1z m-3.7-5.6l0.3 0.6 0 0.7 0.9 0.6-0.1 0.5-0.3 0.3-0.5 1-0.5 0.2-0.7 0.5-0.3 0.7-0.6 0.5-0.5-0.7 0.1-0.6-0.2-0.5 0.3-0.4-0.1-1.1 0.8-0.5 1.3-0.4-0.1-1.2 0.2-0.2z m-9.1-16l0.8 0.5-0.2 0.9 0.5 0.4 0.3-0.3 0.8 0.9 0.4 1.1-0.4 0.7-0.5-0.8-0.7-0.2-0.5 0.2-0.6 0.5-0.6-0.2-0.3-0.3 0.1-0.7-0.8-0.5-0.2-0.5 0.4-0.4-0.1-0.5 0.4-0.5 0.5 0.1 0.7-0.4z m4.6-0.1l0.4 0.1 0.5 0.9-0.1 1.6-0.1 0.1-1.8-1.5 0.9-0.9 0.2-0.3z m0.8-2.7l0.3 0.4 0.1 1.2 0.2 0.6-0.2 0.2-0.6-0.8 0.3-0.4-0.3-0.3-0.2-0.7 0.4-0.2z m-1.4-2.9l0.5 0.1 0 0.8-0.5 0.7-0.5 0.2-0.1 0.6 0.6 0.7 0.1 0.5 0.5 0.3 0.1 0.6-0.3 0.8-0.9 0.1 0 0.9-0.4 0.1-0.2-1.1 1.1-0.5 0-0.6-0.3-0.2-0.8 0.9-0.1-0.7-0.7-1.3-0.1-1.4 0.6-0.3 0.4-0.3 0.1-0.7 0.9-0.2z m-8-1l0.5 1-0.4 0.2-0.5-0.6 0.4-0.6z m-3-2.5l0.5 0.3-0.3 1-0.2 0.9 0.8 0.9 1.1 0.5 0.3 0.4-0.3 0.5-0.8-0.2-1.1-0.6-0.6-0.7-0.5-0.7 0-1 0.3-0.9 0.8-0.4z m-2.2-3.2l0.3 0.3-0.1 0.6-0.5-0.3 0.3-0.6z m15.6-2.8l0.2 1.2 0.4 0.1 0.2 1.6-0.5 0 0-1.3-0.4-0.8 0.1-0.8z m-22.6-18.6l0.7 0.7 0.3 0.7 0.2 0.8-0.2 0.7-0.4 0.4-0.6 0.2-0.5-0.3-1.1 0.1-0.3-0.6 0-1.9 1.3 0 0.6-0.8z m-7.5-46l1.2 1 0.1 1.4 0.7 0.7-0.1 1.2 0.4 1.1 0 0.6-0.6 0.3 0.1 0.4-0.8 0.6-0.3 0.6 0.1 0.6 0.6 0.2 0.1 0.3-1 1.3 0 0.3-0.9 0.2-0.5-0.2-0.5-0.5-0.8-0.3-0.4 0-0.5 0.4-0.5-0.3 0.7-1.1 0.3-0.9-0.3-0.9-0.4-0.5-0.4 0 0.1-1.5-0.2-0.6 0-1.1 0.5 0 0.5-0.2 0.5-1 0.7-0.5 0.1-0.6 0.5-0.2 0.4-0.5 0.6-0.3z m3.5-17.1l0.7 0.6 0.5 1.6-0.6 1 0.8 0.2-0.1 0.5-1.4 0.7-1.1 0-0.5-0.6 0.3-0.4-0.1-0.5 0.9-0.1 0.1-1-0.4-0.5 0.2-0.8 0.4-0.8 0.3 0.1z m-0.9-2.2l0.2 0.7-0.5-0.1 0.3-0.6z m-10.7-0.1l0.6 0 0.8 0.2 0 0.9 0.1 0.5-0.4 0.5-0.2-0.2-1-0.1-0.2-0.5 0.3-1.3z m8.8-0.3l0.1 0.3 0.6 0 0 0.5-0.3 0.4-0.5 0-0.1-0.9 0.2-0.3z m13.2-6.7l0.3 0.2 0.8-0.2 0.3 0.2-0.6 0.7-0.9-0.5 0.1-0.4z m-11.7-3.7l0.3 0.9-0.3 0.2 0-1.1z m10.2-1.6l0.4-0.3 0.6 0.4 0.1 0.9 0.8 1.4 0.5 1.4-0.3 0.4-0.5-0.1-0.1-0.4-0.9-1.4-0.4 0.1-0.4-0.9-0.7-0.2-0.1-0.5 0.5-0.2 0.5-0.6z m0.6-2.1l0.4 0.1-0.2 1.6-0.2 0.1-0.8-0.8 0-1 0.8 0z m1-1.4l0 0.5 0.2 0.4 0.1 0.8 0.5 0.6-0.1 0.4-0.3 0.4-0.4-0.6-0.5-0.2 0-0.9-0.9-0.1-0.3-0.3-0.2-0.6 0.2-0.2 0.8 0.3 0.9-0.5z m1.2-1.5l0.4 0.5 0.3 1.3-0.2 0.5 0.1 0.6-0.2 0.5-0.4 0.1-0.9-1.3 0.5-1.6 0.4-0.6z m-10.1-0.7l0.1 0.2 0.3 1.7 0.6-0.4 0.5 0.2 0 0.6-0.5 1.2-0.1 0.6 0.5 0.5 0.6 1.2-0.3 0.3-0.6-0.4 0.4 1.3-0.8 0.4-0.3 0.6 0.4 1.5 0.4-1 0.9-0.1 0.3 0.3-0.3 0.9 0.3 0.6-0.9 4.3-0.4 0.3-0.6 0.1-0.5 0.3-0.1 0.8-0.4 0.4-0.4-0.1 0 0.6 0.6 0 0.7-0.9 0.8-0.3 0.3 0.3-0.1 1.5-0.6 1.5-0.2 0.9 0.1 0.2-0.5 0.8-0.3-0.5-0.9 0-0.5-0.4 0.1-0.8-0.6-0.6-0.6-0.6 0.1-1.1-0.4-0.9 0.1-0.7-0.3-0.8-0.4 0.1-0.3 0.6-0.3-0.8 0.1-1.4-0.3-1.6-0.5 0.1-0.3-0.6 0.3-0.7 0-0.6 0.3-0.3 0.2-0.5 0.6-0.6 0.3 0.5 0.3 1 0.6 0.5-0.1-1.4 0.1-0.5 0.1-1.9 0.3-1.5-0.1-0.3 0.1-0.8 0.2-0.6 0.4-1.6 1.2-1.6 0.3 0z m0.8-0.2l0.2 0.3 0.7 0.1 0.1 0.8-0.1 0.5-1.1-0.2 0-1.1 0.2-0.4z m4.7-0.3l0.3 0.7-1.2-0.2 0.9-0.5z m4.8-0.2l0.3 0.7-0.1 0.4-0.5-0.1 0.1-0.9 0.2-0.1z m-10-1l0.3 0.1-0.3 1.3-0.3-0.6 0.3-0.8z m6.3 0.5l-0.5 0.6-0.6-0.6 0.3-0.4 0.4 0.4 0.4 0z m-4.5-0.9l0.4 0.2 0.5-0.2 0.5 0.3 0.8-0.1 0.3 0.1 0.5 1.2-0.8 0.3 0.4 0.6 0.1 0.9-0.6-0.3-0.2 1.2-0.3-0.2-1 1.7-0.2 0.7-0.8 0.6-0.7-0.6 0.1-0.4 0.7-2.2 0.1-0.7-0.1-0.7-0.4-0.2-0.3-0.3 0.3-0.9 0.3 0.3 0.5-0.6-0.1-0.7z m29.1-0.3l0.5 0.8 0.5 0.3-0.1 0.4 0.2 0.9-1.1 0-0.4-0.2-0.3-1.2 0.2-0.6 0.5-0.4z m-27-2.4l0.5 0.1 0.5 0.4-0.7 0.3-0.5-0.4 0.2-0.4z m2.8-0.2l-0.4 0.4 0 0.5-0.3 0.7-0.3-0.2 0.2-0.6 0.1-0.9 0.5-0.3 0.2 0.4z m-6.7-11.6l0 1.5-0.5-0.6 0.5-0.9z m5.1-2.4l0.3 0.2 0 0.7 0.5 0 0.5 1.6 0.2 0.5-0.5 0.7 0.1 0.4 0.6 0.4 0.1 0.7 0.4 0.3-0.4 0.6 0 0.4-0.2 1.1 0 1 0.1 0.8 0.4 1-0.4 1.6-0.4-0.3-0.3 0.4 0.4 0.5-0.2 0.4-0.5 0.4-0.2 0.7-0.5-0.5-0.6 0.3-1.3-0.3 0.3 0.9 0.9 1.2 0.4 0.9-0.3 0.3-0.5-0.1-0.7 0.4-0.6-0.4-0.4 0.3-0.7-0.4-0.6 0.5-0.8 0-0.5-1-0.1-2.4 0.2-0.8-0.1-0.5 0.2-0.6-0.4-0.7 0.1-0.7 0.3-0.5 0-1-0.4-0.4 0.4-0.2 0.2-0.6 0.6-0.1-0.1-0.4 0.3-0.5-0.4-0.7 0.3-0.1 0-0.7-0.3-0.5-0.3-1.3 0.1-1.1 0.4 0 0.9-1 0.6 0 0-0.7 0.9-0.2 0.1 0.3 0.1 0 0.2-0.2 0.1 0.2-0.1 0.2 0.1 0.1 0.9-0.2 0.4-0.4 0.2-0.5z m-5.5-2.2l0.6 0.4 0.1 2.5-0.2 0.7-0.7 0.8 0 0.5-0.5 0.7-0.5-1.3-0.1-0.6 0.4-0.6 0.1-1 0.3-0.7-0.2-0.3 0.4-1 0.3-0.1z m8.5-0.1l-0.4 0.3-0.6 0.9-0.3-0.1 0-0.9 0.5 0.3 0.8-0.5z m-2.2-0.8l0.3 0 0.2 0.8-0.7-0.1 0.2-0.7z m36.8-12.4l0.1 0.7-0.5 0.3-0.2-0.5 0.6-0.5z m-34-3l0.3 0.7 0.1 1.2-0.2 0.6-0.1 0.7 0.1 1.1 0.4 0.4 0.3 1.2 0.5 0.6-0.2 0.5-0.5-0.2-0.4 0.2 0-0.8-0.4 0.2-0.6-0.2-0.7 0.5-0.4-0.7-0.2 0.4 0.1 0.5 0.5 0.1 0.9 0.5 0.9 1.3 0.4-0.1-0.1 0.8-0.6 1.6 0.1 1.1-0.2 0.2 0.2 1.1-0.2 0.7-0.6 1-0.5 0.2-0.5-0.1-0.3 0.4-0.6-0.7-0.2-0.7-0.4 0.3-0.4 0.9 0.2 0.6 0.8 0.7-0.3 0.5-0.5-0.1 0-0.7-0.7 0.1-0.2 0.5 0 0.5-0.5 0.3 0 0.9 0.4 0 0 0.6-0.4 0.1-0.2 0-0.2 0.1-0.1-0.1 0.1-0.2 0-0.2-1.2-0.2-0.2-0.4 0.2-0.6-0.2-0.5 0-0.8 0.6 0 0.1-0.5-0.7-0.4 0.1-1 0-1.1 0.7-0.4-0.3-0.7 0.9-0.5-0.9-0.2 0.6-1.7-0.1-0.7 0.6 0 0.1-0.6-0.4 0-0.5-0.5 0.6-0.7-0.5-0.1 0-0.7 0.3-0.2 0-0.8 0.5-0.6-0.3-0.6 0.8-0.2 0.3-0.4-0.3-0.5 0.1-0.8 0.7-0.1 0-0.5 0.8-0.1-0.5-0.9 0.2-0.1 1.2-0.2 0.3 0.4 0.5-0.2-0.3-0.5 0.3-0.3 0.6 0.4 0.1-0.7 0.3 0.1z m-0.4-2.9l0.3 0.4-0.3 0.5-0.8 0-0.1-0.6 0.9-0.3z m9.6-13.6l0.3 1-0.1 0.8-0.2 0.7-0.3-0.1 0.2-0.7-0.2-1.5 0.3-0.2z m7.5-21.1l-0.2 0.8-0.5 0 0.3-0.7 0.4-0.1z" id="INAN" className={`contactus-state-path ${getZoneClass("Andaman and Nicobar")}`} name="Andaman and Nicobar">
                 </path>
@@ -446,34 +554,9 @@ function ContactUs() {
               </g>
             </svg>
           </div>
-        </div>
-        
-        {/* Mobile/Tablet: Platform container after map */}
-        <div className="contactus-platform-container contactus-platform-mobile">
-          <p className="contactus-platform-header">Official Platforms</p>
-          <div className="contactus-platform-grid">
-            {[
-              { name: "LinkedIn", icon: <FaLinkedinIn />, color: "linkedin", url: "https://linkedin.com/company/technothlon" },
-              { name: "Official Mail", icon: <FaEnvelope />, color: "mail", url: "mailto:technothlon@iitg.ac.in" },
-              { name: "Facebook", icon: <FaFacebookF />, color: "facebook", url: "https://facebook.com/technothlon.techniche" },
-              { name: "Instagram", icon: <FaInstagram />, color: "instagram", url: "https://instagram.com/technothlon.iitg" },
-              { name: "Medium", icon: <FaMediumM />, color: "medium", url: "https://medium.com/@technothlon" },
-              { name: "WhatsApp", icon: <FaWhatsapp />, color: "whatsapp", url: "https://whatsapp.com/channel/your-id" }
-            ].map((item, index) => (
-              <a
-                key={index}
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-                className={`contactus-platform-btn contactus-bg-${item.color}`}
-              >
-                <span className="contactus-platform-icon">{item.icon}</span>
-                <span className="contactus-platform-text">{item.name}</span>
-              </a>
-            ))}
-          </div>
-        </div>
+        </div>        
       </div>
+      
       <Footer />
     </div>
   );
