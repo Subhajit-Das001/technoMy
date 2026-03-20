@@ -174,7 +174,7 @@ prizeImages.forEach(img => {
             <img src={AboutUs} alt="About Us Image" className="about-us-image info-img"/>
             <div className="info-card-heading">About Us</div>
             <div className="info-card-content">
-              Over the past 21 years we have expanded our reach to over 450+ cities all over India and various centers abroad.
+              Over the past 22 years we have expanded our reach to over 450+ cities all over India and various centers abroad.
             </div>
             <a href="/aboutus"> Learn More </a>
           </div>
@@ -192,7 +192,7 @@ prizeImages.forEach(img => {
             <img src={Mains} alt="Mains Image" className='info-img'/>
             <div className="info-card-heading">PYQs</div>
             <div className="info-card-content">
-            Look through our repository of past question papers to help you prepare for Technothlon 2025.
+            Look through our repository of past question papers to help you prepare for Technothlon 2026.
             </div>
             <a href="/pyp"> Learn More </a>
           </div>
