@@ -96,7 +96,7 @@ function CityRepPortal() {
           <h2 className="crp-card-title">Upload Documents</h2>
           
           <div className="crp-upload-area">
-            <FileUpload onUploadSuccess={handleUploadSuccess} />
+            <FileUpload onUploadSuccess={handleUploadSuccess} username ={name} />
           </div>
         </div>
 

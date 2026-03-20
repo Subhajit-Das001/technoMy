@@ -6,7 +6,7 @@ const baseURL =
   process.env.NODE_ENV === "production"
     ? "https://technothlon.techniche.org.in/api/"
     : "http://localhost:3001/api/";
-function FileUpload({ onUploadSuccess }) {
+function FileUpload({ onUploadSuccess ,username}) {
   const [uploading, setUploading] = useState(false);
   const [errorState, setErrorState] = useState({ messages: [], title: "" });
   const [debugInfo, setDebugInfo] = useState("");
@@ -31,6 +31,7 @@ function FileUpload({ onUploadSuccess }) {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("UploadedBy",username);
 
     try {
       const response = await axios.post(`${baseURL}offlineReg/upload`, formData, {

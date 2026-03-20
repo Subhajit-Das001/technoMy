@@ -6,6 +6,14 @@ const uploadedFileHashSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  fileName: {
+    type: String,
+    required: true
+  },
+  uploadedBy: {
+    type: String, 
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

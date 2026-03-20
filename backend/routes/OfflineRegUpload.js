@@ -128,6 +128,12 @@ if (existingFile) {
     message: "This file has already been uploaded before."
   });
 }
+const uploadedBy = req.body?.UploadedBy || "unknown";
+await UploadedFileHash.create({
+  hash: fileHash,
+  fileName: req.file.originalname,
+  uploadedBy
+});
 
     let jsonArray;
 
@@ -224,6 +230,7 @@ if (existingFile) {
         mode: "offline",
         zone,
         mailSent: false,
+        uploadId: fileHash
       };
 
       validDocs.push(doc);
@@ -260,7 +267,7 @@ const bulkUpdates = validDocs.map(doc => ({
 }));
 
 await Offline26.bulkWrite(bulkUpdates);
-await UploadedFileHash.create({ hash: fileHash });
+// await UploadedFileHash.create({ hash: fileHash });
 
     // ===== CLEANUP =====
 

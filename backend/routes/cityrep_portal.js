@@ -50,7 +50,12 @@ router.post("/login", async (req, res) => {
         );
 
         // Secure cookie settings
-        res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
+        res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,   // true in production (https)
+  sameSite: "lax",
+  maxAge: 3600000
+});
 
         return res.json({ status: true, message: "Login successful", token });
 
@@ -91,7 +96,7 @@ router.get('/user', verifyToken, async (req, res) => {
         }
         
         return res.json({
-            name: user.name,
+            name: user.username,
             city: user.city,
             photoLink: user.link,
             zone:user.zone // e.g. "https://example.com/myavatar.jpg"

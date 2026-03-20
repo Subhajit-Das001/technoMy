@@ -30,7 +30,7 @@ const offlineTeamSchema = new mongoose.Schema(
         Rank: { type: String, default: 'NA' },
         mailSent: { type: Boolean, default: false },
         batchId: { type: String },
-        
+        uploadId:{type : String, required : true},
         createdAt: {
             type: Date,
             default: () => new Date(Date.now() + 5.5 * 60 * 60 * 1000), 
