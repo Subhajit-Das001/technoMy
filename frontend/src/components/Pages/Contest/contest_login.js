@@ -60,12 +60,12 @@ const StudentAuth = () => {
 
         const isContestActive = nowTS >= startTS && nowTS <= endTS;
         
-        console.log('Time Debug:', {
-          now: now.toISOString(),
-          start: startTimeDate.toISOString(),
-          end: endTimeDate.toISOString(),
-          isActive: isContestActive
-        });
+        // console.log('Time Debug:', {
+        //   now: now.toISOString(),
+        //   start: startTimeDate.toISOString(),
+        //   end: endTimeDate.toISOString(),
+        //   isActive: isContestActive
+        // });
 
         setContestTime({
           startTime: startTimeDate,

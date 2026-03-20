@@ -10,8 +10,8 @@ const COSLogin = () => {
     : "http://localhost:3001/api/";
   
   const redirectUrl = process.env.NODE_ENV === "production"
-    ? "https://technothlon.techniche.org.in/cos_portal"
-    : "http://localhost:3000/cos_portal";
+    ? "https://technothlon.techniche.org.in/school-dashboard"
+    : "http://localhost:3000/school-dashboard";
 
   const [principal_id, setPrincipalId] = useState('');
   const [poc_id, setPocId] = useState('');

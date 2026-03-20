@@ -10,7 +10,7 @@ const baseURL =
   process.env.NODE_ENV === "production"
     ? "https://technothlon.techniche.org.in/api/"
     : "http://localhost:3001/api/";
-
+ 
 function CityRepPortal() {
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
@@ -39,46 +39,19 @@ function CityRepPortal() {
     fetchUserDetails();
   }, []);
 
-  const handleUploadSuccess = async (responseData) => {
-    if (responseData.error) {
-      setError(responseData.error);
-      return;
-    }
+  const handleUploadSuccess = (responseData) => {
+  if (responseData.error) {
+    setError(responseData.error);
+    return;
+  }
 
-    try {
-      const downloadResponse = await axios.get(
-        `${baseURL}uploadcsv/downloadcsv?batchId=${responseData.batchId}`
-      );
-      const { schoolName, fileName, fileUrl } = downloadResponse.data;
-      const timestamp = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
+  if (responseData.errors && responseData.errors.length > 0) {
+    console.log("❌ Errors:", responseData.errors);
+    toast.error(`Failed rows: ${responseData.errors.length}`);
+  }
 
-      const newFile = {
-        createdAt: timestamp,
-        schoolName: schoolName || "Unknown School",
-        fileName,
-        fileUrl: `${baseURL}${fileUrl}`,
-      };
-
-      const updatedFiles = [newFile, ...uploadedFiles];
-      setUploadedFiles(updatedFiles);
-      localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles));
-      
-      // Add toast notification
-      toast.success('Your file is ready for download!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-    } catch (error) {
-      console.error("Error fetching download details:", error);
-      setError("Failed to fetch file details.");
-    }
-  };
+  toast.success(`Uploaded ${responseData.processed} teams successfully!`);
+};
 
   const Logout = () => {
     window.location.href =
@@ -123,7 +96,7 @@ function CityRepPortal() {
           <h2 className="crp-card-title">Upload Documents</h2>
           
           <div className="crp-upload-area">
-            <FileUpload onUploadSuccess={handleUploadSuccess} />
+            <FileUpload onUploadSuccess={handleUploadSuccess} username ={name} />
           </div>
         </div>
 

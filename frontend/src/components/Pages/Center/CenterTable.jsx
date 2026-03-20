@@ -25,7 +25,7 @@ const CenterTable = () => {
                 const response = await axios.get(`${baseURL}/api/center-list`);
                 setCenters(response.data);
                 // Log the entire response to check the data structure
-                console.log('Centers data:', response.data);
+                // console.log('Centers data:', response.data);
                 setError(null);
             } catch (error) {
                 console.error('Error fetching centers:', error);

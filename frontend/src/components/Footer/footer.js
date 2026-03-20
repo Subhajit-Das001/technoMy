@@ -64,7 +64,7 @@ function Footer() {
      
       <hr className="Hr"></hr>
       <div className="frow-last">
-        <div className="frow-div">Copyright &copy; 2025-26 Technothlon. All Rights Reserved.</div>
+        <div className="frow-div">Copyright &copy; 2026-27 Technothlon. All Rights Reserved.</div>
 
         {/* <div className="frow1">
           <p>Designers</p>

@@ -37,8 +37,8 @@ function COSPortal() {
       console.error("Error fetching dashboard data:", err);
       if (err.response?.status === 401) {
         window.location.href = process.env.NODE_ENV === "production"
-          ? "https://technothlon.techniche.org.in/cos_login"
-          : "http://localhost:3000/cos_login";
+          ? "https://technothlon.techniche.org.in/school-registration"
+          : "http://localhost:3000/school-registration";
       }
     }
   };
@@ -55,7 +55,7 @@ function COSPortal() {
     ];
     
     if (!validTypes.includes(file.type) && !file.name.endsWith('.csv') && !file.name.endsWith('.xlsx')) {
-      toast.error('Invalid file type. Please upload CSV or XLSX files only.');
+      toast.error('Invalid file type. Please upload CSV file only.');
       return;
     }
 
@@ -70,7 +70,7 @@ function COSPortal() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true,
+        withCredentials: true, 
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -149,14 +149,14 @@ function COSPortal() {
         withCredentials: true,
       });
       window.location.href = process.env.NODE_ENV === "production"
-        ? "https://technothlon.techniche.org.in/cos_login"
-        : "http://localhost:3000/cos_login";
+        ? "https://technothlon.techniche.org.in/school-registration"
+        : "http://localhost:3000/school-registration";
     } catch (err) {
       console.error("Logout error:", err);
       // Still redirect even if logout fails
       window.location.href = process.env.NODE_ENV === "production"
-        ? "https://technothlon.techniche.org.in/cos_login"
-        : "http://localhost:3000/cos_login";
+        ? "https://technothlon.techniche.org.in/school-registration"
+        : "http://localhost:3000/school-registration";
     }
   };
 
@@ -251,16 +251,16 @@ function COSPortal() {
           <div className="cos_kv_upload_section">
             <h3 className="cos_kv_section_title">Upload Student Data</h3>
             <p className="cos_kv_section_description">
-              Upload CSV or XLSX file with required columns: name1, dob1 (DD/MM/YYYY format or Excel date), email1, contact1, class1, 
+              Upload CSV file with required columns: name1, dob1 (DD/MM/YYYY format or Excel date), email1, contact1, class1, 
               name2, dob2 (DD/MM/YYYY format or Excel date), email2, contact2, class2, squad, language
             </p>
             
             <label className={`cos_kv_upload_button ${uploading ? 'cos_kv_uploading' : ''}`}>
               <Upload size={20} />
-              <span>{uploading ? "Uploading..." : "Upload CSV/XLSX File"}</span>
+              <span>{uploading ? "Uploading..." : "Upload CSV File"}</span>
               <input
                 type="file"
-                accept=".csv,.xlsx"
+                accept=".csv,."
                 onChange={handleFileChange}
                 disabled={uploading}
                 className="cos_kv_file_input"

@@ -266,7 +266,7 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
         }
       });
     }
-
+ 
     // Extra columns are ignored - we only care that required columns exist
     // This allows schools to add serial numbers, notes, or leave blank columns
 
@@ -316,7 +316,7 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
         errors.push(`Row ${rowNum}: Invalid email format for email2: ${row.email2}`);
         continue;
       }
-
+ 
       // Validate contact (should be 10 digits)
       if (row.contact1 && !/^\d{10}$/.test(row.contact1.toString().replace(/\D/g, ''))) {
         errors.push(`Row ${rowNum}: Invalid contact1 format (must be 10 digits): ${row.contact1}`);
