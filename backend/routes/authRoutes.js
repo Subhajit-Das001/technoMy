@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Online25 = require('../models/online25');
-const Offline25 = require('../models/Offline25');
+const Online26 = require('../models/online26');
+const Offline26 = require('../models/offline26');
 const NewStudent = require('../models/newStudent');
 const jwt = require('jsonwebtoken');
 
-// Check registered student (only for Offline25)
+// Check registered student (only for Offline26)
 router.post('/check-student', async (req, res) => {
   try {
     const { rollNumber, phone } = req.body;
@@ -18,7 +18,7 @@ router.post('/check-student', async (req, res) => {
     console.log('Cleaned input:', { cleanPhone, cleanRollNumber });
 
     // Check Offline25 database first
-    const offlineStudent = await Offline25.findOne({ rollNumber: cleanRollNumber });
+    const offlineStudent = await Offline26.findOne({ rollNumber: cleanRollNumber });
 
     if (offlineStudent) {
       // Check if phone matches either contact
@@ -48,7 +48,7 @@ router.post('/check-student', async (req, res) => {
 
     else {
       // If not found in Offline25, check Online25 database
-      const onlineStudent = await Online25.findOne({ rollNumber: cleanRollNumber });
+      const onlineStudent = await Online26.findOne({ rollNumber: cleanRollNumber });
       if (onlineStudent) {
         // Check if phone matches either contact
         const isContact1 = onlineStudent.contact1 === cleanPhone;

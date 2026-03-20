@@ -631,7 +631,7 @@ router.post('/uploadcsv', upload.single('file'), async (req, res) => {
         { $set: { city }, $inc: { studentCount: 1 } },
         { new: true, upsert: true }
       );
-
+ 
       // 3) Generate rollNumber & password
       const rollNumber = generateRollNumber(squad, language, city, cityInfo.studentCount);
       const password = uuidv4();
@@ -1033,8 +1033,8 @@ router.post('/fetch-data', async (req, res) => {
 
     // Prepare CSV fields
     const fields = [
-      'name1', 'email1', 'contact1', 'school1',
-      'name2', 'email2', 'contact2', 'school2',
+      'name1', 'email1', 'contact1', 'school1','dob1','class1',
+      'name2', 'email2', 'contact2', 'school2','dob2','class2',
       'squad', 'language', 'city', 'state',
       'rollNumber', 'password', 'createdAt', 'source'
     ];

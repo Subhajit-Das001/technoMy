@@ -28,7 +28,7 @@ const offlineTeamSchema = new mongoose.Schema(
         rollNumber: { type: String,default: 'NA' },
         password: { type: String, default: 'NA'},
         Rank: { type: String, default: 'NA' },
-        isPaid: { type: Boolean, default: false },
+        mailSent: { type: Boolean, default: false },
         batchId: { type: String },
         
         createdAt: {

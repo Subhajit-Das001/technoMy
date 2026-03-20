@@ -161,12 +161,12 @@ const TeamController = {
                 await transporter.sendMail({
                     from: '"Technothlon" <technothlon.iitg@gmail.com>',
                     to: [team.email1, team.email2],
-                    subject: "Registration Confirmation for Technothlon '25",
+                    subject: "Registration Confirmation for Technothlon '26",
                     html: `
                         <div style="font-family: Arial, sans-serif; padding: 20px;">
                             <h2 style="color: #4CAF50;">Registration Successful!</h2>
                             <p>Hey Champs!</p>
-                            <p>Your registration for Technothlon '25 has been confirmed.</p>
+                            <p>Your registration for Technothlon '26 has been confirmed.</p>
                             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
                                 <p><strong>Roll Number:</strong> ${updatedTeam.rollNumber}</p>
                                 <p><strong>Password:</strong> ${updatedTeam.password}</p>

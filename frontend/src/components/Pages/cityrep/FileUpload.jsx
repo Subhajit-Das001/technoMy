@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Upload, AlertCircle, CheckCircle } from "lucide-react";
 import './FileUpload.css';
-
 const baseURL =
   process.env.NODE_ENV === "production"
     ? "https://technothlon.techniche.org.in/api/"
     : "http://localhost:3001/api/";
-
 function FileUpload({ onUploadSuccess }) {
   const [uploading, setUploading] = useState(false);
   const [errorState, setErrorState] = useState({ messages: [], title: "" });
@@ -18,8 +16,8 @@ function FileUpload({ onUploadSuccess }) {
   ]);
 
   const EXPECTED_COLUMNS = [
-    'name1', 'email1', 'contact1', 'school1',
-    'name2', 'email2', 'contact2', 'school2',
+    'name1', 'dob1','email1', 'contact1', 'school1','class1',
+    'name2','dob2', 'email2', 'contact2', 'school2','class2',
     'squad', 'language', 'city', 'state'
   ];
 
@@ -35,7 +33,7 @@ function FileUpload({ onUploadSuccess }) {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(`${baseURL}uploadcsv/uploadcsv`, formData, {
+      const response = await axios.post(`${baseURL}offlineReg/upload`, formData, {
         headers: { 
           "Content-Type": "multipart/form-data",
         },
@@ -58,9 +56,10 @@ function FileUpload({ onUploadSuccess }) {
   };
 
   const handleUploadError = (error) => {
+    console.log("FULL ERROR RESPONSE:", error.response?.data);
     if (error.response?.data?.error === 'Duplicate entry found') {
       setErrorState({
-        title: "Duplicate Entry",
+        title: "Duplicate File",
         messages: [error.response.data.message]
       });
       return;
@@ -125,7 +124,7 @@ function FileUpload({ onUploadSuccess }) {
   
     try {
       const response = await axios.post(`${baseURL}uploadcsv/fetch-data`, {
-        criteria: validCriteria
+        criteria: validCriteria 
       }, {
         withCredentials: true
       });

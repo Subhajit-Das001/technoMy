@@ -70,7 +70,7 @@ function COSPortal() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true,
+        withCredentials: true, 
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
