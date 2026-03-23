@@ -127,23 +127,23 @@ prizeImages.forEach(img => {
 <div className='events'>
           <Events/>
           </div>
-          {/* <div className="partners-section">
-  <h4 className="partners-title">Our Official Partners for Technothlon 2025</h4>
+          <div className="partners-section">
+  <h4 className="partners-title">Our Official Partner for Technothlon 2026</h4>
   <div className="partners-list">
-    <a href="https://www.ednite.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
+    {/* <a href="https://www.ednite.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
       <img src={Ednite} alt="EdNite Logo" className="partner-logo" />
       <div className="partner-info">
         <div className="partner-role">Academic Partner</div>
       </div>
-    </a>
-    <a href="https://www.trexed.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
+    </a> */}
+    <a href="https://www.trexonline.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
       <img src={TREX} alt="TReX Logo" className="partner-logo" />
       <div className="partner-info">
         <div className="partner-role">Organising Partner</div>
       </div>
     </a>
   </div>
-</div> */}
+</div>
 
 
       <h4 className="h4-updates">RECENT UPDATES</h4>
