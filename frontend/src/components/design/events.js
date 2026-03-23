@@ -3,13 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useWindowSize } from "./useWindowSize";
 import { useState } from "react";
 
-import OPI1 from "../Assets/OPI/OPI1.png"
+import OPI1 from "../Assets/OPI/OPI1.jpeg"
 import OPI2 from "../Assets/OPI/OPI2.png"
-import OPI3 from "../Assets/OPI/OPI3.png"
-import OPI4 from "../Assets/OPI/OPI4.png"
-import OPI5 from "../Assets/OPI/OPI5.png"
-import OPI6 from "../Assets/OPI/OPI6.png"
-import OPI7 from "../Assets/OPI/OPI7.png"
+import OPI3 from "../Assets/OPI/OPI3.jpeg"
+import OPI4 from "../Assets/OPI/OPI4.jpeg"
+import OPI5 from "../Assets/OPI/OPI5.jpeg"
+import OPI6 from "../Assets/OPI/OPI6.jpeg"
+import OPI7 from "../Assets/OPI/OPI7.jpeg"
 
 
 const VerticalAccordion = () => {
@@ -151,45 +151,45 @@ const descriptionVariants = {
 const items = [
   {
     id: 1,
-    title: "Odyssey of Realms",
+    title: "Viento Voyage",
     imgSrc: OPI1,
-      link: "https://www.instagram.com/p/DDRsjmjPGfJ/?hl=en&img_index=1", // Add specific link
+      link: "https://www.instagram.com/technothlon.iitg/p/DR9Ne1Hj0qk/?img_index=1", // Add specific link
   },
   {
     id: 2,
-    title: "Dust Dynamix",
+    title: "L'Affront Arene",
     imgSrc:OPI2,
-     link: "https://www.instagram.com/p/DCqWduZPuwz/?img_index=1" // Add specific link
+     link: "https://www.instagram.com/technothlon.iitg/p/DSHjWMZDzv_/?img_index=1" // Add specific link
   },
   {
     id: 3,
-    title: "Fauna Fantastico",
+    title: "Orbitronix",
     imgSrc:OPI3,
-     link: "https://www.instagram.com/p/DDHF4UYvNju/?hl=en&img_index=1" // Add specific link
+     link: "https://www.instagram.com/technothlon.iitg/p/DSR2oRcj2P5/?hl=en&img_index=1" // Add specific link
   },
   {
     id: 4,
-    title: "InfraVision",
+    title: "The Acumen League",
     imgSrc:OPI4,
-     link: "https://www.instagram.com/p/DC0twmRPvYB/?hl=en&img_index=1" // Add specific link
+     link: "https://www.instagram.com/technothlon.iitg/p/DScE0XWDzeA/?hl=en&img_index=1" // Add specific link
   },
   {
     id: 5,
-    title: "Trial Trifecta",
+    title: "The Pawn Gambit",
     imgSrc:OPI5,
-     link: "https://www.instagram.com/p/DC8rscpPR9E/?hl=en&img_index=1" // Add specific link
+     link: "https://www.instagram.com/technothlon.iitg/p/DSmcpwbj3K2/?hl=en&img_index=1" // Add specific link
   },
   {
     id: 6,
-    title: "Crowned Quest",
+    title: "Risk And Rialto",
     imgSrc:OPI6,
     // Add specific link
-     link: "https://www.instagram.com/p/DDl0JgPP5st/?hl=en&img_index=1"
+     link: "https://www.instagram.com/technothlon.iitg/p/DS4j6DDD991/?hl=en&img_index=1"
   },
   {
     id: 7,
-    title: "Merge Blocker",
+    title: "Ticker Tycoon",
     imgSrc:OPI7,
-      link: "https://www.instagram.com/p/DDeJOrCPC0D/?hl=en&img_index=1", // Add specific link
+      link: "https://www.instagram.com/technothlon.iitg/p/DTAmYmXD3mS/?hl=en&img_index=1", // Add specific link
   },
 ];

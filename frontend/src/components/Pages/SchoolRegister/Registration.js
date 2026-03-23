@@ -13,37 +13,37 @@ import "./Registration.css";
 import cityToId from "./cityToID.json";
 
 // Import the Instruction Panel
-import InstructionPanel from './InstructionPanel'; 
+import InstructionPanel from './InstructionPanel';
 
 const TeamReg = () => {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/api" : "http://localhost:3001/api";
-  const redirectUrl = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/confirmPayment" : "http://localhost:3000/confirmPayment";
-  
+  console.log(baseURL);
+
   // 1. Existing Team State
   const [team, setTeam] = useState({
-    name1: "", 
-    dob1: "", 
-    email1: "", 
-    confirmEmail1: "", 
-    contact1: "", 
-    school1: "", 
+    name1: "",
+    dob1: "",
+    email1: "",
+    confirmEmail1: "",
+    contact1: "",
+    school1: "",
     class1: "",
 
-    name2: "", 
-    dob2: "", 
-    email2: "", 
-    confirmEmail2: "", 
-    contact2: "", 
-    school2: "", 
+    name2: "",
+    dob2: "",
+    email2: "",
+    confirmEmail2: "",
+    contact2: "",
+    school2: "",
     class1: "",
-    squad: "", 
-    language: "", 
-    mode: "online", 
-    country: "", 
-    state: "", 
+    squad: "",
+    language: "",
+    mode: "online",
+    country: "",
+    state: "",
     zone: "",
     city: "",
-    view:"", 
+    view: "",
   });
 
   // 2. New State for Checkboxes
@@ -120,20 +120,20 @@ const TeamReg = () => {
     const selectedState = e.target.value;
     // Automatically determine zone, default to empty string if not found
     const determinedZone = stateToZoneMap[selectedState] || "";
-    
-    setTeam({ 
-      ...team, 
-      state: selectedState, 
-      zone: determinedZone 
+
+    setTeam({
+      ...team,
+      state: selectedState,
+      zone: determinedZone
     });
   };
-  
+
   // ... (Keeping your countries array truncated for brevity, assume full list is here)
   const allCountries = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
-    "Bangladesh", "Barbados", "Belarus", "Belgium", "India", "United States of America", 
-    "United Kingdom", "Canada" 
+    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
+    "Bangladesh", "Barbados", "Belarus", "Belgium", "India", "United States of America",
+    "United Kingdom", "Canada"
     // ... Include the rest of your countries list here
   ];
 
@@ -197,11 +197,11 @@ const TeamReg = () => {
     setTeam({ ...team, city: e.target.value });
   };
 
-  const handleViewChange=(e)=>{
+  const handleViewChange = (e) => {
     setTeam({ ...team, view: e.target.value });
   }
- 
- 
+
+
   const handleCountryChange = (e) => {
     setTeam({ ...team, country: e.target.value });
   };
@@ -217,7 +217,7 @@ const TeamReg = () => {
   const filteredStates = allStates.filter((state) =>
     state.toLowerCase().includes(team.state.toLowerCase())
   );
-  
+
   const filteredCountry = allCountries.filter((country) =>
     country.toLowerCase().includes(team.country.toLowerCase())
   );
@@ -234,7 +234,7 @@ const TeamReg = () => {
     const requiredFields = [
       'name1', 'dob1', 'email1', 'confirmEmail1', 'contact1', 'school1', 'class1', // Added class1
       'name2', 'dob2', 'email2', 'confirmEmail2', 'contact2', 'school2', 'class2', // Added class2
-       'view', 'city', 'state', 'country', 'squad', 'language'
+      'view', 'city', 'state', 'country', 'squad', 'language'
     ];
 
     for (const field of requiredFields) {
@@ -275,13 +275,13 @@ const TeamReg = () => {
 
     // Final security check for agreements (though button is disabled)
     if (!agreements.readInstructions || !agreements.confirmDetails) {
-        alert("Please accept the instructions and confirm your details.");
-        return false;
+      alert("Please accept the instructions and confirm your details.");
+      return false;
     }
 
     return true;
   };
-const postData = async (e) => {
+  const postData = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -294,11 +294,9 @@ const postData = async (e) => {
 
       if (res.data) {
         // USE THE BACKEND PROVIDED URL
-        const { paymentUrl } = res.data; 
-        
-        setTimeout(() => {
-          window.location.href = paymentUrl;
-        }, 2000);
+        const { paymentUrl } = res.data;
+
+        window.location.href = paymentUrl;
       } else {
         setIsLoading(false);
         window.alert("Team Registration Failed");
@@ -309,7 +307,7 @@ const postData = async (e) => {
       window.alert("Team Registration Failed");
     }
   };
-  
+
   const handleLogoClick = () => {
     navigate('/');
   };
@@ -339,16 +337,16 @@ const postData = async (e) => {
 
   return (
     <div className="wrapper-reg">
-      
+
       {/* 3. Instruction Panel Popup */}
 
       <div className="header-banner-reg">
         <div className="logo-container-reg">
           <img src={iitg2} alt="IIT Guwahati" className="institution-logo-reg" />
           <div className="ob-reg" style={{ backgroundImage: `url(${ob})` }}>
-            <img 
-              src={logo1} 
-              alt="Technothlon" 
+            <img
+              src={logo1}
+              alt="Technothlon"
               className="main-logo-reg"
               onClick={handleLogoClick}
               style={{ cursor: 'pointer' }}
@@ -360,22 +358,22 @@ const postData = async (e) => {
 
       <div className="containe">
         <div className="header-left">
-              <InstructionPanel />
-           </div>
-<div className="form-header">
-           
-           <h1 className="form-title">Student Registration Form</h1>
-           {/* Spacer div to help keep title perfectly centered if needed */}
-           <div className="header-spacer"></div>
-        </div>        
+          <InstructionPanel />
+        </div>
+        <div className="form-header">
+
+          <h1 className="form-title">Student Registration Form</h1>
+          {/* Spacer div to help keep title perfectly centered if needed */}
+          <div className="header-spacer"></div>
+        </div>
         <form onSubmit={postData}>
-          
+
           {/* STUDENT 1 SECTION */}
           <h2 className="section-title">Student Information 1</h2>
-          
+
           <label htmlFor='name1'>Name:</label>
           <input type='text' autoComplete='off' name='name1' id='name1' required value={team.name1} onChange={handleInput} />
-          
+
           <label htmlFor='dob1'>Date of Birth:</label>
           <input type='date' name='dob1' id='dob1' required value={team.dob1} onChange={handleInput} />
 
@@ -390,7 +388,7 @@ const postData = async (e) => {
 
           <label htmlFor="school1">School:</label>
           <input type="text" autoComplete="off" name="school1" id="school1" required value={team.school1} onChange={handleSchool1Change} />
-          
+
           <label htmlFor="class1">Class:</label>
           <select name="class1" id="class1" required value={team.class1} onChange={handleInput}>
             <option value="" disabled>Select Class</option>
@@ -402,11 +400,11 @@ const postData = async (e) => {
 
           {/* STUDENT 2 SECTION */}
           <h2 className="section-title">Student Information 2</h2>
-          
+
           <label htmlFor="name2">Name:</label>
           <input type="text" id="name2" name="name2" required value={team.name2} onChange={handleInput} />
 
-           <label htmlFor='dob2'>Date of Birth:</label>
+          <label htmlFor='dob2'>Date of Birth:</label>
           <input type='date' name='dob2' id='dob2' required value={team.dob2} onChange={handleInput} />
 
           <label htmlFor="contact2">Contact Information:</label>
@@ -415,13 +413,13 @@ const postData = async (e) => {
           <label htmlFor="email2">Email:</label>
           <input type="email" autoComplete="off" name="email2" id="email2" required value={team.email2} onChange={handleInput} />
 
-           <label htmlFor="confirmEmail2">Confirm Email:</label>
+          <label htmlFor="confirmEmail2">Confirm Email:</label>
           <input type="email" autoComplete="off" name="confirmEmail2" id="confirmEmail2" placeholder="Re-enter email" required value={team.confirmEmail2} onChange={handleInput} onPaste={(e) => e.preventDefault()} />
 
           <label htmlFor="school2">School:</label>
           <input type="text" autoComplete="off" name="school2" id="school2" required value={team.school2} onChange={handleSchool2Change} />
-           
-           <label htmlFor="class2">Class:</label>
+
+          <label htmlFor="class2">Class:</label>
           <select name="class2" id="class2" required value={team.class2} onChange={handleInput}>
             <option value="" disabled>Select Class</option>
             <option value="9">9th</option>
@@ -445,7 +443,7 @@ const postData = async (e) => {
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
           </select>
-      
+
           <label htmlFor="country">Country:</label>
           <input type="text" name="country" id="country" list="countries" required value={team.country} onChange={handleCountryChange} />
           <datalist id="countries">
@@ -453,24 +451,24 @@ const postData = async (e) => {
               <option key={index} value={country} />
             ))}
           </datalist>
-          
-         <label htmlFor="state">State:</label>
-<input 
-  type="text" 
-  name="state" 
-  id="state" 
-  list="states" 
-  value={team.state} 
-  onChange={handleStateChange} 
-  placeholder="Select State"  // Add placeholder here
-  required 
-/>
 
-<datalist id="states">
-  {filteredStates.map((state, index) => (
-    <option key={index} value={state} />
-  ))}
-</datalist>
+          <label htmlFor="state">State:</label>
+          <input
+            type="text"
+            name="state"
+            id="state"
+            list="states"
+            value={team.state}
+            onChange={handleStateChange}
+            placeholder="Select State"  // Add placeholder here
+            required
+          />
+
+          <datalist id="states">
+            {filteredStates.map((state, index) => (
+              <option key={index} value={state} />
+            ))}
+          </datalist>
 
           <label htmlFor="city">City:</label>
           <input type="text" autoComplete="off" list="cities" name="city" id="city" placeholder="City" required value={team.city} onChange={handleCityChange} />
@@ -479,8 +477,8 @@ const postData = async (e) => {
               <option key={index} value={cityName} />
             ))}
           </datalist>
-          
-        
+
+
           <label htmlFor="view">How did you hear about Technothlon:</label>
           <select name="view" id="view" onChange={handleViewChange} value={team.view} required>
             <option value="" disabled>Select</option>
@@ -496,31 +494,41 @@ const postData = async (e) => {
           </select>
 
           <label style={checkboxRowStyle}>
-              <input 
-                type="checkbox" 
-                name="readInstructions"
-                checked={agreements.readInstructions}
-                onChange={handleAgreementChange}
-                style={{width:'20px', height:'20px'}}
-              />
-              <span>I have read the instructions carefully <span style={{color:'red'}}>*</span></span>
-            </label>
+            <input
+              type="checkbox"
+              name="readInstructions"
+              checked={agreements.readInstructions}
+              onChange={handleAgreementChange}
+              style={{ width: '20px', height: '20px' }}
+            />
+            <span>I have read the instructions carefully <span style={{ color: 'red' }}>*</span></span>
+          </label>
 
-            <label style={checkboxRowStyle}>
-              <input 
-                type="checkbox" 
-                name="confirmDetails"
-                checked={agreements.confirmDetails}
-                onChange={handleAgreementChange}
-                style={{width:'20px', height:'20px'}}
-              />
-              <span>I confirm my details (name, email) are correct and cannot be changed later <span style={{color:'red'}}>*</span></span>
-            </label>
+          <label style={checkboxRowStyle}>
+            <input
+              type="checkbox"
+              name="confirmDetails"
+              checked={agreements.confirmDetails}
+              onChange={handleAgreementChange}
+              style={{ width: '20px', height: '20px' }}
+            />
+            <span>I confirm my details (name, email) are correct and cannot be changed later <span style={{ color: 'red' }}>*</span></span>
+          </label>
 
           {/* 4. CHECKBOX AND PAY BUTTON SECTION */}
           <div style={checkboxSectionStyle} className="payment-confirmation-section">
-            
-            
+
+
+
+            <p style={{
+              color: 'red',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              margin: '10px 0',
+              fontSize: '16px'
+            }}>
+              IMPORTANT: Do NOT close the browser after payment. Please wait to be redirected back to our site to receive your Roll Number.
+            </p>
 
             {/* The Submit/Pay Button */}
             <button
@@ -537,7 +545,7 @@ const postData = async (e) => {
             >
               Pay Now
             </button>
-            
+
           </div>
 
         </form>
