@@ -1,3 +1,5 @@
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -99,7 +101,7 @@ app.use('/api/merch', merchAnalyticsRoutes);
 app.use('/api/cos_portal', cosPortalRoutes);
 app.use('/api/offlineReg', offlineRegUpload);
 // Root route
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
     res.send("Hello from Technothlon Server");
 });
 
