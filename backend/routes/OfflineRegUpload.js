@@ -195,7 +195,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       const dob2 = parseDate(row.dob2);
 
       const cityID = cityToID[row.city];
-      const zone = getZone(row.city);
+      const zone = getZone(row.state);
 
       const cityInfo = await CityStudentCount.findOneAndUpdate(
         { cityID },

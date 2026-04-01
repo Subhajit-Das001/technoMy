@@ -35,7 +35,7 @@ const TeamReg = () => {
     confirmEmail2: "",
     contact2: "",
     school2: "",
-    class1: "",
+    class2: "",
     squad: "",
     language: "",
     mode: "online",
