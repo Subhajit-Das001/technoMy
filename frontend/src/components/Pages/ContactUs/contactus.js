@@ -7,7 +7,7 @@ import Footer from "../../Footer/footer";
 
 // Images (Ensure paths are correct)
 import dp from '../../Assets/heads/dp.jpg';
-import mf from '../../Assets/heads/mf.jpg';
+import oh from '../../Assets/heads/oh.JPG';
 import po from '../../Assets/heads/po.jpg';
 import ri from '../../Assets/heads/ri.png';
 import ud from '../../Assets/heads/ud.png';
@@ -54,7 +54,7 @@ function ContactUs() {
 
     {
       id: 3,
-      name: "Deep",
+      name: "Deep Shah",
       role: "West Zone Head",
       img: dp,
       linkedin: "https://www.linkedin.com/in/deep-shah-b69b89312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
@@ -84,12 +84,12 @@ function ContactUs() {
     },
     {
       id: 6,
-      name: "Md Mahroof",
+      name: "Kabya ",
       role: "West Zone Head",
-      img: mf,
-      linkedin: "https://www.linkedin.com/in/mahroof-imtiaz-b475a5370?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      email: "imtiazmahroof@gmail.com",
-      contact: "9954083559",
+      img: oh,
+      linkedin: "https://www.linkedin.com/in/kbchaubey25/",
+      email: "kabya25ranjan@gmail.com",
+      contact: "6307043498",
       position: "right center"
     },
 
