@@ -17,7 +17,7 @@ import InstructionPanel from './InstructionPanel';
 
 const TeamReg = () => {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/api" : "http://localhost:3001/api";
-  console.log(baseURL);
+  // console.log(baseURL);
 
   // 1. Existing Team State
   const [team, setTeam] = useState({

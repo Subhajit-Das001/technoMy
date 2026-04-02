@@ -25,7 +25,7 @@ function Contest() {
 
     // Add this near the top of your component
     useEffect(() => {
-        console.log('Base URL:', baseURL);
+        // console.log('Base URL:', baseURL);
     }, [baseURL]);
 
     // State management

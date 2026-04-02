@@ -134,7 +134,7 @@ const TechnopedQuestion = ({ rollNumber }) => {
 
         try {
             const response = await axios.post(`${baseURL}api/submit-answers`, data);
-            console.log('Submission response:', response.data);
+            // console.log('Submission response:', response.data);
             setShowResult(true); // Showing the result page on successful submission
             localStorage.clear(); // Clear localStorage after submission
         } catch (error) {
