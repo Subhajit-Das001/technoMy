@@ -4,9 +4,10 @@ const Online26 = require('../models/online26');
 const Offline26 = require('../models/offline26');
 const NewStudent = require('../models/newStudent');
 const jwt = require('jsonwebtoken');
+const { authLimiter } = require('../middleware/auth');
 
 // Check registered student (only for Offline26)
-router.post('/check-student', async (req, res) => {
+router.post('/check-student', authLimiter, async (req, res) => {
   try {
     const { rollNumber, phone } = req.body;
     console.log('Raw input:', { rollNumber, phone });
@@ -83,7 +84,7 @@ router.post('/check-student', async (req, res) => {
 });
 
 // Sign in new student
-router.post('/signin-new', async (req, res) => {
+router.post('/signin-new', authLimiter, async (req, res) => {
   try {
     const { email, phone } = req.body;
     if (!email || !phone) {
@@ -119,7 +120,7 @@ router.post('/signin-new', async (req, res) => {
 });
 
 // Register new student
-router.post('/register-new', async (req, res) => {
+router.post('/register-new', authLimiter, async (req, res) => {
   try {
     const { name, email, phone, school, city } = req.body;
 

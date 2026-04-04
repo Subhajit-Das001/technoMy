@@ -3,7 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const csv = require('csvtojson');
 const fs = require('fs');
-const CentreInfo = require('../models/centres'); // Adjust the path to your model
+const CentreInfo = require('../models/centres');
+const { isAdmin } = require('../middleware/auth');
 
 // Set up multer for file upload
 const storage = multer.diskStorage({
@@ -14,10 +15,13 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
-// POST route for uploading CSV
-router.post('/centre', upload.single('file'), async (req, res) => {
+// POST route for uploading CSV (Protected by Shared Secret)
+router.post('/centre', isAdmin, upload.single('file'), async (req, res) => {
   try {
     // Convert CSV file to JSON array
     const jsonArray = await csv().fromFile(req.file.path);

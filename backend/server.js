@@ -6,6 +6,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const EventEmitter = require('events');
+const helmet = require('helmet');
+const { globalLimiter } = require('./middleware/auth');
 
 // Load environment variables
 dotenv.config();
@@ -39,9 +41,23 @@ process.setMaxListeners(20);
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Security Headers
+app.use(helmet());
+
+// Global Rate Limiting
+app.use('/api', globalLimiter);
+
+// Specific Body Limits for CSV Uploads
+app.use('/api/uploadcsv', express.json({ limit: '5mb' }));
+app.use('/api/uploadcsv', express.urlencoded({ limit: '5mb', extended: true }));
+app.use('/api/centre', express.json({ limit: '5mb' }));
+app.use('/api/centre', express.urlencoded({ limit: '5mb', extended: true }));
+app.use('/api/offlineReg', express.json({ limit: '5mb' }));
+app.use('/api/offlineReg', express.urlencoded({ limit: '5mb', extended: true }));
+
+// Global Body Limits
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ limit: '2mb', extended: true }));
 
 // Define allowed origins
 const allowedOrigins = [
@@ -49,7 +65,8 @@ const allowedOrigins = [
   'http://localhost:3001',  // Backend server
   'http://localhost:5173',  // Vite default
   'https://technothlon.techniche.org.in',
-  // Add any other production URLs
+  'https://www.technothlon.techniche.org.in',
+  'https://technothlon-25.vercel.app' //testing website
 ];
 
 // CORS configuration

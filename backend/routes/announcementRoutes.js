@@ -1,31 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const Announcement = require('../models/announcement');
+const { isAdmin, schemas } = require('../middleware/auth');
 
 // Get all announcements
 router.get('/', async (req, res) => {
-    try {
-      console.log('Fetching announcements...');
-      const announcements = await Announcement.find().sort({ createdAt: -1 });
-      //console.log('Announcements fetched:', announcements);
-      res.json(announcements);
-    } catch (err) {
-      console.error('Error fetching announcements:', err);
-      res.status(500).json({ message: 'Error fetching announcements' });
-    }
-  });
-  
+  try {
+    console.log('Fetching announcements...');
+    const announcements = await Announcement.find().sort({ createdAt: -1 }).allowDiskUse(true);
+    //console.log('Announcements fetched:', announcements);
+    res.json(announcements);
+  } catch (err) {
+    console.error('Error fetching announcements:', err);
+    res.status(500).json({ message: 'Error fetching announcements' });
+  }
+});
 
-// Add a new announcement
-router.post('/', async (req, res) => {
-  const { id, title, content, link } = req.body;  // Make sure to include id in the destructuring
+
+// Add a new announcement (Protected by Shared Secret)
+router.post('/', isAdmin, async (req, res) => {
+  // Validate input
+  const { error, value } = schemas.announcement.validate(req.body);
+  if (error) {
+    return res.status(400).json({ success: false, message: error.details[0].message });
+  }
+
+  const { id, title, content, link } = value;
   const announcement = new Announcement({ id, title, content, link });
 
   try {
     const savedAnnouncement = await announcement.save();
-    res.status(201).json(savedAnnouncement);
+    res.status(201).json({ success: true, data: savedAnnouncement });
   } catch (err) {
-    res.status(400).json({ message: 'Error creating announcement' });
+    console.error('Error creating announcement:', err);
+    res.status(400).json({ success: false, message: 'Error creating announcement. Ensure ID is unique.' });
   }
 });
 

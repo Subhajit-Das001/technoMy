@@ -11,6 +11,7 @@ const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const dotenv = require("dotenv");
+const { isAdmin } = require('../middleware/auth');
 const pdf = require('html-pdf');
 const fs = require('fs');
 const csvParser = require('csv-parser');
@@ -92,7 +93,8 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  fileFilter: fileFilter
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
 const cityFilePath = path.join(__dirname, '../utils/cityToID.json');
@@ -346,8 +348,8 @@ router.get('/debug-ranks', async (req, res) => {
   }
 });
 
-// Test route to set a rank for a specific roll number (for testing purposes)
-router.post('/set-test-rank', async (req, res) => {
+// Test route to set a rank for a specific roll number (Protected by Shared Secret)
+router.post('/set-test-rank', isAdmin, async (req, res) => {
   try {
     const { rollNumber, rank } = req.body;
 
@@ -560,8 +562,8 @@ router.get('/results-table', async (req, res) => {
 const XLSX = require('xlsx');
 const getZone = require('../utils/getZone');
 
-// 🚀 Upload CSV and process data
-router.post('/uploadcsv', upload.single('file'), async (req, res) => {
+// 🚀 Upload CSV and process data (Protected by Shared Secret)
+router.post('/uploadcsv', isAdmin, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
