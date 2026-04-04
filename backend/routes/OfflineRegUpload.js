@@ -195,7 +195,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       const dob2 = parseDate(row.dob2);
 
       const cityID = cityToID[row.city];
-      const zone = getZone(row.city);
+      const zone = getZone(row.state);
 
       const cityInfo = await CityStudentCount.findOneAndUpdate(
         { cityID },
@@ -285,6 +285,84 @@ let counter = 0;
 
     res.status(500).json({
       error: "Internal server error"
+    });
+  }
+});
+router.post("/retry-mails", async (req, res) => {
+  try {
+    const { hashId } = req.body;
+
+    if (!hashId) {
+      return res.status(400).json({
+        error: "hashId is required"
+      });
+    }
+
+    // 🔍 Find users of this file whose mail failed
+    const pendingUsers = await Offline26.find({
+      uploadId: hashId,
+      mailSent: false
+    });
+
+    if (pendingUsers.length === 0) {
+      return res.json({
+        message: "No pending emails for this file 🎉"
+      });
+    }
+
+    console.log(`📧 Retrying ${pendingUsers.length} emails for file: ${hashId}`);
+
+    let successCount = 0;
+    let total = pendingUsers.length;
+    let counter = 0;
+
+    for (let doc of pendingUsers) {
+      counter++;
+
+      console.log(`🔁 [${counter}/${total}] Retrying ${doc.rollNumber}`);
+
+      const results = await Promise.allSettled([
+        doc.email1
+          ? sendEmail(doc.email1, doc.rollNumber, doc.password)
+          : null,
+        doc.email2
+          ? sendEmail(doc.email2, doc.rollNumber, doc.password)
+          : null
+      ]);
+
+      const success = results.some(
+        r => r?.status === "fulfilled" && r.value === true
+      );
+
+      if (success) {
+        successCount++;
+        console.log(`✅ [${counter}/${total}] Sent: ${doc.rollNumber}`);
+      } else {
+        console.log(`❌ [${counter}/${total}] Failed: ${doc.rollNumber}`);
+      }
+
+      await Offline26.updateOne(
+        { _id: doc._id },
+        { $set: { mailSent: success } }
+      );
+
+      // optional delay (prevents Gmail throttling)
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    return res.json({
+      message: "Retry completed",
+      success: successCount,
+      failed: total - successCount,
+      total
+    });
+
+  } catch (err) {
+    console.error("Retry error:", err);
+
+    res.status(500).json({
+      error: "Retry failed",
+      message: err.message
     });
   }
 });

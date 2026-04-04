@@ -41,7 +41,7 @@ const Upload = () => {
       }
 
       const data = await response.json();
-      console.log("Upload successful", data);
+      // console.log("Upload successful", data);
       alert("File uploaded successfully!");
     } catch (error) {
       console.error("Error uploading file", error);
@@ -69,7 +69,7 @@ const Upload = () => {
       }
 
       const data = await response.json();
-      console.log("Centre upload successful", data);
+      // console.log("Centre upload successful", data);
       alert("Centre CSV file uploaded successfully!");
     } catch (error) {
       console.error("Error uploading centre file", error);
@@ -97,7 +97,7 @@ const Upload = () => {
       }
 
       const data = await response.json();
-      console.log("Result upload successful", data);
+      // console.log("Result upload successful", data);
       alert("Result CSV file uploaded successfully!");
     } catch (error) {
       console.error("Error uploading result file", error);
