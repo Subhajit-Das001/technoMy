@@ -114,7 +114,7 @@ const AdmitCard = () => {
            withCredentials: true });
         const fetchedUser = response.data.user;
         setUser(fetchedUser);
-        console.log('User data:', fetchedUser);
+        // console.log('User data:', fetchedUser);
       } catch (err) {
         console.log('Error fetching user details:', err);
         setError('Failed to fetch user details');
