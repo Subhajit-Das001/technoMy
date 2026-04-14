@@ -667,9 +667,7 @@
   "Andaman and Nicobar Islands": "671",
   "Dadra and Nagar Haveli and Daman & Diu": "672",
   "Midnopore": "673",
-  "delhi": "674",
   "Shegaon": "675",
-  "": "676",
   "Ghugus": "677",
   "Solan": "678",
   "undefined": "679",
@@ -709,5 +707,8 @@
   "Kothagudem" : "713",
   "Bhupalapally": "714",
   "Srikakulam" : "715",
-  "Suryapet": "716"
+  "Suryapet": "716",
+  "Baijnath" : "717",
+  "Fatehabad": "718",
+  "Rajamundry":"719"
 }
