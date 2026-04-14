@@ -308,7 +308,7 @@ const closeOverlay = () => {
                 { name: "Facebook", icon: <FaFacebookF />, color: "facebook", url: "https://facebook.com/technothlon.techniche" },
                 { name: "Instagram", icon: <FaInstagram />, color: "instagram", url: "https://instagram.com/technothlon.iitg" },
                 { name: "Medium", icon: <FaMediumM />, color: "medium", url: "https://medium.com/@technothlon" },
-                { name: "WhatsApp", icon: <FaWhatsapp />, color: "whatsapp", url: "https://whatsapp.com/channel/your-id" }
+                { name: "WhatsApp", icon: <FaWhatsapp />, color: "whatsapp", url: "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S" }
               ].map((item, index) => (
                 <a
                   key={index}
