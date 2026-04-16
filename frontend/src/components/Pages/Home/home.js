@@ -174,7 +174,7 @@ prizeImages.forEach(img => {
             <img src={AboutUs} alt="About Us Image" className="about-us-image info-img"/>
             <div className="info-card-heading">About Us</div>
             <div className="info-card-content">
-              Over the past 22 years we have expanded our reach to over 450+ cities all over India and various centers abroad.
+              Over the past 22 years we have expanded our reach to over 730+ cities all over India and various centers abroad.
             </div>
             <a href="/aboutus"> Learn More </a>
           </div>

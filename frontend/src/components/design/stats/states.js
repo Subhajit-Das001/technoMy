@@ -57,7 +57,7 @@ const Stats = () => {
   const stats = [
     { label: "Schools", value: "3200", suffix: "+", icon: <FaSchool size={50} color="#3498db" /> },
     { label: "Students", value: "300", suffix: "K+", icon: <FaUserGraduate size={50} color="#e67e22" /> },
-    { label: "Cities", value: "500", suffix: "+", icon: <FaCity size={50} color="#2ecc71" /> },
+    { label: "Cities", value: "750", suffix: "+", icon: <FaCity size={50} color="#2ecc71" /> },
   ];
 
   return (
