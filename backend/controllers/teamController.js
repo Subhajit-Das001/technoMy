@@ -168,6 +168,8 @@ const TeamController = {
                             <p>Hey Champs!</p>
                             <p>Your registration for Technothlon '26 has been confirmed.</p>
                             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                                <p><strong>Name1:</strong> ${updatedTeam.name1}</p>
+                                <p><strong>Name2:</strong> ${updatedTeam.name2}</p>
                                 <p><strong>Roll Number:</strong> ${updatedTeam.rollNumber}</p>
                                 <p><strong>Password:</strong> ${updatedTeam.password}</p>
                             </div>
