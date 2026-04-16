@@ -15,6 +15,17 @@ const getZone = require("../utils/getZone");
 const cityToID = require("../utils/cityToID.json");
 const generateRollNumber = require("../utils/generateRollNumber");
 
+
+//Contact details of Zonal Heads
+const ZONAL_HEADS = {
+  South: { name: "Zonal_Head_South", phone: "7233951978" },
+  // South: { name: "Zonal_Head_South_2", phone: "+918978909914" },
+  East: { name: "Zonal_Head_East", phone: "9954704388" },
+  West: { name: "Zonal_Head_West", phone: "85111107997" },
+  North: { name: "Zonal_Head_North", phone: "6200716689" },
+  Online: { name: "Online_Head",phone: "6307043498"}
+};
+
 dotenv.config();
 
 
@@ -367,4 +378,125 @@ router.post("/retry-mails", async (req, res) => {
   }
 });
 
+
+//Generating A .vcf file 
+router.post("/generate-vcf", async (req, res) => {
+  try {
+    const { hashId } = req.body;
+
+    if (!hashId) {
+      return res.status(400).json({
+        error: "hashId is required"
+      });
+    }
+
+    // 🔍 Get all records for this upload
+    const records = await Offline26.find({ uploadId: hashId });
+
+    if (!records.length) {
+      return res.status(404).json({
+        error: "No records found for this hashId"
+      });
+    }
+
+    // 🔍 Get file info
+    const fileInfo = await UploadedFileHash.findOne({hash : hashId});
+
+    const fileNameBase = fileInfo?.fileName || "contacts";
+
+    // 📍 Extract city, zone, squad
+    const city = records[0].city || "City";
+    const zone = records[0].zone || "Zone";
+    // const squad = records[0].squad || "Team";
+
+    let vcfContent = "";
+
+    const seen = new Set();
+
+    // ================= FIXED CONTACTS =================
+
+    // 🔥 Online_Head (always first)
+    vcfContent += `BEGIN:VCARD
+VERSION:3.0
+FN:Online_Head
+TEL;TYPE=CELL:+916307043498
+ORG:Technothlon 2026
+END:VCARD
+`;
+    seen.add("6307043498"); // Kabya number (without +91)
+
+    // 🔥 Zonal Head
+    if (ZONAL_HEADS[zone]) {
+      const head = ZONAL_HEADS[zone];
+
+      vcfContent += `BEGIN:VCARD
+VERSION:3.0
+FN:${head.name}
+TEL;TYPE=CELL:${head.phone}
+ORG:Technothlon 2026
+END:VCARD
+`;
+      seen.add(head.phone.replace("91", ""));
+    }
+
+    // ================= STUDENT CONTACTS =================
+
+    for (let doc of records) {
+      const num1 = doc.contact1?.replace(/\D/g, "");
+      const num2 = doc.contact2?.replace(/\D/g, "");
+      const squadCode = doc.squad === "Juniors" ? "JR" : "HT";
+      
+      // Student 1
+      if (num1 && !seen.has(num1)) {
+        seen.add(num1);
+
+        const name1 = `${city}_${doc.name1}_${squadCode}_Techno26`;
+
+        vcfContent += `BEGIN:VCARD
+VERSION:3.0
+FN:${name1}
+TEL;TYPE=CELL:${num1}
+ORG:Technothlon 2026
+NOTE:Zone=${zone}
+END:VCARD
+`;
+      }
+
+      // Student 2
+      if (num2 && !seen.has(num2)) {
+        seen.add(num2);
+
+        const name2 = `${city}_${doc.name2}_${squadCode}_Techno26`;
+
+        vcfContent += `BEGIN:VCARD
+VERSION:3.0
+FN:${name2}
+TEL;TYPE=CELL:${num2}
+ORG:Technothlon 2026
+NOTE:Zone=${zone}
+END:VCARD
+`;
+      }
+    }
+
+    // ================= FILE NAME =================
+    const finalFileName = `${city}_${fileNameBase}_${zone}.vcf`;
+
+    // ================= SEND FILE =================
+    res.setHeader("Content-Type", "text/vcard");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${finalFileName}`
+    );
+
+    return res.send(vcfContent);
+
+  } catch (err) {
+    console.error("VCF generation error:", err);
+    res.status(500).json({
+      error: "Internal server error",
+      message: err.message
+    });
+  }
+});
 module.exports = router;
