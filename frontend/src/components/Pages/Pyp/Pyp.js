@@ -339,7 +339,7 @@ function Pyp() {
       <div className="green">
             <h1>Previous Year Questions</h1>
             <p>See for yourself the unique question papers of Technothlon!
-              <br />  Go through our repository of past Technothlon papers to get a hang of the questions and get ready to face Technothlon 2025!
+              <br />  Go through our repository of past Technothlon papers to get a hang of the questions and get ready to face Technothlon 2026!
               </p>
       </div>
       <div className="con">

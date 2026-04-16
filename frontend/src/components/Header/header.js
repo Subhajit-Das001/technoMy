@@ -122,13 +122,13 @@ function Header() {
           >
             <p>Contact Us</p>
           </Link>
-          <Link
+          {/* <Link
             to="/cos_login"
             className={`hlinks ${clickedLink === "results" ? "clicked" : ""}`}
             onClick={() => setClickedLink("results")}
           >
             <p>Result</p>
-          </Link>
+          </Link> */}
         </div>
         <div className="regggg">
          <Link
