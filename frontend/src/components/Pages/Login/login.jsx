@@ -29,7 +29,7 @@ const Login = () => {
     if (!roll.trim()) {
       setError('Please enter Roll Number');
       return;
-    }
+    } 
 
     if (!password.trim()) {
       setError('Please enter Password');

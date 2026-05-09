@@ -10,6 +10,7 @@ const cosPortalSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
+    
   },
   principal_id: {
     type: String,
