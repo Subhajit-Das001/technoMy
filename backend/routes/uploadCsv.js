@@ -129,17 +129,17 @@ router.post('/login', async (req, res) => {
 
   try {
     let user = null;
-    user = await Offline25.findOne({ rollNumber: roll });
+    user = await Offline26.findOne({ rollNumber: roll });
 
-    if (!user) {
-      user = await Online25.findOne({ rollNumber: roll });
-    }
+    // if (!user) {
+    //   user = await Online25.findOne({ rollNumber: roll });
+    // }
     if (!user) {
       user = await Online26.findOne({ rollNumber: roll });
     }
-    if (!user) {
-      user = await Offline26.findOne({ rollNumber: roll });
-    }
+    // if (!user) {
+    //   user = await Offline25.findOne({ rollNumber: roll });
+    // }
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });

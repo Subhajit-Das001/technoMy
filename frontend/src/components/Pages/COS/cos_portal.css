@@ -1,15 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* --- LAYOUT & WRAPPER --- */
 .cos_kv_portal_wrapper {
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
   background-color: #fdf6e3;
   display: flex;
   flex-direction: column;
+  color: #333;
 }
 
+/* --- HEADER --- */
 .cos_kv_header {
   background-color: #fee6a1;
   border-bottom: 2px solid #ffb347;
   padding: 20px 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .cos_kv_header_content {
@@ -26,55 +32,97 @@
   gap: 15px;
 }
 
+.cos_kv_logo_box {
+  background: white;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
 .cos_kv_school_icon {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
 }
 
+.cos_kv_school_text {
+  display: flex;
+  flex-direction: column;
+}
+
 .cos_kv_school_name {
+  margin: 0;
   font-size: 24px;
   font-weight: 600;
   color: #333;
-  margin: 0;
 }
 
 .cos_kv_school_code {
+  margin: 4px 0 0 0;
   font-size: 14px;
   color: #666;
-  margin: 4px 0 0 0;
 }
 
-.cos_kv_logout_button {
+/* Header Buttons */
+.cos_kv_header_actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cos_kv_btn_outline_blue {
+  background: #f0f7ff;
+  color: #2b6cb0;
+  border: 1px solid #90cdf4;
+  padding: 8px 16px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cos_kv_btn_outline_blue:hover {
+  background: #e2e8f0;
+}
+
+.cos_kv_btn_solid_orange {
   background-color: #d35400;
   color: white;
   border: none;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  transition: 0.2s;
 }
 
-.cos_kv_logout_button:hover {
+.cos_kv_btn_solid_orange:hover {
   background-color: #b84600;
 }
 
+/* --- DASHBOARD BODY --- */
 .cos_kv_main_container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.cos_kv_dashboard {
+.cos_kv_dashboard_card {
   background: #fff;
   border-radius: 8px;
   padding: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   border: 1px solid #ffb347;
 }
 
@@ -82,14 +130,15 @@
   font-size: 28px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 30px;
-  border-bottom: 3px solid #ffb347;
+  margin: 0 0 30px 0;
   padding-bottom: 15px;
+  border-bottom: 2px solid #ffb347;
 }
 
+/* --- STATS GRID --- */
 .cos_kv_stats_grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
   margin-bottom: 40px;
 }
@@ -98,27 +147,29 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 20px;
+  padding: 24px 20px;
   background-color: #fef9f0;
   border-radius: 8px;
-  border: 2px solid #ffb347;
+  border: 1px solid #f6ad55;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .cos_kv_stat_card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 179, 71, 0.2);
+  box-shadow: 0 4px 8px rgba(255, 179, 71, 0.15);
 }
 
 .cos_kv_stat_icon {
-  width: 40px;
-  height: 40px;
-  color: #d35400;
+  width: 35px;
+  height: 35px;
+  color: #dd6b20;
   flex-shrink: 0;
 }
 
 .cos_kv_stat_content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .cos_kv_stat_label {
@@ -135,50 +186,82 @@
   margin: 0;
 }
 
+/* --- UPLOAD SECTION FIXES --- */
 .cos_kv_upload_section {
-  margin-bottom: 40px;
-  padding: 30px;
-  background-color: #fef9f0;
+  border: 1px solid #ffb347;
   border-radius: 8px;
-  border: 2px solid #ffb347;
+  padding: 30px;
+  background-color: #fffdfa;
+  margin-bottom: 40px;
 }
 
 .cos_kv_section_title {
+  color: #d35400;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 15px;
-  color: #d35400;
+  margin: 0 0 15px 0;
 }
 
 .cos_kv_section_description {
-  font-size: 14px;
   color: #666;
-  margin-bottom: 20px;
+  font-size: 14px;
   line-height: 1.6;
+  margin: 0 0 25px 0;
+  max-width: 950px;
 }
 
-.cos_kv_upload_button {
+/* Restored "Report Issue" Button Styles */
+.cos_kv_btn_outline_red {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+  padding: 8px 16px;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px; /* Space between Report and Upload button */
+  transition: all 0.2s;
+}
+
+.cos_kv_btn_outline_red:hover:not(.disabled) {
+  background-color: #fed7d7;
+}
+
+.cos_kv_btn_outline_red.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+/* Primary Upload Button */
+.cos_kv_upload_action_area {
+  margin-top: 5px;
+}
+
+.cos_kv_btn_upload {
   background-color: #ffb347;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 500;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.cos_kv_upload_button:hover {
+.cos_kv_btn_upload:hover:not(.disabled) {
   background-color: #ffa533;
 }
 
-.cos_kv_upload_button.cos_kv_uploading {
-  background-color: #d9b377;
+.cos_kv_btn_upload.disabled {
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -186,35 +269,30 @@
   display: none;
 }
 
+/* Errors */
 .cos_kv_error_container {
   margin-top: 20px;
   padding: 15px;
   background-color: #ffe6e6;
-  border: 2px solid #d35400;
-  border-radius: 4px;
+  border: 1px solid #feb2b2;
+  border-radius: 6px;
+  color: #c53030;
 }
 
 .cos_kv_error_header {
   font-size: 16px;
   font-weight: 600;
-  color: #d35400;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .cos_kv_error_messages {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.cos_kv_error_message {
+  gap: 6px;
   font-size: 14px;
-  color: #8b3a00;
-  padding: 8px;
-  background-color: white;
-  border-radius: 4px;
 }
 
+/* --- DOWNLOAD HISTORY --- */
 .cos_kv_files_section {
   margin-top: 40px;
 }
@@ -231,8 +309,8 @@
   align-items: center;
   padding: 15px 20px;
   background-color: #fef9f0;
-  border: 2px solid #ffb347;
-  border-radius: 4px;
+  border: 1px solid #ffb347;
+  border-radius: 6px;
 }
 
 .cos_kv_file_info {
@@ -283,239 +361,248 @@
   background-color: #ffa533;
 }
 
-.cos_kv_loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 20px;
+/* --- MODALS --- */
+.cos_modal_overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
 }
 
-@keyframes cos_kv_spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.cos_modal_content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
 }
 
-.cos_kv_spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #fdf6e3;
-  border-top: 4px solid #ffb347;
-  border-radius: 50%;
-  animation: cos_kv_spin 1s linear infinite;
+.modal_header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center;
 }
 
-/* Tablet and Mobile Responsive Styles */
+.modal_header h2 {
+  margin: 0; font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #2d3748;
+}
+
+.text_blue { color: #3182ce; }
+.text_red { color: #e53e3e !important; }
+
+.close_btn {
+  background: none; border: none; color: #a0aec0; cursor: pointer; padding: 4px;
+}
+
+.modal_body { padding: 24px; }
+
+/* Guidelines List inside Modal */
+.guidelines_list {
+  list-style: none; padding: 0; margin: 0; color: #1a202c; line-height: 1.6;
+}
+
+.guidelines_list li { margin-bottom: 18px; font-size: 0.95rem; }
+
+.code_inline {
+  background: #ebf8ff; 
+  color: #2b6cb0; 
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.code_block {
+  background: #2d3748; 
+  color: #e2e8f0; 
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.modal_footer {
+  padding: 16px 24px 24px 24px;
+}
+
+.modal_footer.right_align { text-align: right; }
+.modal_footer.no_border { border-top: none; padding-top: 0; }
+
+.cos_btn_solid_blue {
+  background: #3182ce; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.cos_btn_solid_blue:hover { background: #2b6cb0; }
+
+/* Report Form in Modal */
+.report_helper_text { margin: 0 0 20px 0; color: #4a5568; font-size: 0.95rem; }
+.form_group label { display: block; font-weight: 500; margin-bottom: 8px; color: #2d3748; }
+.form_group textarea {
+  width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px;
+  font-family: inherit; margin-bottom: 20px; outline: none; box-sizing: border-box;
+}
+.form_group textarea:focus { border-color: #3182ce; }
+
+/* Loader */
+.cos_kv_loading { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
+.cos_kv_spinner { width: 40px; height: 40px; border: 4px solid #fbd38d; border-top-color: #d35400; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
 @media (max-width: 768px) {
-  .cos_kv_header {
-    padding: 15px 20px;
-  }
+  .cos_kv_header { padding: 15px 20px; }
+  .cos_kv_header_content { flex-direction: column; gap: 15px; align-items: flex-start; }
+  .cos_kv_school_info { width: 100%; gap: 10px; }
+  .cos_kv_school_icon { width: 40px; height: 40px; }
+  .cos_kv_school_name { font-size: 18px; }
+  .cos_kv_school_code { font-size: 12px; }
+  
+  .cos_kv_header_actions { width: 100%; justify-content: space-between; }
+  .cos_kv_btn_outline_blue, .cos_kv_btn_solid_orange { flex: 1; justify-content: center; }
 
-  .cos_kv_header_content {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-
-  .cos_kv_school_info {
-    width: 100%;
-    gap: 10px;
-  }
-
-  .cos_kv_school_icon {
-    width: 60px;
-    height: 60px;
-  }
-
-  .cos_kv_school_name {
-    font-size: 18px;
-  }
-
-  .cos_kv_school_code {
-    font-size: 12px;
-  }
-
-  .cos_kv_logout_button {
-    width: 100%;
-    justify-content: center;
-    padding: 12px 20px;
-  }
-
-  .cos_kv_main_container {
-    padding: 20px 15px;
-  }
-
-  .cos_kv_dashboard {
-    padding: 20px 15px;
-  }
-
-  .cos_kv_dashboard_title {
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-
-  .cos_kv_stats_grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .cos_kv_stat_card {
-    padding: 15px;
-  }
-
-  .cos_kv_stat_icon {
-    width: 35px;
-    height: 35px;
-  }
-
-  .cos_kv_stat_value {
-    font-size: 24px;
-  }
-
-  .cos_kv_upload_section {
-    padding: 20px 15px;
-    margin-bottom: 30px;
-  }
-
-  .cos_kv_section_title {
-    font-size: 18px;
-  }
-
-  .cos_kv_section_description {
-    font-size: 13px;
-    margin-bottom: 15px;
-  }
-
-  .cos_kv_upload_button {
-    width: 100%;
-    justify-content: center;
-    padding: 14px 24px;
-  }
-
-  .cos_kv_file_item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .cos_kv_file_info {
-    width: 100%;
-  }
-
-  .cos_kv_file_name {
-    word-break: break-word;
-    font-size: 13px;
-  }
-
-  .cos_kv_download_button {
-    width: 100%;
-    padding: 10px 16px;
-  }
-
-  .cos_kv_files_section {
-    margin-top: 30px;
-  }
+  .cos_kv_main_container { padding: 20px 15px; }
+  .cos_kv_dashboard_card { padding: 20px 15px; }
+  .cos_kv_dashboard_title { font-size: 22px; margin-bottom: 20px; }
+  
+  .cos_kv_stats_grid { grid-template-columns: 1fr; gap: 15px; }
+  
+  .cos_kv_upload_section { padding: 20px 15px; }
+  .cos_kv_section_title { font-size: 18px; }
+  .cos_kv_btn_upload { width: 100%; justify-content: center; }
+  
+  .cos_kv_file_item { flex-direction: column; align-items: flex-start; gap: 15px; padding: 15px; }
+  .cos_kv_download_button { width: 100%; }
 }
 
-/* Small Mobile Devices */
 @media (max-width: 480px) {
-  .cos_kv_header {
-    padding: 12px 15px;
-  }
+  .cos_kv_header { padding: 12px 15px; }
+  .cos_kv_school_name { font-size: 16px; }
+  .cos_kv_school_code { font-size: 11px; }
+  .cos_kv_dashboard_title { font-size: 20px; }
+  
+  .cos_kv_stat_card { padding: 12px; gap: 12px; }
+  .cos_kv_stat_icon { width: 30px; height: 30px; }
+  .cos_kv_stat_value { font-size: 20px; }
+  
+  .cos_kv_section_title { font-size: 16px; }
+  .cos_kv_section_description { font-size: 12px; }
+}/* --- BUTTON STYLES FIX --- */
 
-  .cos_kv_school_icon {
-    width: 50px;
-    height: 50px;
-  }
+/* Header Logout Button */
+.cos_kv_logout_button {
+  background-color: #d35400;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+  white-space: nowrap; /* Prevents wrapping */
+}
 
-  .cos_kv_school_name {
-    font-size: 16px;
-  }
+.cos_kv_logout_button:hover {
+  background-color: #b84600;
+}
 
-  .cos_kv_school_code {
-    font-size: 11px;
-  }
+/* Report Issue Button */
+.cos_kv_report_btn {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+  padding: 10px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 40px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
 
-  .cos_kv_main_container {
-    padding: 15px 10px;
-  }
+.cos_kv_report_btn:hover:not(.disabled) {
+  background-color: #fed7d7;
+}
 
-  .cos_kv_dashboard {
-    padding: 15px 10px;
-  }
+.cos_kv_report_btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
 
-  .cos_kv_dashboard_title {
-    font-size: 20px;
-    margin-bottom: 15px;
-  }
+/* Upload CSV Button */
+.cos_kv_upload_button {
+  background-color: #ffb347;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
 
-  .cos_kv_stats_grid {
-    gap: 12px;
-  }
+.cos_kv_upload_button:hover:not(.cos_kv_uploading) {
+  background-color: #ffa533;
+}
 
-  .cos_kv_stat_card {
-    padding: 12px;
-    gap: 12px;
-  }
+.cos_kv_upload_button.cos_kv_uploading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
-  .cos_kv_stat_icon {
-    width: 30px;
-    height: 30px;
-  }
+.cos_kv_file_input {
+  display: none;
+}
+/* --- Action Wrapper Layout --- */
+.cos_kv_upload_actions_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  .cos_kv_stat_label {
-    font-size: 13px;
-  }
+/* Reset margins so flexbox handles the spacing perfectly */
+.cos_kv_upload_action_area {
+  margin-top: 0 !important;
+}
 
-  .cos_kv_stat_value {
-    font-size: 20px;
-  }
+.cos_kv_report_btn {
+  margin-bottom: 0 !important; /* Removes the bottom margin from previous styles */
+}
 
-  .cos_kv_upload_section {
-    padding: 15px 10px;
+/* Mobile Responsiveness: Stack the buttons on smaller screens */
+@media (max-width: 768px) {
+  .cos_kv_upload_actions_wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
   }
-
-  .cos_kv_section_title {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-
-  .cos_kv_section_description {
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  .cos_kv_upload_button {
-    padding: 12px 20px;
-    font-size: 13px;
-  }
-
-  .cos_kv_file_item {
-    padding: 12px;
-    gap: 12px;
-  }
-
-  .cos_kv_file_name {
-    font-size: 12px;
-  }
-
-  .cos_kv_file_date,
-  .cos_kv_file_count {
-    font-size: 11px;
-  }
-
-  .cos_kv_error_container {
-    padding: 12px;
-  }
-
-  .cos_kv_error_header {
-    font-size: 14px;
-  }
-
-  .cos_kv_error_message {
-    font-size: 12px;
-    padding: 6px;
+  
+  .cos_kv_report_btn {
+    width: 100%;
+    justify-content: center;
   }
 }

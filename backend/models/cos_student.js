@@ -1,0 +1,38 @@
+const mongoose = require('mongoose');
+
+const cosStudentsSchema = new mongoose.Schema({
+    // --- Student 1 ---
+    name1: { type: String, required: true },
+    contact1: { type: String, required: true },
+    email1: { type: String, required: true },
+    school1: { type: String, required: true },
+    class1: { type: String, required: true },
+    dob1: { type: Date, required: true },
+
+    // --- Student 2 ---
+    name2: { type: String, required: true },
+    contact2: { type: String, required: true },
+    email2: { type: String, required: true },
+    school2: { type: String, required: true },
+    class2: { type: String, required: true },
+    dob2: { type: Date, required: true },
+
+    // --- Team Details ---
+    squad: { type: String, required: true },
+    language: { type: String, required: true },
+    mode: { type: String, required: true, default: 'online' },
+    country: { type: String, required: true, default: 'India' },
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+    zone: { type: String, required: true },
+    
+    // --- Logistics & Linking ---
+    school_id: { type: String, ref: 'cos_school', required: true },
+    branch_id: { type: String, ref: 'cos_branch', required: true },
+    csv_hash_id: { type: String },
+    centre: { type: String },
+    rank: { type: Number },
+    isPaid: {type : Boolean, default : false}
+}, { timestamps: true });
+
+module.exports = mongoose.model('cos_students', cosStudentsSchema);

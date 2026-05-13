@@ -1,0 +1,195 @@
+/* Ensure the body doesn't have default margins */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.poc_reg_wrapper {
+  background-color: #f0f4f8; /* Professional light blue-gray */
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.poc_reg_container.landscape_layout {
+  background: #ffffff;
+  width: 95%; /* Occupies most of the screen width */
+  max-width: 1200px; /* Limits expansion on ultra-wide monitors */
+  min-height: 70vh; /* Ensures a significant vertical presence */
+  padding: 50px;
+  padding-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid #0056b3; /* Dark Blue Accent */
+  display: flex;
+  flex-direction: column;
+}
+
+.poc_reg_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* margin-bottom: 40px; */
+  border-bottom: 2px solid #e1e8ed;
+  /* padding-bottom: 20px; */
+  margin-top: 20px;
+}
+
+.poc_reg_logo {
+  height: 85px;
+  margin-right: 20px;
+}
+
+.poc_reg_title {
+  color: #0056b3;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.06cap;
+}
+
+.poc_reg_form_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two distinct columns for landscape feel */
+  column-gap: 60px;
+  row-gap: 25px;
+}
+
+.poc_reg_input_group {
+  display: flex;
+  flex-direction: column;
+}
+
+.poc_reg_input_group label {
+  font-weight: 600;
+  color: #334e68;
+  margin-bottom: 8px;
+}
+
+.poc_reg_input_group input {
+  padding: 12px 15px;
+  border: 1.5px solid #d1d9e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.poc_reg_input_group input:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+.poc_reg_full_width {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.poc_reg_submit_btn {
+  background-color: #0056b3;
+  color: white;
+  padding: 15px 60px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.poc_reg_submit_btn:hover {
+  background-color: #004494;
+}
+
+.poc_reg_error {
+  color: #d93025;
+  background: #fce8e6;
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* Success Modal - Centered in Viewport */
+/* --- Modal Overlay (The Darkened Background) --- */
+.poc_reg_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it stays above everything */
+  backdrop-filter: blur(4px); /* Modern blur effect for the background */
+}
+
+/* --- Modal Box --- */
+.poc_reg_modal_content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-top: 6px solid #28a745; /* Red accent top border */
+  animation: modalPop 0.3s ease-out; /* Subtle entrance animation */
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* --- Title --- */
+.poc_reg_modal_content h2 {
+  color: #1a1a1a;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+/* --- Description --- */
+.poc_reg_modal_content p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* --- The Red Login Button --- */
+.poc_reg_login_btn {
+  background-color: #28a745; /* Red Color */
+  color: #ffffff;
+  padding: 14px 40px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%; /* Full width inside the modal for mobile-friendliness */
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.poc_reg_login_btn:hover {
+  background-color: #b8261c; /* Darker red on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(217, 48, 37, 0.3);
+}
+
+.poc_reg_login_btn:active {
+  transform: translateY(0);
+}

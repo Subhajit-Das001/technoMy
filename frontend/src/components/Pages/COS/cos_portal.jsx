@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { LogOut, Upload, Download, Users, School, Calendar } from "lucide-react";
+import { LogOut, Upload, Download, Users, School, Calendar,AlertCircle, Info, Send, X, MessageSquareWarning} from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './cos_portal.css';
@@ -23,9 +23,25 @@ function COSPortal() {
     JSON.parse(localStorage.getItem("cos_uploadedFiles")) || []
   );
 
-  useEffect(() => {
+  // New states for Guidelines and Reporting
+  const [showGuidelines, setShowGuidelines] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportMessage, setReportMessage] = useState("");
+  const [failedFileName, setFailedFileName] = useState(null);
+  const [sendingReport, setSendingReport] = useState(false);
+  const [fileHash, setFileHash] = useState("");
+useEffect(() => {
     fetchDashboardData();
+    // Show guidelines once per session
+    const hasSeenGuidelines = sessionStorage.getItem("cos_seen_guidelines");
+    if (!hasSeenGuidelines) {
+      setShowGuidelines(true);
+    }
   }, []);
+  const closeGuidelines = () => {
+    setShowGuidelines(false);
+    sessionStorage.setItem("cos_seen_guidelines", "true");
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -34,7 +50,7 @@ function COSPortal() {
       });
       setDashboardData(response.data);
     } catch (err) {
-      console.error("Error fetching dashboard data:", err);
+      // console.error("Error fetching dashboard data:", err);
       if (err.response?.status === 401) {
         window.location.href = process.env.NODE_ENV === "production"
           ? "https://technothlon.techniche.org.in/school-registration"
@@ -46,7 +62,7 @@ function COSPortal() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+setFailedFileName(file.name);
     // Validate file type
     const validTypes = [
       'text/csv',
@@ -81,7 +97,7 @@ function COSPortal() {
 
       if (response.data.success) {
         toast.success(`Successfully processed ${response.data.processedCount} teams!`);
-        
+        setFileHash(response.data.fileHash);
         // Get the correct filename from backend response
         const fileName = response.data.fileName || `cos_output_${Date.now()}.csv`;
         const downloadUrl = `${baseURL}cos_portal/download/${fileName}`;
@@ -107,12 +123,12 @@ function COSPortal() {
         const updatedFiles = [newFile, ...uploadedFiles];
         setUploadedFiles(updatedFiles);
         localStorage.setItem("cos_uploadedFiles", JSON.stringify(updatedFiles));
-
+setFailedFileName(null);
         // Refresh dashboard
         fetchDashboardData();
       }
     } catch (err) {
-      console.error("Upload error:", err);
+      // console.error("Upload error:", err);
       if (err.response?.data?.errors) {
         const errorMessages = err.response.data.errors;
         setError({
@@ -133,7 +149,34 @@ function COSPortal() {
       e.target.value = '';
     }
   };
+const handleSendReport = async (e) => {
+    e.preventDefault();
+    if (!reportMessage.trim()) {
+      toast.warning("Please enter a message for the admin.");
+      return;
+    }
 
+    setSendingReport(true);
+    try {
+      // Sending detailed payload for backend DB and Mailer
+      await axios.post(`${baseURL}cos_portal/report`, {
+        branch_id: dashboardData.branch_id,
+        branch_name: dashboardData.branch_name,
+        fileName: failedFileName || "Unknown/No file",
+        errorDetails: error,
+        fileHash: fileHash || "No file hash",
+        message: reportMessage
+      }, { withCredentials: true });
+      
+      toast.success("Report sent to admin. It will be resolved within 24 hours.");
+      setShowReportModal(false);
+      setReportMessage("");
+    } catch (err) {
+      toast.error("Failed to send report. Please try again later.");
+    } finally {
+      setSendingReport(false);
+    }
+  };
   const handleDownload = (fileUrl, fileName) => {
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -152,8 +195,9 @@ function COSPortal() {
         ? "https://technothlon.techniche.org.in/school-registration"
         : "http://localhost:3000/school-registration";
     } catch (err) {
-      console.error("Logout error:", err);
+      // console.error("Logout error:", err);
       // Still redirect even if logout fails
+      sessionStorage.removeItem("cos_seen_guidelines");
       window.location.href = process.env.NODE_ENV === "production"
         ? "https://technothlon.techniche.org.in/school-registration"
         : "http://localhost:3000/school-registration";
@@ -199,14 +243,19 @@ function COSPortal() {
           <div className="cos_kv_school_info">
             <img src={kvsLogo} alt="KVS Logo" className="cos_kv_school_icon" />
             <div>
-              <h1 className="cos_kv_school_name">{dashboardData.school}</h1>
-              <p className="cos_kv_school_code">Code: {dashboardData.code}</p>
+              <h1 className="cos_kv_school_name">{dashboardData.branch_name}</h1>
+              <p className="cos_kv_school_code">Branch ID: {dashboardData.branch_id}</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="cos_kv_logout_button">
-            <LogOut size={20} />
-            <span>Logout</span>
-          </button>
+          <div className="cos_kv_header_actions">
+            <button onClick={() => setShowGuidelines(true)} className="cos_kv_btn_outline_blue">
+              <Info size={20} /> <span>Guidelines</span>
+            </button>
+            <button onClick={handleLogout} className="cos_kv_logout_button">
+              <LogOut size={20} /> <span>Logout</span>
+            </button>
+          </div>
+
         </div>
       </header>
 
@@ -238,7 +287,6 @@ function COSPortal() {
                 <p className="cos_kv_stat_value">{dashboardData.hauts_team}</p>
               </div>
             </div>
-
             <div className="cos_kv_stat_card">
               <Calendar className="cos_kv_stat_icon" />
               <div className="cos_kv_stat_content">
@@ -251,26 +299,36 @@ function COSPortal() {
           <div className="cos_kv_upload_section">
             <h3 className="cos_kv_section_title">Upload Student Data</h3>
             <p className="cos_kv_section_description">
-              Upload CSV file with required columns: name1, dob1 (DD/MM/YYYY format or Excel date), email1, contact1, class1, 
-              name2, dob2 (DD/MM/YYYY format or Excel date), email2, contact2, class2, squad, language
+              Upload CSV file with required columns: name1, dob1 (DD/MM/YYYY format), email1, contact1, class1, 
+              name2, dob2 (DD/MM/YYYY format), email2, contact2, class2, squad, language
             </p>
-            
-            <label className={`cos_kv_upload_button ${uploading ? 'cos_kv_uploading' : ''}`}>
-              <Upload size={20} />
-              <span>{uploading ? "Uploading..." : "Upload CSV File"}</span>
-              <input
-                type="file"
-                accept=".csv,."
-                onChange={handleFileChange}
-                disabled={uploading}
-                className="cos_kv_file_input"
-              />
-            </label>
+            {/* --- NEW FLEX WRAPPER START --- */}
+  <div className="cos_kv_upload_actions_wrapper">
+    
+    {/* Upload Button stays on the left */}
+    <div className="cos_kv_upload_action_area">
+      <label className={`cos_kv_upload_button ${uploading ? 'cos_kv_uploading' : ''}`}>
+        <Upload size={18} />
+        <span>{uploading ? "Uploading..." : "Upload CSV File"}</span>
+        <input type="file" accept=".csv" onChange={handleFileChange} disabled={uploading} className="cos_kv_file_input" />
+      </label>
+    </div>
 
+    {/* Report Button moves to the right */}
+    <button 
+      onClick={() => setShowReportModal(true)} 
+      disabled={!error}
+      className={`cos_kv_report_btn ${!error ? 'disabled' : ''}`}
+    >
+      <AlertCircle size={18} /> <span>Report Issue</span>
+    </button>
+    
+  </div>
+  {/* --- NEW FLEX WRAPPER END --- */}
             {error && (
               <div className="cos_kv_error_container">
                 <div className="cos_kv_error_header">
-                  {error.title}
+                  <AlertCircle size={18} /> {error.title}
                 </div>
                 <div className="cos_kv_error_messages">
                   {error.messages.map((message, idx) => (
@@ -279,6 +337,8 @@ function COSPortal() {
                 </div>
               </div>
             )}
+
+            
           </div>
 
           {uploadedFiles.length > 0 && (
@@ -308,6 +368,74 @@ function COSPortal() {
               </div>
             </div>
           )}
+{/* --- MODALS --- */}
+{/* 3. Guidelines Modal Match */}
+      {showGuidelines && (
+        <div className="cos_modal_overlay">
+          <div className="cos_modal_content guidelines_modal">
+            <div className="modal_header">
+              <h2><Info size={20} className="text_blue"/> CSV Upload Guidelines</h2>
+              <button onClick={closeGuidelines} className="close_btn"><X size={20}/></button>
+            </div>
+            <div className="modal_body">
+              <ul className="guidelines_list">
+                <li>
+                  <strong>Naming Format:</strong> The file name must strictly be:<br/>
+                  <code className="code_inline">CSV_&lt;Sr_no.&gt;_&lt;Branch_name&gt;_&lt;School_name&gt;.csv</code>
+                </li>
+                <li>
+                  <strong>Unique Files:</strong> Ensure no two CSV files uploaded have the identical file name.
+                </li>
+                <li>
+                  <strong>Required Fields:</strong> The file must contain exactly <strong>12</strong> fields with case-sensitive titles.
+                </li>
+                <li>
+                  <strong>Column Headers:</strong> Use exactly these titles in row 1:
+                  <div className="code_block">
+                    name1, dob1, email1, contact1, class1, name2, dob2, email2, contact2, class2, squad, language
+                  </div>
+                </li>
+                <li>
+                  <strong>Assistance:</strong> Any errors will be displayed on your screen. If you are still unable to upload after checking errors, click the <strong>Report Issue</strong> button to contact our team.
+                </li>
+              </ul>
+            </div>
+            <div className="modal_footer right_align">
+              <button onClick={closeGuidelines} className="cos_btn_solid_blue">I Understand, Proceed</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Report Modal Match */}
+      {showReportModal && (
+        <div className="cos_modal_overlay">
+          <div className="cos_modal_content report_modal">
+            <div className="modal_header">
+              <h2 className="text_red"><AlertCircle size={20}/> Report Issue</h2>
+              <button onClick={() => setShowReportModal(false)} className="close_btn"><X size={20}/></button>
+            </div>
+            <div className="modal_body">
+              <form onSubmit={handleSendReport}>
+                <p className="report_helper_text">It will be sent to Admin through mail and will be resolved within 24 hours.</p>
+                <div className="form_group">
+                  <label>Message</label>
+                  <textarea 
+                    value={reportMessage} onChange={(e) => setReportMessage(e.target.value)}
+                    placeholder="Describe the issue you are facing..." rows="4" required
+                  />
+                </div>
+                <div className="modal_footer right_align no_border">
+                  <button type="submit" className="cos_btn_solid_blue" disabled={sendingReport}>
+                    {sendingReport ? "Sending..." : "Send Report"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
         </div>
       </div>
     </div>
