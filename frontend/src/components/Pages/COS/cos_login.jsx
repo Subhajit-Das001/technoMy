@@ -13,36 +13,39 @@ const COSLogin = () => {
     ? "https://technothlon.techniche.org.in/school-dashboard"
     : "http://localhost:3000/school-dashboard";
 
-  const [principal_id, setPrincipalId] = useState('');
-  const [poc_id, setPocId] = useState('');
+  const [school_id, setSchoolId] = useState('');
+  const [branch_id, setBranchId] = useState('');
+  const [bpoc_mail, setBpocMail] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+ 
   axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!principal_id.trim() || !poc_id.trim()) {
-      setError('Please enter Principal ID and POC ID');
+    if (!school_id.trim() || !branch_id.trim() || !bpoc_mail.trim()) {
+      setError('Please enter correct details');
       return;
     }
 
-    // Send poc_id as password to backend
-    axios.post(`${baseURL}cos_portal/login`, { principal_id, password: poc_id })
+    // Send branch_id as password to backend
+    axios.post(`${baseURL}cos_portal/login`, { school_id, branch_id , bpoc_mail})
       .then(res => {
         if (res.data.status) {
           window.location.href = redirectUrl;
         } else {
-          setError("Invalid Principal ID or POC ID");
-          setPrincipalId('');
-          setPocId('');
+          setError("Invalid Details");
+          setSchoolId('');
+          setBranchId('');
+          setBpocMail('');
         }
       })
       .catch(() => {
-        setError("Invalid Principal ID or POC ID");
-        setPrincipalId('');
-        setPocId('');
+        setError("Invalid Details");
+        setSchoolId('');
+        setBranchId('');
+        setBpocMail('');
       });
   };
 
@@ -54,31 +57,43 @@ const COSLogin = () => {
             <img src={logo2} alt="Technothlon Logo" className="cos_kv_logo" />
           </div>
           
-          <h1 className="cos_kv_portal_title">School Registration Portal</h1>
+          <h1 className="cos_kv_portal_title">SCHOOL LOGIN PORTAL</h1>
           
           <form onSubmit={handleSubmit} className="cos_kv_login_form">
             <div className="cos_kv_input_group">
-              <label htmlFor="principal_id" className="cos_kv_input_label">Principal ID</label>
+              <label htmlFor="school_id" className="cos_kv_input_label">School ID</label>
               <input
-                id="principal_id"
+                id="school_id"
                 type="text"
-                value={principal_id}
-                onChange={(e) => setPrincipalId(e.target.value)}
+                value={school_id}
+                onChange={(e) => setSchoolId(e.target.value)}
                 className="cos_kv_input_field"
-                placeholder="Enter Principal ID"
+                placeholder="Enter School ID"
                 required
               />
             </div>
 
             <div className="cos_kv_input_group">
-              <label htmlFor="poc_id" className="cos_kv_input_label">POC ID</label>
+              <label htmlFor="branch_id" className="cos_kv_input_label">Branch ID</label>
               <input
-                id="poc_id"
+                id="branch_id"
                 type="text"
-                value={poc_id}
-                onChange={(e) => setPocId(e.target.value)}
+                value={branch_id}
+                onChange={(e) => setBranchId(e.target.value)}
                 className="cos_kv_input_field"
-                placeholder="Enter POC ID"
+                placeholder="Enter Branch ID"
+                required
+              />
+            </div>
+            <div className="cos_kv_input_group">
+              <label htmlFor="bpoc_mail" className="cos_kv_input_label">POC Mail ID</label>
+              <input
+                id="bpoc_mail"
+                type="text"
+                value={bpoc_mail}
+                onChange={(e) => setBpocMail(e.target.value)}
+                className="cos_kv_input_field"
+                placeholder="Enter POC Mail ID"
                 required
               />
             </div>

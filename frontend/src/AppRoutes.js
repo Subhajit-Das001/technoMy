@@ -45,6 +45,7 @@ import TechnopediaQuestion from './components/Pages/Technopedia/technopedia-ques
 import CenterTable from './components/Pages/Center/CenterTable';
 import Merch from './components/Pages/Merch/merch';
 import ResultTable from './components/Pages/ResultTable/ResultTable';
+import POCRegistration from './components/Pages/COS/branch_registration';
 
 const AppRoutes = () => {
   return (
@@ -65,6 +66,7 @@ const AppRoutes = () => {
       <Route path="/leds" element={<LEDs />} />
       <Route path="/feedback" element={<Feedback />} />
       <Route path='/registeredschool' element={<RegisteredSchool />} />
+      <Route path='/poc-registration' element={<POCRegistration/>} />
    <Route path='/studentlanding' element={<StudentLandingPage/>} /> 
          <Route
         path="/technothlon2023-updates"
