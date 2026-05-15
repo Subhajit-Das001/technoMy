@@ -796,7 +796,7 @@ if (existingFile) {
       .toLowerCase()
       .substring(0, 50); // Limit length
     const timestamp = Date.now();
-    const outputFileName = `${sanitizedSchoolName}_${dateStr}_${timestamp}.csv`;
+    const outputFileName = `${sanitizedSchoolName}_credentials_${timestamp}.csv`;
     const outputPath = `uploads/cos/${outputFileName}`;
     
     // Convert to CSV

@@ -383,9 +383,9 @@ const handleSendReport = async (e) => {
                   <strong>Naming Format:</strong> The file name must strictly be:<br/>
                   <code className="code_inline">CSV_&lt;Sr_no.&gt;_&lt;Branch_name&gt;_&lt;School_name&gt;.csv</code>
                 </li>
-                <li>
+                {/* <li>
                   <strong>Unique Files:</strong> Ensure no two CSV files uploaded have the identical file name.
-                </li>
+                </li> */}
                 <li>
                   <strong>Required Fields:</strong> The file must contain exactly <strong>14</strong> fields with case-sensitive titles.
                 </li>
@@ -397,6 +397,9 @@ const handleSendReport = async (e) => {
                 </li>
                 <li>
                   <strong>Assistance:</strong> Any errors will be displayed on your screen. If you are still unable to upload after checking errors, click the <strong>Report Issue</strong> button to contact our team.
+                </li>
+                <li>
+                  <strong>Credentials:</strong> After uploading the CSV, download the credentials file containing the roll numbers and passwords of all participants. You can also access it later from Download History.
                 </li>
               </ul>
             </div>

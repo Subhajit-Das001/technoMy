@@ -20,7 +20,7 @@ const cosStudentsSchema = new mongoose.Schema({
     // --- Team Details ---
     squad: { type: String, required: true },
     language: { type: String, required: true },
-    mode: { type: String, required: true, default: 'online' },
+    mode: { type: String, required: true, default: 'cos' },
     country: { type: String, required: true, default: 'India' },
     state: { type: String, required: true },
     city: { type: String, required: true },
