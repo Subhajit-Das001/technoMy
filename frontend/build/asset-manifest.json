@@ -1,8 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.b990b02b.css",
-    "main.js": "/static/js/main.a74574e5.js",
+    "main.css": "/static/css/main.d80952a6.css",
+    "main.js": "/static/js/main.8d05d335.js",
+    "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
+    "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
+    "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
+    "static/media/Juniors English 25.pdf": "/static/media/Juniors English 25.ccfb49ea5a3f4d647d2c.pdf",
     "static/media/Hauts english 22.pdf": "/static/media/Hauts english 22.f753fc4d5ed99ba8ae58.pdf",
+    "static/media/Hauts English 24.pdf": "/static/media/Hauts English 24.fb91ad779e1aea65a9fb.pdf",
+    "static/media/Juniors English 24.pdf": "/static/media/Juniors English 24.460d9076a4b2b2148cf5.pdf",
     "static/media/2019hauts.pdf": "/static/media/2019hauts.669672443df660a331f3.pdf",
     "static/media/Technothlon_2017_HE.pdf": "/static/media/Technothlon_2017_HE.cdff712ddb1b5808079b.pdf",
     "static/media/Technothlon_2017_JE.pdf": "/static/media/Technothlon_2017_JE.49f65c2d9275a49fad34.pdf",
@@ -26,7 +32,6 @@
     "static/media/Technothlon_2013_Juniors.pdf": "/static/media/Technothlon_2013_Juniors.8ea14c725a264898ec24.pdf",
     "static/media/httyd.png": "/static/media/httyd.78d7637daf77fa3c646f.png",
     "static/media/Technothlon_2016_HE.pdf": "/static/media/Technothlon_2016_HE.b37f3d3b025b5f31d3c9.pdf",
-    "static/media/mf.jpg": "/static/media/mf.feaf04ceb92520acd360.jpg",
     "static/media/Technothlon_2015_JUNIOR(en).pdf": "/static/media/Technothlon_2015_JUNIOR(en).e1a6da0d24f1d302bb66.pdf",
     "static/media/Technothlon_2016_JE.pdf": "/static/media/Technothlon_2016_JE.5039097ae5fbea1326cf.pdf",
     "static/media/dp.jpg": "/static/media/dp.f2eada02acee6f92c319.jpg",
@@ -91,6 +96,7 @@
     "static/media/sr.jpg": "/static/media/sr.0552d20a4ccda5fb1312.jpg",
     "static/media/techno1.png": "/static/media/techno1.e1d55409b17d83992178.png",
     "static/media/HeroImgD.png": "/static/media/HeroImgD.d5b42bf2bb0eb9db661b.png",
+    "static/media/oh.JPG": "/static/media/oh.e810d97b3b6a38c642bb.JPG",
     "static/media/Juniors Key 22.pdf": "/static/media/Juniors Key 22.f73fe459ddac47d36d30.pdf",
     "static/media/ains.png": "/static/media/ains.9beb1811232198411ff0.png",
     "static/media/logo.png": "/static/media/logo.44c3e5a082e0c63c8b6e.png",
@@ -104,6 +110,8 @@
     "static/media/Birb.png": "/static/media/Birb.f19781ab5a9227746da4.png",
     "static/media/techno-owl.png": "/static/media/techno-owl.62b161acf6909d78d78d.png",
     "static/media/announcement.png": "/static/media/announcement.6458ec72c326fae7d4fe.png",
+    "static/media/Hauts Key 25.pdf": "/static/media/Hauts Key 25.39ed9bf618cbd81d42d8.pdf",
+    "static/media/Juniors Key 25.pdf": "/static/media/Juniors Key 25.4b08e3604a7c8fdc4640.pdf",
     "static/media/social-media.png": "/static/media/social-media.ee7686ce501bde413ff6.png",
     "static/media/whatsapp.png": "/static/media/whatsapp.c5bd477bd14a788dbc64.png",
     "static/media/Hauts key 22.pdf": "/static/media/Hauts key 22.1b2016b0746399cea867.pdf",
@@ -113,11 +121,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.b990b02b.css.map": "/static/css/main.b990b02b.css.map",
-    "main.a74574e5.js.map": "/static/js/main.a74574e5.js.map"
+    "main.d80952a6.css.map": "/static/css/main.d80952a6.css.map",
+    "main.8d05d335.js.map": "/static/js/main.8d05d335.js.map"
   },
   "entrypoints": [
-    "static/css/main.b990b02b.css",
-    "static/js/main.a74574e5.js"
+    "static/css/main.d80952a6.css",
+    "static/js/main.8d05d335.js"
   ]
 }

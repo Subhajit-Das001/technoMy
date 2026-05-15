@@ -136,12 +136,12 @@ prizeImages.forEach(img => {
         <div className="partner-role">Academic Partner</div>
       </div>
     </a> */}
-    <a href="https://www.trexonline.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
+    {/* <a href="https://www.trexonline.com/" target="_blank" rel="noopener noreferrer" className="partner-card"> */}
       <img src={TREX} alt="TReX Logo" className="partner-logo" />
       <div className="partner-info">
         <div className="partner-role">Organising Partner</div>
       </div>
-    </a>
+    {/* </a> */}
   </div>
 </div>
 

@@ -9,9 +9,10 @@ const dotenv = require("dotenv");
 const whatsapp = "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S"
 const Offline26 = require("../models/offline26");
 const crypto = require("crypto");
-const UploadedFileHash = require("../models/UploadFileHash");
+const UploadedFileHash = require("../models/uploadFileHash");
 const CityStudentCount = require("../models/cityStudentCountModel");
 const getZone = require("../utils/getZone");
+const { isAdmin } = require("../middleware/auth");
 const cityToID = require("../utils/cityToID.json");
 const generateRollNumber = require("../utils/generateRollNumber");
 
@@ -41,7 +42,10 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 
 // ================= EMAIL =================
@@ -107,7 +111,8 @@ const REQUIRED_COLUMNS = [
  
 
 // ================= ROUTE =================
-router.post("/upload", upload.single("file"), async (req, res) => {
+// Protected by Shared Secret
+router.post("/upload", isAdmin, upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
@@ -299,7 +304,8 @@ let counter = 0;
     });
   }
 });
-router.post("/retry-mails", async (req, res) => {
+// Protected by Shared Secret
+router.post("/retry-mails", isAdmin, async (req, res) => {
   try {
     const { hashId } = req.body;
 

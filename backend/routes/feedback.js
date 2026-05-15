@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Feedback = require('../models/feedBack'); 
+const { feedbackLimiter, schemas } = require('../middleware/auth');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 // 1. Setup Nodemailer Transporter (Same as your payment code)
@@ -12,9 +13,16 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-router.post('/feedback', async (req, res) => {
+// Apply rate limiting and Joi validation
+router.post('/feedback', feedbackLimiter, async (req, res) => {
     try {
-        const { name, email, feedbackType, feedbackContent } = req.body;
+        // Validate input
+        const { error, value } = schemas.feedback.validate(req.body);
+        if (error) {
+            return res.status(400).json({ success: false, message: error.details[0].message });
+        }
+
+        const { name, email, feedbackType, feedbackContent } = value;
 
         // 2. Save to Database
         const feedback = new Feedback({
