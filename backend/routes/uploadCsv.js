@@ -1098,4 +1098,141 @@ router.get('/download-fetch/:filename', (req, res) => {
   }
 });
 
+//Route for resending mails 
+// router.post("/match", async (req, res) => {
+//   try {
+//     const inputJson = req.body;
+
+//     if (!Array.isArray(inputJson)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Request body must be an array of JSON objects",
+//       });
+//     }
+
+//     const output = [];
+
+//     for (const row of inputJson) {
+//       const phone = String(row["Phone Number"] || "").trim();
+//       const city = String(row["City"] || "").trim();
+
+//       let matchedRecord = null;
+//       let recordName = "";
+//       let recordEmail = "";
+
+//       if (phone && city) {
+//         matchedRecord = await Offline26.findOne({
+//           city: new RegExp(`^${city}$`, "i"),
+//           $or: [
+//             { contact1: phone },
+//             { contact2: phone },
+//           ],
+//         });
+
+//         // identify whether matched with contact1 or contact2
+//         if (matchedRecord) {
+//           if (matchedRecord.contact1 === phone) {
+//             recordName = matchedRecord.name1 || "";
+//             recordEmail = matchedRecord.email1 || "";
+//           } else if (matchedRecord.contact2 === phone) {
+//             recordName = matchedRecord.name2 || "";
+//             recordEmail = matchedRecord.email2 || "";
+//           }
+//         }
+//       }
+
+//       output.push({
+//         ...row,
+
+//         rollNumber: matchedRecord?.rollNumber || "",
+//         password: matchedRecord?.password || "",
+
+//         Record_Name: recordName,
+//         Record_Email: recordEmail,
+//       });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       count: output.length,
+//       data: output,
+//     });
+
+//   } catch (error) {
+//     console.error("Error matching records:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// });
+
+//Credential Finder
+// router.post("/finder", async (req, res) => {
+
+//     try {
+
+//         const data = req.body;
+
+//         // Validate input
+//         if (!Array.isArray(data)) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Input must be an array of JSON objects"
+//             });
+//         }
+
+//         const updatedData = [];
+
+//         // =====================================
+//         // PROCESS EACH RECORD
+//         // =====================================
+
+//         for (let i = 0; i < data.length; i++) {
+
+//             const item = data[i];
+
+//             // Find matching record
+//             const student = await Offline26.findOne({
+//                 rollNumber: item.rollNumber
+//             });
+
+//             updatedData.push({
+//                 "Sr_no.": i + 1,
+//                 ...item,
+//                 password: student?.password || ""
+//             });
+
+//             console.log(
+//                 `Row ${i + 1} -> ${item.rollNumber} -> ${
+//                     student?.password || "NOT FOUND"
+//                 }`
+//             );
+//         }
+
+//         // =====================================
+//         // RESPONSE
+//         // =====================================
+
+//         return res.status(200).json({
+//             success: true,
+//             total: updatedData.length,
+//             data: updatedData
+//         });
+
+//     } catch (error) {
+
+//         console.error(error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Server Error",
+//             error: error.message
+//         });
+//     }
+// });
+
+
+
 module.exports = router;
