@@ -1,6 +1,8 @@
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -38,6 +40,16 @@ const offlineRegUpload = require('./routes/OfflineRegUpload');
 // Configure event emitter
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
+
+
+
+
+
+const uploadDir = path.join('uploads', 'cos');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const app = express();
 
@@ -117,6 +129,7 @@ app.use('/api/technopedia', technopediaRoutes);
 app.use('/api/merch', merchAnalyticsRoutes);
 app.use('/api/cos_portal', cosPortalRoutes);
 app.use('/api/offlineReg', offlineRegUpload);
+
 // Root route
 app.get('/health', (req, res) => {
     res.send("Hello from Technothlon Server");
