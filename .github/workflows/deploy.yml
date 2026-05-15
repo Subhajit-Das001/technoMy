@@ -1,0 +1,103 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 1 — Build Frontend on GitHub Runner (free compute, no EC2 resources used)
+  # ─────────────────────────────────────────────────────────────────────────────
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          CI: false           # React: don't treat warnings as errors
+          REACT_APP_NODE_ENV: production
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build/
+          retention-days: 1   # ephemeral — only needed for the deploy job below
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 2 — Deploy to EC2 (runs only if build succeeded)
+  # ─────────────────────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    environment: production
+    needs: build-frontend   # ← hard dependency: will NOT run if build fails
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build/
+
+      - name: Copy build folder to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "frontend/build/"
+          target: "${{ secrets.APP_DIR }}/frontend/"
+          strip_components: 2
+
+      - name: Deploy backend & serve frontend on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -euo pipefail
+
+            echo "──────────────────────────────────────"
+            echo "  Pulling latest code from main..."
+            echo "──────────────────────────────────────"
+            cd ${{ secrets.APP_DIR }}
+            git pull origin main
+
+            echo "──────────────────────────────────────"
+            echo "  Installing backend dependencies..."
+            echo "──────────────────────────────────────"
+            cd backend
+            npm install
+
+            echo "──────────────────────────────────────"
+            echo "  Restarting backend via PM2..."
+            echo "──────────────────────────────────────"
+            pm2 restart ${{ secrets.PM2_APP_NAME }} \
+              || pm2 start server.js --name ${{ secrets.PM2_APP_NAME }}
+            pm2 save
+
+            echo ""
+            echo "Deployment complete!"
