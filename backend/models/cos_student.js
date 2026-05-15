@@ -25,14 +25,20 @@ const cosStudentsSchema = new mongoose.Schema({
     state: { type: String, required: true },
     city: { type: String, required: true },
     zone: { type: String, required: true },
-    
+    rollNumber: { type: String, required: true }, 
+    password: { type: String, required: true }, 
     // --- Logistics & Linking ---
     school_id: { type: String, ref: 'cos_school', required: true },
     branch_id: { type: String, ref: 'cos_branch', required: true },
     csv_hash_id: { type: String },
     centre: { type: String },
     rank: { type: Number },
-    isPaid: {type : Boolean, default : false}
+    isPaid: {type : Boolean, default : false},
+
+     createdAt: {
+            type: Date,
+            default: () => new Date(Date.now() + 5.5 * 60 * 60 * 1000), 
+        },
 }, { timestamps: true });
 
 module.exports = mongoose.model('cos_students', cosStudentsSchema);

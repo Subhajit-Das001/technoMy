@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const router = express.Router();
 const COS_portal = require("../models/cos_portal");
 const COS_KV = require("../models/cos_kv");
@@ -22,66 +23,38 @@ const CosBranch = require("../models/cos_branch");
 const CosStudent = require("../models/cos_student");
 const CosReport = require("../models/cos_report");
 // Helper function to format Date to DDMMYYYY (for password)
-const formatDateForPassword = (dateInput) => {
-    const d = new Date(dateInput);
-    
-    const day = String(d.getUTCDate()).padStart(2, '0');
-    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-    const year = String(d.getUTCFullYear()); // Full 4-digit year
-    
-    return `${day}${month}${year}`;
+// ================= DATE =================
+const parseDate = (value) => {
+  if (!value) return null;
+
+  if (!isNaN(value)) {
+  const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+
+  excelEpoch.setUTCDate(
+    excelEpoch.getUTCDate() + Number(value)
+  );
+
+  return excelEpoch;
+}
+
+  const str = value.toString().trim();
+
+  // DD/MM/YYYY OR DD-MM-YYYY
+  const match = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (match) {
+     const day = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10);
+    const year = parseInt(match[3], 10);
+
+    return new Date(Date.UTC(year, month - 1, day));
+  }
+
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
 };
 
-// Helper function to parse DD/MM/YYYY format or Excel serial date
-const parseDate = (dateString) => {
-    if (!dateString) return null;
-    
-    // Convert to string to handle both string and number inputs
-    const dateStr = dateString.toString().trim();
-    
-    // Check if it's an Excel serial date (numeric)
-    const excelSerialNum = parseInt(dateStr, 10);
-    if (!isNaN(excelSerialNum) && excelSerialNum > 0 && excelSerialNum < 100000) {
-        // Excel serial to date conversion
-        // Excel serial 1 = January 1, 1900, but accounting for the leap year bug
-        // 25569 = number of days from Dec 30, 1899 to Jan 1, 1970
-        try {
-            // Convert Excel serial to milliseconds from Unix epoch
-            const excelDate = new Date((excelSerialNum - 25569) * 86400000);
-            
-            // Read the date values
-            const year = excelDate.getUTCFullYear();
-            const month = excelDate.getUTCMonth();
-            const day = excelDate.getUTCDate();
-            
-            // Create a proper UTC date
-            const date = new Date(Date.UTC(year, month, day));
-            
-            if (!isNaN(date.getTime())) {
-                return date;
-            }
-        } catch (e) {
-            // Fall through to text format parsing
-        }
-    }
-    
-    // Handle DD/MM/YYYY text format
-    const dateMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (dateMatch) {
-        const day = parseInt(dateMatch[1], 10);
-        const month = parseInt(dateMatch[2], 10) - 1; // Month is 0-indexed
-        const year = parseInt(dateMatch[3], 10);
-        
-        // Create UTC date
-        const date = new Date(Date.UTC(year, month, day));
-        
-        if (!isNaN(date.getTime())) {
-            return date;
-        }
-    }
-    
-    // Return null for invalid format
-    return null;
+const formatDateForPassword = (date) => {
+  return `${String(date.getUTCDate()).padStart(2, '0')}${String(date.getUTCMonth()+1).padStart(2,'0')}${date.getUTCFullYear()}`;
 };
 
 dotenv.config();
@@ -165,8 +138,8 @@ router.post('/report', verifyToken, async (req, res) => {
   try {
 
     // 1. Extract frontend payload
-    const { branch_id, branch_name, fileName, errorDetails, message, filehash, fileHash } = req.body;
-    const normalizedFileHash = filehash || fileHash;
+    const { branch_id, branch_name, fileName, errorDetails, message, fileHash } = req.body;
+    const normalizedFileHash =  fileHash;
 
     // 2. Securely extract BPOC details from the authenticated user object 
     // (Ensure your authMiddleware attaches 'user' to the 'req' object)
@@ -508,20 +481,23 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     const fileBuffer = fs.readFileSync(req.file.path);
-    const fileHash = crypto
-      .createHash("sha256")
-      .update(fileBuffer)
-      .digest("hex");
-    // Check if this specific file has been uploaded before
-    // (Assuming UploadedFileHash is the model name from your 1st snippet)
-    const existingFile = await UploadedFileHash.findOne({ hash: fileHash });
-    if (existingFile) {
-      fs.unlinkSync(req.file.path);
-      return res.status(400).json({
-        error: "Duplicate file upload",
-        message: "This file has already been processed."
-      });
-    }
+
+const fileHash = crypto
+  .createHash("sha256")
+  .update(fileBuffer)
+  .digest("hex");
+
+// Check duplicate upload
+const existingFile = await UploadedFileHash.findOne({ hash: fileHash });
+
+if (existingFile) {
+  fs.unlinkSync(req.file.path);
+
+  return res.status(400).json({
+    error: "Duplicate file upload",
+    message: "This file has already been processed."
+  });
+}
     // ===============================================
     const { school_id, branch_id } = req.user;
     const branch = await CosBranch.findOne({ branch_id });
@@ -565,6 +541,7 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
     // Process and validate data
     const processedData = [];
     const errors = [];
+    const teamsToInsert = [];
 
     for (let i = 0; i < jsonArray.length; i++) {
       const row = jsonArray[i];
@@ -708,19 +685,13 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
       };
 
       // Save to database
-      try {
-        const newTeam = new CosStudent(teamData);
-        await newTeam.save();
-        
-        // Add roll number and password to processed data for CSV output
-        processedData.push({
-          ...row,
-          rollNumber: rollNumber,
-          password: generatedPassword
-        });
-      } catch (dbError) {
-        errors.push(`Row ${rowNum}: Database error - ${dbError.message}`);
-      }
+      teamsToInsert.push(teamData);
+
+  processedData.push({
+  ...row,
+  rollNumber: rollNumber,
+  password: generatedPassword
+});
     }
 
     // If there are errors, return them
@@ -732,11 +703,31 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
         processedCount: processedData.length
       });
     }
+    // Generate hash only after validation succeeds
+
+
+    try {
+  await CosStudent.insertMany(teamsToInsert, {
+    ordered: true
+  });
+} catch (dbError) {
+  fs.unlinkSync(req.file.path);
+
+  return res.status(500).json({
+    error: "Database insertion failed",
+    message: dbError.message
+  });
+}
+
+
+
     await UploadedFileHash.create({
       hash: fileHash,
       fileName: req.file.originalname,
       uploadedBy: branch_id || "cos_portal"
     });
+
+
 
     // Update school statistics
     const juniorCount = processedData.filter(d => d.squad === 'Juniors').length;
@@ -790,7 +781,7 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
         squad: row.squad || '',
         language: row.language || '',
         rollNumber: row.rollNumber || '',
-        password: row.password || ''
+        password: `="${row.password || ''}"`
       };
     });
 
@@ -804,15 +795,17 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
       .replace(/_+/g, '_')
       .toLowerCase()
       .substring(0, 50); // Limit length
-    
-    const outputFileName = `${sanitizedSchoolName}_${dateStr}.csv`;
+    const timestamp = Date.now();
+    const outputFileName = `${sanitizedSchoolName}_${dateStr}_${timestamp}.csv`;
     const outputPath = `uploads/cos/${outputFileName}`;
     
     // Convert to CSV
     const csvHeader = Object.keys(outputData[0]).join(',');
-    const csvRows = outputData.map(row => 
-      Object.values(row).map(val => `"${val}"`).join(',')
-    );
+    const csvRows = outputData.map(row =>
+  Object.values(row)
+    .map(val => `"${String(val).replace(/"/g, '""')}"`)
+    .join(',')
+);
     const csvContent = [csvHeader, ...csvRows].join('\n');
     
     fs.writeFileSync(outputPath, csvContent);
@@ -846,8 +839,8 @@ router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
 // Download File Route
 router.get("/download/:fileName", verifyToken, (req, res) => {
   try {
-    const fileName = req.params.fileName;
-    const filePath = `uploads/cos/${fileName}`;
+    const fileName = path.basename(req.params.fileName);
+   const filePath = path.join('uploads', 'cos', fileName);
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: 'File not found' });
@@ -856,7 +849,11 @@ router.get("/download/:fileName", verifyToken, (req, res) => {
     res.download(filePath, fileName, (err) => {
       if (err) {
         console.error("Download error:", err);
-        res.status(500).json({ error: 'Error downloading file' });
+        if (!res.headersSent) {
+  res.status(500).json({
+    error: 'Error downloading file'
+  });
+}
       }
     });
   } catch (err) {
