@@ -59,16 +59,19 @@ jobs:
           name: frontend-build
           path: frontend/build/
 
-      - name: Copy build folder to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          source: "frontend/build/"
-          target: "${{ secrets.APP_DIR }}/frontend/"
-          strip_components: 2
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy build to EC2 (rsync — only transfers changed files)
+        run: |
+          rsync -avz --checksum --delete \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            frontend/build/ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}/frontend/build/
 
       - name: Deploy backend & serve frontend on EC2
         uses: appleboy/ssh-action@v1.0.3
