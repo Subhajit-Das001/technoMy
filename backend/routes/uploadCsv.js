@@ -28,6 +28,7 @@ const Offline26 = require('../models/offline26');
 const { parse } = require('json2csv');
 const Cityrep_portal = require('../models/cityrep_portal.js');
 const CityRep_portal = require('../models/cityrep_portal.js');
+const cosStudent = require('../models/cos_student.js');
 const { Parser } = require('json2csv');
 // const XLSX = require('xlsx');
 
@@ -137,9 +138,9 @@ router.post('/login', async (req, res) => {
     if (!user) {
       user = await Online26.findOne({ rollNumber: roll });
     }
-    // if (!user) {
-    //   user = await Offline25.findOne({ rollNumber: roll });
-    // }
+    if (!user) {
+      user = await cosStudent.findOne({ rollNumber: roll });
+    }
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
