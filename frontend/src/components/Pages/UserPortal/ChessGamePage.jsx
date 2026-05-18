@@ -31,7 +31,7 @@ const ChessGamePage = ({ onFullscreenToggle, isFullscreen }) => {
             ← Back to Profile
           </button>
           <h1 className="chess-title">
-            Play Chess – Technothlon Edition ♟️
+            Pawn Gambit – Technothlon'25 Mains
           </h1>
         </div>
       )}
@@ -40,13 +40,13 @@ const ChessGamePage = ({ onFullscreenToggle, isFullscreen }) => {
       {!isGameFullscreen && (
         <div className="chess-normal-header">
           <h1 className="chess-title">
-            Play Chess – Technothlon Edition ♟️
+            Pawn Gambit – Technothlon'25 Mains
           </h1>
           <button 
             className="fullscreen-btn"
             onClick={handleFullscreenToggle}
           >
-            🖥️ Fullscreen Mode
+             Fullscreen Mode
           </button>
           <div>
           <ChessMergeInstructions/>
@@ -56,7 +56,7 @@ const ChessGamePage = ({ onFullscreenToggle, isFullscreen }) => {
       
       <div className="chess-iframe-wrapper">
         <iframe
-          src="https://chess-crowned-2czv.vercel.app/"
+          src="https://pawn-gambit.netlify.app/"
           title="Chess Game"
           className="chess-iframe"
           allowFullScreen

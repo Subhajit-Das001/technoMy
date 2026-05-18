@@ -27,6 +27,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 0;
+  gap: 12px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -53,26 +54,27 @@
   line-height: 1.2;
 }
 
-/* Button styles */
+/* Fullscreen Button */
 .fullscreen-btn {
-  background-color: #4CAF50;
-  color: white;
+  background: linear-gradient(135deg, #8b5e5e 0%, #6f4b4b 100%);
+  color: #f8f1e7;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 18px;
+  min-width: 150px;
+  height: 52px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+  letter-spacing: 0.4px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
 }
 
 .fullscreen-btn:hover {
-  background-color: #45a049;
+  background: linear-gradient(135deg, #9a6969 0%, #7a5555 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-
 .back-to-profile-btn {
   background-color: #2196F3;
   color: white;

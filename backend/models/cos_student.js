@@ -8,7 +8,6 @@ const cosStudentsSchema = new mongoose.Schema({
     school1: { type: String, required: true },
     class1: { type: String, required: true },
     dob1: { type: Date, required: true },
-
     // --- Student 2 ---
     name2: { type: String, required: true },
     contact2: { type: String, required: true },
@@ -16,7 +15,6 @@ const cosStudentsSchema = new mongoose.Schema({
     school2: { type: String, required: true },
     class2: { type: String, required: true },
     dob2: { type: Date, required: true },
-
     // --- Team Details ---
     squad: { type: String, required: true },
     language: { type: String, required: true },

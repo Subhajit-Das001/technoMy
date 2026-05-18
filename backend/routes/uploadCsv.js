@@ -130,16 +130,19 @@ router.post('/login', async (req, res) => {
 
   try {
     let user = null;
+    let userType = ""
     user = await Offline26.findOne({ rollNumber: roll });
-
+    if (user) userType = "Offline26";
     // if (!user) {
     //   user = await Online25.findOne({ rollNumber: roll });
     // }
     if (!user) {
       user = await Online26.findOne({ rollNumber: roll });
+      if (user) userType = "Online26";
     }
     if (!user) {
       user = await cosStudent.findOne({ rollNumber: roll });
+      if (user) userType = "cosStudent";
     }
 
     if (!user) {
@@ -150,6 +153,11 @@ router.post('/login', async (req, res) => {
 
     if (user.password !== password) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+    if (userType === "cosStudent" && !user.isPaid) {
+      return res.status(403).json({
+        message: "Credentials will be active after few days"
+      });
     }
 
     const token = jwt.sign({ roll: User, source: user.source || 'Online25' }, process.env.KEY, { expiresIn: '7h' });
@@ -187,16 +195,19 @@ router.get('/user', verifyToken, async (req, res) => {
 
   try {
     let user = null;
-    user = await Online25.findOne({ rollNumber: roll });
+    // user = await Online25.findOne({ rollNumber: roll });
 
-    if (!user) {
-      user = await Offline25.findOne({ rollNumber: roll });
-    }
+    // if (!user) {
+    //   user = await Offline25.findOne({ rollNumber: roll });
+    // }
     if (!user) {
       user = await Online26.findOne({ rollNumber: roll });
     }
     if (!user) {
       user = await Offline26.findOne({ rollNumber: roll });
+    }
+    if (!user) {
+      user = await cosStudent.findOne({ rollNumber: roll });
     }
 
     // if (!user) {
@@ -265,14 +276,14 @@ router.post('/update-details', verifyToken, async (req, res) => {
   const { roll } = req;
 
   try {
-    let user = await Online25.findOne({ rollNumber: roll });
-    if (!user) {
-      user = await Offline25.findOne({ rollNumber: roll });
-    }
+    let user = await cosStudent.findOne({ rollNumber: roll });
+    // if (!user) {
+    //   user = await Offline25.findOne({ rollNumber: roll });
+    // }
 
-    if (!user) {
-      user = await Teams.findOne({ roll });
-    }
+    // if (!user) {
+    //   user = await Teams.findOne({ roll });
+    // }
     if (!user) {
       user = await Online26.findOne({ rollNumber: roll });
     }
