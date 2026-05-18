@@ -16,80 +16,64 @@ const ChessMergeInstructions = () => {
   return (
     <>
       <button className="instruction-btn" onClick={handleExpand}>
-        Show Instructions
-      </button>
+         Instructions
+      </button> 
 
       <div className={`chess-instr ${expanded ? "expanded" : ""}`}>
         <button className="close-btn" onClick={handleClose}>
           &times;
         </button>
       
-        <h2>CHESS MERGE INSTRUCTIONS</h2>
-        
-        <div className="instructions-content">
-          <h3>🎮 How to Play</h3>
-          <ul>
-            <li><strong>Select a Piece:</strong> Click on any of your pieces to select it. The selected piece will have a <span className="highlight-red">black background</span>.</li>
-            <li><strong>Move Pieces:</strong> After selecting a piece, click on a destination square to move it there.</li>
-            <li><strong>Merge Pieces:</strong> When two identical pieces collide, they merge into a higher-value piece.</li>
-            <li><strong>Piece Hierarchy:</strong> Pawn → Rook → Knight → Bishop → Queen</li>
-          </ul>
+        <h2>PAWN GAMBIT INSTRUCTIONS</h2>
+<p className="intro-line">
+  <strong>This game was played in the mains event of Technothlon 2025-26 held in IIT Guwahati</strong>
+</p>
 
-          <h3>⚡ Special Actions</h3>
-          <ul>
-            <li><strong>Promote:</strong> Select a piece and click the "Promote" button to upgrade it to the next level (only up to Rook).</li>
-            <li><strong>Swap Mode:</strong> Click "Swap Mode" to swap positions of two of your pieces:
-            <ul>
-    <li>First, click on the first piece you want to swap; the selected piece will have a black background.</li>
-    <li>Then, click on the second piece to select it; the second piece will not be highlighted with a black background.</li>
-    <li>Both pieces must belong to the current player.</li>
-    <li>After selecting both pieces, click on the 'Swap' button to swap their positions.</li>
-    <li>After swapping, the selection will reset automatically, and you can start the next move.</li>
-</ul>
+<div className="instructions-content">
+  <h3>🎮 How to Play</h3>
+  <ul>
+    <li><strong>Start Your Run:</strong> You begin the game controlling a single Black Pawn.</li>
+    <li><strong>Your Move:</strong> Move your piece (Pawn, or later upgraded to Rook, Bishop, or Queen) according to standard chess rules.</li>
+    <li><strong>Opponent Spawns:</strong> After your move, a new White piece appears randomly on an unoccupied square.</li>
+    <li><strong>Opponent Movement:</strong> Existing White pieces will actively reposition to close the distance to your piece.</li>
+    <li><strong>Earning XP:</strong> Accumulate Experience Points (XP) throughout the rounds by surviving turns, dodging attacks, and capturing opponent pieces.</li>
+  </ul>
 
-            </li>
-          </ul>
+  <h3>⚡ Special Actions</h3>
+  <ul>
+    <li><strong>Upgrade Piece:</strong> As you progress, upgrade your starting Black Pawn into more powerful pieces to increase your mobility and survival chances.</li>
+    <li><strong>Calculated Dodging:</strong> While you cannot place your piece in check after a move, you will often find yourself in "danger positions." Choose wisely when to take a calculated risk and when to dodge.</li>
+  </ul>
 
-          <h3>🏆 Victory Conditions</h3>
-          <ul>
-            <li><strong>Victory by Queen:</strong> First player to successfully merge pieces to form a Queen wins!</li>
-            <li><strong>Victory by Timer:</strong> When the timer runs out, the game ends and the opponent wins.</li>
-            <li><strong>Tie-Breaking:</strong> If multiple players achieve victory by Queen, the one with fewer moves wins.</li>
-          </ul>
+  <h3>🏆 Victory Conditions</h3>
+  <ul>
+    <li><strong>Victory by Score:</strong> Accumulate the highest total XP over the course of the 4 rounds to win.</li>
+    <li><strong>Tie-Breaking:</strong> If players have identical XP at the end of the game, the player with the highest amount of collected Gems receives the higher rank.</li>
+    <li><strong>Game Over:</strong> If you lose all 5 of your lives within any single round, your run ends immediately.</li>
+  </ul>
 
-          {/* <h3>🎯 Game Controls</h3>
-          <ul>
-            <li><strong>Black Background:</strong> Currently selected piece</li>
-            <li><strong>Blue Background:</strong> First piece selected in swap mode</li>
-            <li><strong>Hover Effects:</strong> Pieces and squares highlight when you hover over them</li>
-            <li><strong>Timer:</strong> Game has a time limit - watch the countdown!</li>
-            <li><strong>Move Counter:</strong> Tracks the number of moves for each player</li>
-          </ul> */}
+  <h3>📋 Game Rules</h3>
+  <ul>
+    <li><strong>Lives System:</strong> You start each of the 4 rounds with 5 lives. You lose 1 life if your piece is captured.</li>
+    <li><strong>Round 1 - Recruit's Gauntlet:</strong> Familiarize yourself with the core mechanics and basic survival strategies.</li>
+    <li><strong>Round 2 - Veteran's Crucible:</strong> The challenge intensifies with more frequent and aggressive opponent spawns.</li>
+    <li><strong>Round 3 - Champion's Trial:</strong> Face a unique mystery crafted specifically for a champion's mind.</li>
+    <li><strong>Round 4 - The Final Stand:</strong> A final stand awaits you, with a problem you must break through.</li>
+  </ul>
 
-          <h3>📋 Game Rules</h3>
-          <ul>
-            <li>Players alternate turns (White starts first)</li>
-            <li>You can only move your own pieces</li>
-            <li>Traditional chess movement rules apply</li>
-            <li>When timer runs out, the current player loses</li>
-            {/* <li>Each move counts towards your total move count</li> */}
-            {/* <li>Promoting and swapping also count as moves</li> */}
-          </ul>
+  <h3>🎲 Strategic Tips</h3>
+  <ul>
+    <li>Plan your moves carefully — every move you make triggers both a new enemy spawn and enemy repositioning.</li>
+    <li>Sometimes surviving means moving into a danger zone to set up a capture or a better dodge next turn.</li>
+    <li>Protect your lives! Don't take unnecessary risks early in a round.</li>
+    <li>Use your piece upgrades wisely to counter the aggressive swarms in later rounds.</li>
+  </ul>
 
-          <h3>🎲 Strategic Tips</h3>
-          <ul>
-            <li>Plan your merges carefully - identical pieces must collide to merge</li>
-            <li>Use the Promote button strategically to build up your pieces</li>
-            <li>Swap pieces to create better positioning for merges</li>
-            <li>Watch the timer and make efficient moves</li>
-            <li>Remember: only up to Rook promotion is allowed with the Promote button</li>
-          </ul>
-
-          <div className="important-note">
-            <strong>⚠️ Important:</strong> Do not reload the page during gameplay as this will result in immediate disqualification!
-            <strong>This game is supported only on PC.</strong>
-            </div>
-        </div>
+  <div className="important-note">
+    <strong>⚠️ Important:</strong> Do not reload the page during gameplay as this will result in immediate disqualification!
+    <strong> This game is supported only on PC.</strong>
+  </div>
+</div>
       </div>
     </>
   );

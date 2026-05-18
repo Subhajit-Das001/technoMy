@@ -41,15 +41,17 @@ const Login = () => {
       .then(res => {
         if (res.data.status) {
           window.location.href = redirectUrl;
-        } else {
-          setError("Wrong Roll or Password");
-          setRoll('');
-          setPassword('');
-        }
+        } //else {
+        //   setError("Wrong Roll or Password");
+        //   setRoll('');
+        //   setPassword('');
+        //}
       })
       .catch((err) => {
-        console.log('Error during login:', err);
-        setError("Wrong Roll or Password");
+        // console.log('Error during login:', err);
+        setError(
+      err?.response?.data?.message || "Something went wrong"
+    );
         setRoll('');
         setPassword('');
       });
