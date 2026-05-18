@@ -30,7 +30,7 @@ const capitalizeWords = (str) => {
   const [formData, setFormData] = useState(initialFormState);
   const [error, setError] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -78,25 +78,32 @@ const capitalizeWords = (str) => {
       return;
     }
 
-    try {
-      const res = await axios.post(`${baseURL}cos_portal/register-poc`, trimmedData);
-      
-      if (res.data.success) {
-        setFormData(initialFormState); // Clear form
-        setShowPopup(true); // Show success modal
-      }
-    } catch (err) {
-       if (err.response && err.response.data) {
-    setError(
-      err.response.data.message || 
-      err.response.data.error || 
-      "Registration failed."
+  try {
+    setIsLoading(true);
+
+    const res = await axios.post(
+      `${baseURL}cos_portal/register-poc`,
+      trimmedData
     );
-    console.log(err)
-  } else {
-    setError("Server error. Please try again later.");
-  }
+
+    if (res.data.success) {
+      setFormData(initialFormState);
+      setShowPopup(true);
     }
+  } catch (err) {
+    if (err.response && err.response.data) {
+      setError(
+        err.response.data.message ||
+        err.response.data.error ||
+        "Registration failed."
+      );
+      console.log(err);
+    } else {
+      setError("Server error. Please try again later.");
+    }
+  } finally {
+    setIsLoading(false);
+  }
   };
 
   return (
@@ -150,8 +157,20 @@ const capitalizeWords = (str) => {
 
             <div className="poc_reg_full_width">
               {error && <div className="poc_reg_error">{error}</div>}
-              <button type="submit" className="poc_reg_submit_btn">Register Branch</button>
-            </div>
+<button
+  type="submit"
+  className="poc_reg_submit_btn"
+  disabled={isLoading}
+>
+  {isLoading ? (
+    <span className="btn_loader_wrapper">
+      <span className="btn_loader"></span>
+      Registering...
+    </span>
+  ) : (
+    "Register Branch"
+  )}
+</button>            </div>
           </form>
         </div>
       </div>

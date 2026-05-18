@@ -146,7 +146,32 @@ html, body {
   border-top: 6px solid #28a745; /* Red accent top border */
   animation: modalPop 0.3s ease-out; /* Subtle entrance animation */
 }
+.poc_reg_submit_btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
 
+.btn_loader_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn_loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
 @keyframes modalPop {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }

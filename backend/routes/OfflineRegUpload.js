@@ -112,7 +112,7 @@ const REQUIRED_COLUMNS = [
 
 // ================= ROUTE =================
 // Protected by Shared Secret
-router.post("/upload", isAdmin, upload.single("file"), async (req, res) => {
+router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
