@@ -12,6 +12,7 @@ const Online25=require('../models/online25');
 const Offline25=require('../models/Offline25');
 const Online26 = require('../models/online26');
 const Offline26=require('../models/offline26');
+const CosStudent = require("../models/cos_student")
 const newStudent = require('../models/newStudent');
 
 // Test endpoint to check database connection
@@ -121,14 +122,17 @@ router.post('/check-student', async (req, res) => {
         // 2. Check Online26
         result = await checkModelForStudent(Online26, cleanRollNumber, cleanSecond, "online");
         if (result) return res.json(result);
+        //COS Students 
+        result = await checkModelForStudent(CosStudent, cleanRollNumber, cleanSecond, "online");
+        if (result) return res.json(result);
 
         // 3. Check Offline25 (Old Batch)
-        result = await checkModelForStudent(Offline25, cleanRollNumber, cleanSecond, "offline");
-        if (result) return res.json(result);
+        // result = await checkModelForStudent(Offline25, cleanRollNumber, cleanSecond, "offline");
+        // if (result) return res.json(result);
 
-        // 4. Check Online25
-        result = await checkModelForStudent(Online25, cleanRollNumber, cleanSecond, "online");
-        if (result) return res.json(result);
+        // // 4. Check Online25
+        // result = await checkModelForStudent(Online25, cleanRollNumber, cleanSecond, "online");
+        // if (result) return res.json(result);
 
         // If no match found in any DB
         return res.json({ 
@@ -848,17 +852,22 @@ router.post('/techno/end', async (req, res) => {
 
 // Get contest times - Remove time limits
 router.get('/techno/times', async (req, res) => {
+
     try {
         const { phone, sessionId } = req.query;
 
         // Get global contest schedule
-        const technoSchedule = await Technopedia.findOne()
-            .sort({ createdAt: -1 })
-            .select('startTime endTime');
+        // const technoSchedule = await Technopedia.findOne()
+        //     .sort({ createdAt: -1 })
+        //     .select('startTime endTime');
 
-        if (!technoSchedule) {
-            return res.status(404).json({ message: 'No contest schedule found' });
-        }
+            const technoSchedule = {
+                startTime: new Date('2026-05-10T09:00:00'),
+                endTime: new Date('2027-05-10T18:00:00')
+            };
+        // if (!technoSchedule) {
+        //     return res.status(404).json({ message: 'No contest schedule found' });
+        // }
 
         // Convert contest schedule times to IST
         const scheduleStartIST = convertToIST(technoSchedule.startTime);
@@ -900,62 +909,62 @@ router.get('/techno/times', async (req, res) => {
 
 // Get contest dates
 router.get('/techno/dates', async (req, res) => {
-    try {
-        const technoSchedule = await Technopedia.findOne()
-            .sort({ createdAt: -1 })
-            .select('startTime endTime');
-        
-        if (!technoSchedule) {
-            return res.status(404).json({ message: 'No contest found' });
-        }
+  try {
 
-        // Convert times to IST
-        const istStartTime = convertToIST(technoSchedule.startTime);
-        const istEndTime = convertToIST(technoSchedule.endTime);
+    // Hardcoded dates
+    const technoSchedule = {
+      startTime: new Date('2026-05-10T09:00:00'),
+      endTime: new Date('2027-05-10T18:00:00')
+    };
 
-        res.json({
-            startTime: istStartTime.toISOString(),
-            endTime: istEndTime.toISOString(),
-            timezone: 'Asia/Kolkata'
-        });
-    } catch (error) {
-        console.error('Error fetching contest dates:', error);
-        res.status(500).json({ message: 'Error fetching contest dates' });
-    }
+    // Convert times to IST
+    const istStartTime = convertToIST(technoSchedule.startTime);
+    const istEndTime = convertToIST(technoSchedule.endTime);
+
+    res.json({
+      startTime: istStartTime.toISOString(),
+      endTime: istEndTime.toISOString(),
+      timezone: 'Asia/Kolkata'
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
-// Get question by ID
-router.get('/techno/questions/:id', async (req, res) => {
-    try {
-        const questionId = parseInt(req.params.id);
+// // Get question by ID
+// router.get('/techno/questions/:id', async (req, res) => {
+//     try {
+//         const questionId = parseInt(req.params.id);
         
-        // Find the latest contest and get the specific question
-        const technopedia = await Technopedia.findOne()
-            .sort({ createdAt: -1 })
-            .select('questions');
+//         // Find the latest contest and get the specific question
+//         const technopedia = await Technopedia.findOne()
+//             .sort({ createdAt: -1 })
+//             .select('questions');
 
-        if (!technopedia) {
-            return res.status(404).json({ message: 'No contest found' });
-        }
+//         if (!technopedia) {
+//             return res.status(404).json({ message: 'No contest found' });
+//         }
 
-        const question = technopedia.questions.find(q => q.questionId === questionId);
+//         const question = technopedia.questions.find(q => q.questionId === questionId);
         
-        if (!question) {
-            return res.status(404).json({ message: 'Question not found' });
-        }
+//         if (!question) {
+//             return res.status(404).json({ message: 'Question not found' });
+//         }
 
-        // Return question without the answer
-        res.json({
-            title: question.title,
-            content: question.content,
-            points: question.points,
-            letter: question.letter
-        });
-    } catch (error) {
-        console.error('Error fetching question:', error);
-        res.status(500).json({ message: 'Error fetching question' });
-    }
-});
+//         // Return question without the answer
+//         res.json({
+//             title: question.title,
+//             content: question.content,
+//             points: question.points,
+//             letter: question.letter
+//         });
+//     } catch (error) {
+//         console.error('Error fetching question:', error);
+//         res.status(500).json({ message: 'Error fetching question' });
+//     }
+// });
 
 // Get leaderboard
 router.get('/contest/leaderboard', async (req, res) => {
@@ -1057,6 +1066,55 @@ router.get('/techno/submission-count/:questionId', async (req, res) => {
     } catch (error) {
         console.error('Error fetching submission count:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+// fetching the question year wise
+router.get('/questions/years', async (req, res) => {
+    try {
+        const yearsQuestions = await Technopedia.find().sort({ createdAt: -1 });
+        if (!yearsQuestions || yearsQuestions.length === 0) {
+            return res.status(404).json({ message: 'No questions found' });
+        }
+        res.status(200).json({
+            success: true,
+            data: yearsQuestions,
+            message: 'Questions fetched year wise successfully'
+        })
+    } catch (error) {
+        console.error('Error fetching question years:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+})
+
+// Get question year by ID
+router.get('/questions/:year/:id', async (req, res) => {
+    try {
+        const { year, id } = req.params;
+        const questionId = Number(id);  // ✅ const — was global before
+
+        const technopedia = await Technopedia.findOne({
+            $or: [{ year: Number(year) }, { year: String(year) }]
+        }).sort({ createdAt: -1 });
+
+        if (!technopedia) {
+            return res.status(404).json({ message: `No contest found for year ${year}` });
+        }
+
+        const question = technopedia.questions.find(q => q.questionId === questionId);
+        if (!question) {
+            return res.status(404).json({ message: `Question ${questionId} not found` });
+        }
+
+        res.json({
+            title: question.title,
+            content: question.content,
+            points: question.points,
+            letter: question.letter
+        });
+    } catch (error) {
+        console.error('Error fetching question:', error);
+        res.status(500).json({ message: 'Error fetching question' });
     }
 });
 

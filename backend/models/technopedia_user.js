@@ -19,7 +19,7 @@ const TechnopediaAnswerSchema = new mongoose.Schema({
         get: function() {
             return this.timeSpentArray.length;
         }
-    },
+    }, 
     attempted: { type: Boolean, default: true },
     isCorrect: { type: Boolean, default: false },
     score: { type: Number, default: 0 },

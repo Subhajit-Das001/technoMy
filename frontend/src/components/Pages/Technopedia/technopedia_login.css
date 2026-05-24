@@ -5,9 +5,9 @@
   --red-primary: #ff5252;
 }
 
-.TL-contest-container {
+.TL-login-container {
   background: linear-gradient(135deg, #f4f1e2 0%, #e8e3cf 100%);
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
   box-sizing: border-box;
 }
 
-.TL-contest-container::before {
+.TL-login-container::before {
   content: '';
   position: absolute;
   top: 0;
@@ -30,21 +30,38 @@
   z-index: 0;
 }
 
-.TL-center-content {
+
+.TL-login-center-content {
+  width: 50%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  background-color: #fff;
+  border-radius: 20px;
   align-items: center;
-  justify-content: center;
-  z-index: 2;
-  width: 100%;
-  max-width: 600px;
+  justify-content: space-evenly;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  gap: 4rem;
+  overflow: hidden;
+  min-height: 600px;
 }
 
-.tl-logo-container {
+.tl-login-logo-container {
+  background-color: #E5592A;
+  border-top-right-radius: 60px;
+  border-bottom-right-radius: 60px;
+  width: 100%;
+  min-height: 600px;
   display: flex;
+  flex-direction: column;
+  gap: 3rem;
   justify-content: center;
   align-items: center;
-  /* margin-bottom: 2.5rem; */
+}
+
+.tl-logo-text {
+  font-size: 200%;
+  font-weight: 600;
+  color: #fff;
 }
 
 .tl-logo-img {
@@ -53,35 +70,30 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
-.TL-questions-section-c {
+.TL-login-section {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
+  padding-right: 2.5rem;
 }
 
 .TL-login-form {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem 2.5rem 2rem 2.5rem;
-  width: 30vw;
   /* max-width: 50vw; */
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 2;
+  /* z-index: 2; */
   box-sizing: border-box;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 
 .TL-login-title {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   font-size: 1.6rem;
   font-weight: 700;
   color: #223438;
@@ -167,7 +179,7 @@
 }
 
 /* Mobile Responsive */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .TL-contest-container {
     padding: 10px;
   }
@@ -211,39 +223,66 @@
     font-size: 1rem;
     padding: 0.8rem 0;
   }
-}
+} */
 
 @media (max-width: 1024px) {
-  .TL-login-form {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    padding: 2.5rem 2.5rem 2rem 2.5rem;
-    width: 50vw;
-    /* max-width: 50vw; */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-    box-sizing: border-box;
-    margin: 0 auto;
+  .TL-login-center-content {
+    width: 75%;
   }
 }
+ 
+
+@media (max-width: 1400px) {
+  .TL-login-center-content {
+    width: 65%;
+  }
+}
+
 @media (max-width: 480px) {
-  .TL-login-form {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    padding: 2.5rem 2.5rem 2rem 2.5rem;
-    width: 80vw;
-    /* max-width: 50vw; */
+  .TL-login-center-content {
+    max-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color:transparent;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    gap: 2rem;
+  }
+
+  .tl-login-logo-container {
+    background-color: transparent;
+    border-radius: 0;
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .tl-logo-img {
+    max-width: 200px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  }
+  .tl-logo-text{
+    display: none;
+  }
+  .TL-login-section {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
-    z-index: 2;
-    box-sizing: border-box;
-    margin: 0 auto;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+  .TL-login-form{
+    width: 100%;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 1rem 2rem;
   }
 }

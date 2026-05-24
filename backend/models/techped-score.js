@@ -15,4 +15,4 @@ const techpedScoreSchema = new mongoose.Schema({
 
 const Response = mongoose.model('TechpedScore', techpedScoreSchema);
 
-module.exports = Response;
+module.exports = Response; 

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./question.css";
+import { Button } from "@mui/material";
 
 function TechnopediaQuestion() {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
 
-  const { id, letter } = useParams();
+  const { year, id, letter } = useParams();
   const navigate = useNavigate();
   const [question, setQuestion] = useState({
     title: "",
@@ -26,7 +27,7 @@ function TechnopediaQuestion() {
     if (visitStartTime) {
       const currentTime = new Date();
       const timeSpentMs = currentTime - visitStartTime;
-      
+
       // Only process if more than 1 second spent
       if (timeSpentMs > 1000) {
         // Save individual time entries
@@ -34,16 +35,16 @@ function TechnopediaQuestion() {
         const existingTimes = JSON.parse(localStorage.getItem(questionKey) || '[]');
         const updatedTimes = [...existingTimes, timeSpentMs];
         localStorage.setItem(questionKey, JSON.stringify(updatedTimes));
-        
+
         // Update total time as a single number
         const previousTotal = parseInt(localStorage.getItem(`technopedia_totalTimeSpent_question_${id}`) || '0');
         const newTotal = previousTotal + timeSpentMs;
         localStorage.setItem(`technopedia_totalTimeSpent_question_${id}`, newTotal.toString());
-        
-        console.log(`Technopedia Question ${id} visit recorded:`, {
-          timeSpentMs,
-          totalTimeSpent: newTotal
-        });
+
+        // console.log(`Technopedia Question ${id} visit recorded:`, {
+        //   timeSpentMs,
+        //   totalTimeSpent: newTotal
+        // });
       }
     }
   };
@@ -53,17 +54,17 @@ function TechnopediaQuestion() {
     if (!visitStartTime) return 0;
     const currentTime = new Date();
     const timeSpentMs = currentTime - visitStartTime;
-    
+
     // Get the previous total time spent as a number, defaulting to 0
     const previousTimeSpent = parseInt(localStorage.getItem(`technopedia_totalTimeSpent_question_${id}`) || '0');
-    
+
     return Math.floor((timeSpentMs + previousTimeSpent) / 1000); // Convert to seconds
   };
 
   // Add this function to get the appropriate emoji
   const getMoodEmoji = (timeSpent) => {
     const minutes = Math.floor(timeSpent / 60);
-    
+
     // Proper condition checks with ranges
     if (minutes <= 6) {
       return { emoji: "😀🔥", phase: "Fire in Eye" };
@@ -81,7 +82,7 @@ function TechnopediaQuestion() {
     const fetchQuestion = async () => {
       try {
         // Use the correct Technopedia endpoint
-        const response = await axios.get(`${baseURL}/api/technopedia/techno/questions/${id}`);
+        const response = await axios.get(`${baseURL}/api/technopedia/questions/${year}/${id}`);
         setQuestion(response.data);
       } catch (error) {
         console.error("Error fetching question:", error);
@@ -89,7 +90,7 @@ function TechnopediaQuestion() {
         // Redirect back to technopedia page after 3 seconds if question not found
         if (error.response?.status === 404) {
           setTimeout(() => {
-            navigate('/technopedia');
+            navigate(`/technopedia/${year}`);
           }, 3000);
         }
       }
@@ -100,7 +101,7 @@ function TechnopediaQuestion() {
 
   useEffect(() => {
     setVisitStartTime(new Date());
-    
+
     return () => {
       saveTimeSpent();
     };
@@ -134,17 +135,17 @@ function TechnopediaQuestion() {
 
   const handleBack = () => {
     saveTimeSpent(); // Save time before navigating
-    navigate('/technopedia');
+    navigate(`/technopedia/${year}`);
   };
 
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
       setError("");
-      
+
       const userPhone = localStorage.getItem('userPhone');
-      console.log('Frontend - userPhone from localStorage:', userPhone);
-      
+      // console.log('Frontend - userPhone from localStorage:', userPhone);
+
       if (!userPhone) {
         setError("Session expired. Please login again.");
         setTimeout(() => navigate('/technopedia-login'), 2000);
@@ -165,31 +166,32 @@ function TechnopediaQuestion() {
         timeSpentArray,
         totalTimeSpent
       };
-      
-      console.log('Frontend - sending request data:', requestData);
+
+      // console.log('Frontend - sending request data:', requestData);
 
       const response = await axios.post(`${baseURL}/api/technopedia/submit`, requestData);
 
       if (response.data.success) {
         // Show success message briefly
         setIsSubmitted(true);
-        
+
         // Update answered questions in localStorage
         const answeredQuestions = JSON.parse(localStorage.getItem('answeredQuestions') || '[]');
         if (!answeredQuestions.includes(id)) {
           answeredQuestions.push(id);
           localStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions));
         }
-        
+
         // Dispatch custom event to notify technopedia page
         window.dispatchEvent(new CustomEvent('answerSubmitted', {
           detail: { questionId: parseInt(id) }
         }));
-        
+
         // Reset form after 2 seconds to allow for another submission
         setTimeout(() => {
           setIsSubmitted(false);
           setAnswer("");
+          handleNextQuestion();
         }, 2000);
       }
     } catch (error) {
@@ -198,6 +200,36 @@ function TechnopediaQuestion() {
       setIsSubmitting(false);
     }
   };
+  const handleNextQuestion=()=>{
+    if(parseInt(id)===10){
+      navigate(`/technopedia/${year}`);
+      return;
+    }
+    let newLetter=String.fromCharCode(letter.charCodeAt(0)+1);
+    saveTimeSpent(); // Save time before navigating
+    navigate(`/technopedia/${year}/${parseInt(id) + 1}/${newLetter}`);
+  }
+  const handlePrevQuestion=()=>{
+    if(parseInt(id)===1){
+      return;
+    }
+    let newLetter=String.fromCharCode(letter.charCodeAt(0)-1);
+    saveTimeSpent(); // Save time before navigating
+    navigate(`/technopedia/${year}/${parseInt(id) - 1}/${newLetter}`);
+  }
+  const checkFirstIndex=()=>{
+    if(parseInt(id)===1){
+      return true;
+    }
+    return false;
+  }
+  const checkLastIndex=()=>{
+    if(parseInt(id)>=10){
+      return true;
+    }
+    return false;
+  }
+  
 
   return (
     <div className="technopedia-question-container">
@@ -212,8 +244,8 @@ function TechnopediaQuestion() {
           Question {letter} - {question.title}
         </h2>
         <div className="technopedia-points">Points Available: {question.points}</div>
-        
-        <div style={{whiteSpace: "pre-line"}} className="technopedia-question-text">
+
+        <div style={{ whiteSpace: "pre-line" }} className="technopedia-question-text">
           {question.content.replace(/\\n/g, "\n")}
         </div>
 
@@ -227,8 +259,25 @@ function TechnopediaQuestion() {
             placeholder="Type your answer here..."
             disabled={isSubmitting}
           />
-          <button 
-            className={`technopedia-submit-button ${isSubmitted ? 'submitted' : ''}`}
+
+          <div className="technopedia-next-prev">
+            <button
+            disabled={isSubmitting || checkFirstIndex() }
+            onClick={()=>{handlePrevQuestion()}}
+            className="technopedia-btn prev">
+              <ion-icon name="arrow-back-outline"></ion-icon>
+              <span>Prev</span>
+            </button>
+            <button 
+            disabled={isSubmitting ||checkLastIndex() }
+            onClick={()=>{handleNextQuestion()}}
+            className="technopedia-btn next">
+              <span>Next</span>
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+          </div>
+          <button
+            className={`${isSubmitted ? 'submitted' : ''}  technopedia-submit-button `}
             onClick={handleSubmit}
             disabled={!answer || isSubmitting}
           >

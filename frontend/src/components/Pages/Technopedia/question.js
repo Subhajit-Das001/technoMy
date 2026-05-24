@@ -6,7 +6,7 @@ import "./question.css";
 function TechnopediaQuestion() {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
 
-  const { id, letter } = useParams();
+  const { year, id, letter } = useParams();
   const navigate = useNavigate();
   const [question, setQuestion] = useState({
     title: "",
@@ -125,15 +125,17 @@ function TechnopediaQuestion() {
 
   const handleBack = () => {
     saveTimeSpent();
-    navigate('/technopedia');
+    navigate(`/technopedia/${year}`);
   };
 
   const handleSubmit = async () => {
     try {
-      const technopediaRoll = localStorage.getItem('technopediaRoll');
-      if (!technopediaRoll) {
+      const userPhone = localStorage.getItem('userPhone');
+      const sessionToken = localStorage.getItem('sessionToken');
+
+      if (!userPhone || !sessionToken) {
         setError("Session expired. Please login again.");
-        setTimeout(() => navigate('/technopedia/login'), 2000);
+        setTimeout(() => navigate('/technopedia-login'), 2000);
         return;
       }
       saveTimeSpent();
@@ -143,18 +145,25 @@ function TechnopediaQuestion() {
       const response = await axios.post(`${baseURL}/api/technopedia/submit`, {
         questionId: parseInt(id),
         answer,
-        rollNumber: technopediaRoll,
+        phone: userPhone,
         timeSpentArray,
         totalTimeSpent
       });
       if (response.data.success) {
         setIsSubmitted(true);
+
+        //neaw added
+        window.dispatchEvent(new CustomEvent('answerSubmitted', {
+          detail: { questionId: parseInt(id) }
+        }));
+
+        
         const answeredQuestions = JSON.parse(localStorage.getItem('technopedia_answeredQuestions') || '[]');
         if (!answeredQuestions.includes(id)) {
           answeredQuestions.push(id);
           localStorage.setItem('technopedia_answeredQuestions', JSON.stringify(answeredQuestions));
         }
-        setTimeout(() => navigate('/technopedia'), 1000);
+        setTimeout(() => navigate(`/technopedia/${year}`), 1000);
       }
     } catch (error) {
       setError(error.response?.data?.message || "Failed to submit answer");
@@ -187,10 +196,10 @@ function TechnopediaQuestion() {
       </div>
       <div className="technopedia-question-content">
         <h2 className="technopedia-question-title">
-          Question {letter} - {question.title}
+          Question {letter ? letter : "A"} - {question.title ? question.title : "Monochromatic Polygon Problem"}
         </h2>
-        <div className="technopedia-points">Points Available: {question.points}</div>
-        <div style={{whiteSpace: "pre-line"}} className="technopedia-question-text">
+        <div className="technopedia-points">Points Available: {question.points ? question.points : "100"}</div>
+        <div style={{ whiteSpace: "pre-line" }} className="technopedia-question-text">
           {question.content && question.content.replace(/\n/g, "\n")}
         </div>
         <div className="technopedia-answer-section">
@@ -203,7 +212,7 @@ function TechnopediaQuestion() {
             placeholder="Type your answer here..."
             disabled={isSubmitted}
           />
-          <button 
+          <button
             className={`technopedia-submit-button ${isSubmitted ? 'submitted' : ''}`}
             onClick={handleSubmit}
             disabled={!answer || isSubmitted}

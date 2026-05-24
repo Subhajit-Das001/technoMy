@@ -10,9 +10,10 @@ const TechnopediaLogin = () => {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
   
   const [rollNumber, setRollNumber] = useState('');
-  const [second, setSecond] = useState(''); // email or phone
+  const [second, setSecond] = useState(''); // email or phone -> changed to Date of Birth
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Add contest timing state
@@ -45,12 +46,12 @@ const TechnopediaLogin = () => {
 
         const isContestActive = nowTS >= startTS && nowTS <= endTS;
         
-        console.log('Time Debug:', {
-          now: now.toISOString(),
-          start: startTimeDate.toISOString(),
-          end: endTimeDate.toISOString(),
-          isActive: isContestActive
-        });
+        // console.log('Time Debug:', { 
+        //   now: now.toISOString(),
+        //   start: startTimeDate.toISOString(),
+        //   end: endTimeDate.toISOString(),
+        //   isActive: isContestActive
+        // });
 
         setContestTime({
           startTime: startTimeDate,
@@ -74,31 +75,18 @@ const TechnopediaLogin = () => {
     const interval = setInterval(fetchContestTimes, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
   }, [baseURL]);
-
-  const handleLogin = async (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     
     // Add contest timing check
-    const now = new Date().getTime();
-    const start = new Date(contestDates.startTime).getTime();
-    const end = new Date(contestDates.endTime).getTime();
-    
-    // Debug log
-    console.log('Submit Time Check:', {
-      now: new Date().toISOString(),
-      start: contestDates.startTime,
-      end: contestDates.endTime,
-      isActive: now >= start && now <= end
-    });
-
-    // Check contest timing for login
-    if (!(now >= start && now <= end)) {
-      setError('Technopedia has not started yet or has ended. Please check the timing.');
-      return;
-    }
+   if (!contestTime.isContestStarted) {
+  setError('Technopedia has not started yet or has ended.');
+  return;
+}
 
     try {
+      setLoading(true);
       const res = await axios.post(`${baseURL}/api/technopedia/check-student`, { rollNumber, second });
       if (res.data.exists) {
         // Save user info to localStorage/session                 
@@ -112,28 +100,25 @@ const TechnopediaLogin = () => {
         localStorage.setItem('technopediaUserData', JSON.stringify(res.data));
         navigate('/technopedia');
       } else {
+        setLoading(false);
         setError(res.data.message || 'Invalid credentials');
       }
     } catch (err) {
+      setLoading(false);
       setError('Server error. Please try again.');
     }
   };
-
-  console.log('Contest Status:', {
-    isContestStarted: contestTime.isContestStarted,
-    now: new Date().toISOString(),
-    startTime: contestTime.startTime?.toISOString(),
-    endTime: contestTime.endTime?.toISOString()
-  });
+  
 
   return (
-  <div className="TL-contest-container">
+   <div className="TL-login-container">
     {/* Layout below matches login.jsx alignment and proportions (centered logo, wide form) */}
-    <div className="TL-center-content">
-      <div className="tl-logo-container">
+    <div className="TL-login-center-content">
+      <div className="tl-login-logo-container">
         <img src={technoped} alt="Technopedia Logo" className="tl-logo-img" />
+        <p className='tl-logo-text'>Technothlon</p>
       </div>
-      <div className="TL-questions-section-c">
+      <div className="TL-login-section">
         <form className="TL-login-form" onSubmit={handleLogin}>
           <h2 className="TL-login-title">Technopedia Login</h2>
           <div className="TL-input-group">
@@ -146,7 +131,7 @@ const TechnopediaLogin = () => {
             />
           </div>
           <div className="TL-input-group">
-            <label>Email or Phone Number</label>
+            <label>Email or Contact</label>
             <input
               type="text"
               value={second}
@@ -162,7 +147,7 @@ const TechnopediaLogin = () => {
           {error && <div className="TL-error-message">{error}</div>}
           {message && <div className="TL-message">{message}</div>}
           <button type="submit" className="TL-start-button">
-            Login
+            {loading ? 'logining...' : 'Login'}
           </button>
         </form>
       </div>

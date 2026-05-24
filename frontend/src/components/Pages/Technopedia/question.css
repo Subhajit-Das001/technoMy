@@ -1,7 +1,8 @@
 /* Technopedia Question Container */
 .technopedia-question-container {
   min-height: 100vh;
-  background: #f5f5dc; /* Beige background */
+  background: #f5f5dc;
+  /* Beige background */
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -15,7 +16,8 @@
 }
 
 .technopedia-back-button {
-  background: #8B4513; /* Saddle brown color */
+  background: #8B4513;
+  /* Saddle brown color */
   color: white;
   border: none;
   padding: 12px 20px;
@@ -32,7 +34,8 @@
 .technopedia-back-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(139, 69, 19, 0.4);
-  background: #A0522D; /* Darker brown on hover */
+  background: #A0522D;
+  /* Darker brown on hover */
 }
 
 .technopedia-back-button span {
@@ -55,7 +58,8 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   padding: 32px;
   position: relative;
-  border: 2px solid #8B4513; /* Saddle brown border */
+  border: 2px solid #8B4513;
+  /* Saddle brown border */
 }
 
 .technopedia-question-content::before {
@@ -65,7 +69,8 @@
   left: -2px;
   right: -2px;
   height: 4px;
-  background: #8B4513; /* Saddle brown top border */
+  background: #8B4513;
+  /* Saddle brown top border */
   border-radius: 16px 16px 0 0;
 }
 
@@ -83,7 +88,8 @@
 /* Points Display */
 .technopedia-points {
   display: inline-block;
-  background: #8B4513; /* Saddle brown color */
+  background: #8B4513;
+  /* Saddle brown color */
   color: white;
   padding: 10px 20px;
   border-radius: 25px;
@@ -100,7 +106,8 @@
   background: #f8fafc;
   padding: 28px;
   border-radius: 12px;
-  border-left: 6px solid #8B4513; /* Saddle brown left border */
+  border-left: 6px solid #8B4513;
+  /* Saddle brown left border */
   font-size: 1.1rem;
   line-height: 1.8;
   color: #2c3e50;
@@ -139,7 +146,8 @@
 
 .technopedia-answer-section input:focus {
   outline: none;
-  border-color: #8B4513; /* Saddle brown focus border */
+  border-color: #8B4513;
+  /* Saddle brown focus border */
   box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
 }
 
@@ -151,7 +159,8 @@
 
 /* Submit Button */
 .technopedia-submit-button {
-  background: #8B4513; /* Saddle brown color */
+  background: #8B4513;
+  /* Saddle brown color */
   color: white;
   border: none;
   padding: 16px 32px;
@@ -163,11 +172,15 @@
   box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
   width: 100%;
 }
-
+.technopedia-submit-button.submitted:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
 .technopedia-submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
-  background: #A0522D; /* Darker brown on hover */
+  background: #A0522D;
+  /* Darker brown on hover */
 }
 
 .technopedia-submit-button:disabled {
@@ -182,6 +195,7 @@
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
+
 /* Error Message */
 .technopedia-error-message {
   background: #f8d7da;
@@ -193,32 +207,84 @@
   font-weight: 500;
 }
 
+
+.technopedia-next-prev {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.technopedia-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #8B4513;
+  /* Saddle brown color */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+}
+.next:disabled{
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.prev:disabled{
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.next:hover:not(:disabled) {
+  transform: translateX(2px);
+  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+  background: #A0522D;
+  /* Darker brown on hover */
+}
+
+.prev:hover:not(:disabled) {
+  transform: translateX(-2px);
+  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+  background: #A0522D;
+  /* Darker brown on hover */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .technopedia-question-container {
     padding: 12px;
   }
-  
+
   .technopedia-question-header {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
-  
+
   .technopedia-question-content {
     padding: 20px;
     margin: 0;
   }
-  
+
   .technopedia-question-title {
     font-size: 1.4rem;
   }
-  
+
   .technopedia-question-text {
     padding: 20px;
     font-size: 1rem;
   }
-  
+
   .technopedia-answer-section {
     padding: 20px;
   }
@@ -229,11 +295,11 @@
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .technopedia-question-title {
     font-size: 1.2rem;
   }
-  
+
   .technopedia-points {
     font-size: 14px;
     padding: 8px 16px;

@@ -1,45 +1,133 @@
-
-
-// Array of questions
-const questions = [
-    {
-        id: 1,
-        question: "The switch box in your new house is in an inconvenient corner of your basement. To your disappointment, you discover none of the 250 switches is labeled. (Suppose each switch maps to only one light.) To start with, you switch all 250 lights in the house to 'on', and then you head down to your basement to begin the mapping process. On every trip to your basement, you can switch any number of switches on or off. You can then roam the hallways of your house to discover which lights are on and which are off. What is the minimum number of trips you need to make to the basement to map every switch to every light?",
-    },
-    {
-        id: 2,
-        question: "At a restaurant, pizzas can be ordered in boxes of 6, 9, and 20. What is the highest number of pizzas that cannot be bought with any combination of these boxes?",
-    },
-    {
-        id: 3,
-        question: "Amber and Bosco are preparing for a holiday party, and each has a pie to slice up into pieces. They decide to have a little contest to make things fun. Each person is allowed to make 81 cuts of the pie with a knife, and whoever ends up with more pieces is the winner. They agree stacking is not allowed, but that “centerpieces without the crust are permissible. How many maximum pieces can be made using 81 cuts?",
-    },
-    {
-        id: 4,
-        question: "What is the minimum number of shots needed to guarantee hitting a battleship (a 4 × 1 rectangle) on a 10 × 10 board? The battleship can be located anywhere on the board and may be oriented either horizontally or vertically. You may assume that there are no other ships. (A “shot” is a blind guess of a square on the board.)",
-    },
-    {
-        id: 5,
-        question: "In a city shrouded in darkness, four brave superheroes find themselves faced with a daunting task: crossing a treacherous bridge at night, with only one torch to guide their way. Each hero possesses unique abilities, with varying speeds to traverse the bridge: The Flash, with lightning speed, takes 1 minute to cross; Batman, stealthy and resourceful, takes 2 minutes; Wonder Woman, with her unmatched strength and courage, takes 7 minutes; and Thor, wielding the power of thunder, takes 10 minutes. To ensure the safety of all four heroes, they must devise a plan to cross the bridge in the shortest time possible. With the fate of the city hanging in the balance, what is the minimum time in which to overcome this challenge?",
-    },
-    {
-        id: 6,
-        question: `Consider a circle containing n numbers in which there exists a free circular permutation of the numbers from 1 to n with adjacent pairs summing to a prime. For n = 4, one of the following permutations exists.Then for n = 10, find the total number of possible permutations.`,
-    },
-    {
-        id: 7,
-        question: "Twenty-four ants are placed randomly on a meter-long rod; each ant is facing east or west with equal probability. At a signal, they proceed to march forward (that is, in whatever direction they are facing) at 1 cm/sec; whenever two ants collide, they reverse directions. How long does it take (in seconds) before you can be certain that all the ants are off the rod?",
-    },
-    {
-        id: 8,
-        question: "Place a stick on each edge of each 1x1 cell of an 8x8 chessboard. On an edge common to two cells, place exactly one stick. Find the minimum number of sticks to be deleted so that the remaining sticks do not form any rectangle.",
-    }
-];
-
-// Array of answers
-const answers = [8, 43, 3322, 24, 17, 48, 100, 43];
+const temporaryTechnopediaContest = {
+    contest: 'Technopedia Contest 2025',
+    year: '2025',
+    startTime: new Date('2025-11-10T00:00:00.000Z'),
+    endTime: new Date('2026-11-22T00:00:00.000Z'),
+    questions: [
+        {
+            questionId: 1,
+            letter: 'A',
+            title: 'Monochromatic Polygon Problem',
+            content: `There are an unlimited number of laser nodes that can emit either a green or blue light between any two of them.
+However, the team cannot control which color is produced between any given pair of nodes.
+To create an efficient light source, they need to ensure that at least one polygon (such as a triangle or square) is formed using rays all of the same color (e.g., an all-green triangle or an all-blue square).
+What is the smallest number of nodes needed to guarantee that such a monochromatic polygon will always be formed?
+Note: The nodes are always arranged as the vertices of a regular polygon.`,
+            answer: 6,
+            points: 100
+        },
+        {
+            questionId: 2,
+            letter: 'B',
+            title: 'Minimum Possible Score in a Team Game',
+            content: `A, B and C join a game as a team.
+Each of them has to independently answer 2021 yes-no questions (the questions are the same for everyone), in each of which either 'yes' or 'no' must be chosen.
+After that, the answers of A and B are compared and the number of questions in which they chose the same answer is recorded.
+The same is done for A's and C's answers, as well as for B's and C's answers.
+The score of the team in the game is the largest number recorded.
+Find the minimum possible score of the team in the game.`,
+            answer: 674,
+            points: 100
+        },
+        {
+            questionId: 3,
+            letter: 'C',
+            title: 'Steps on a Stopped Escalator',
+            content: `Jack and Paul are descending a similar escalator.
+Jack walks down, taking 250 steps to reach the bottom; Paul ran down, taking 375.
+Paul ran three steps in the time it took Jack to walk one.
+Find out how many steps will be visible when the escalator is stopped.`,
+            answer: 500,
+            points: 100
+        },
+        {
+            questionId: 4,
+            letter: 'D',
+            title: 'Minimum Students for Common Topic',
+            content: `In a class, every pair of students has a conversation, but always about exactly one of three different topics.
+Each pair chooses one topic and sticks to it.
+What is the minimum number of students required to guarantee that there will always be three students such that every pair among them talked about the same topic?`,
+            answer: 17,
+            points: 100
+        },
+        {
+            questionId: 5,
+            letter: 'E',
+            title: 'Danger Symbol on a Grid',
+            content: `On the 51x51 grid wall of the building, there is a danger symbol on one of the squares and Heart symbols on the other 2600 squares.
+In one move, a player may reverse the symbols (danger symbol to heart symbol and heart symbol to danger symbol) of any a*a subgrid where a > 1.
+The player has to reach a stage when each square on the grid is a Heart symbol in order to win.
+How many such places are possible for the danger symbol?`,
+            answer: 200,
+            points: 100
+        },
+        {
+            questionId: 6,
+            letter: 'F',
+            title: 'Alien Multiplication Problem',
+            content: `In a distant galaxy, Earth has been invaded by Aliens.
+These aliens have a special way of multiplying: the number of aliens (n) can be replaced by a * b aliens if a + 2b = n, where n, a, and b are natural numbers.
+If the alien population ever becomes exactly 2020, humanity’s hope is lost forever.
+The aliens know that after a sequence of such replacements, there are some numbers from which 2020 can never be reached, even if they keep multiplying forever.
+Find the sum of all initial numbers from which 2020 can’t be reached.`,
+            answer: 36,
+            points: 100
+        },
+        {
+            questionId: 7,
+            letter: 'G',
+            title: 'Unlocking the Door with Identical Keys',
+            content: `A door is locked with a special lock having two separate keyholes.
+One needs to put two keys in the keyholes and turn them at the same time to open the door.
+Aakash has a bunch of 8 identical keys, out of which 4 of them fit the lock and the other 4 don’t.
+To unlock the door, he can try different combinations using two keys at a time.
+What is the least number of attempts in which he can open the door?`,
+            answer: 28,
+            points: 100
+        },
+        {
+            questionId: 8,
+            letter: 'H',
+            title: 'Unique Word Game Scoring',
+            content: `Three boys played a "Word" game in which they each wrote down ten words.
+For each word a boy wrote, he scored three points if neither of the other boys had the same word;
+he scored one point if only one of the other boys had the same word.
+No points were awarded for words which all three boys had.
+When they added up their scores, they found that they each had different scores.
+Shyam had the smallest score (19 points), and James scored the most.
+How many points did James score?.`,
+            answer: 25,
+            points: 100
+        },
+        {
+            questionId: 9,
+            letter: 'I',
+            title: 'Elevator Problem with Fixed Movement',
+            content: `There are 85 floors in the tower and a single elevator to travel from one floor to another.
+There are no stairs.
+The elevator has a wiring mismatch due to which it can move exactly 7 floors upwards or 9 floors downwards.
+The elevator takes 34 seconds to move to the next allowed floor (34 seconds to climb 7 floors and 34 seconds to come down 9 floors).
+How much time does it take for the elevator to reach floor number 80 when it starts from the first floor?
+(Answer in seconds)`,
+            answer: 850,
+            points: 100
+        },
+        {
+            questionId: 10,
+            letter: 'J',
+            title: 'Milk-Drinking Dragons',
+            content: `There are 2022 milk-drinking dragons standing in a row.
+The first dragon has 1 pint of milk, the second has 2 pints, and so on, up to the 2022nd dragon which has 2022 pints.
+The first dragon will transfer half his milk and half a pint to the second one, then the second will transfer half his milk and half a pint to the third one, and so on until the 2021st dragon transfers half his milk and half a pint to the 2022nd one.
+How much milk (in pints) will the 2022nd dragon have after that?`,
+            answer: 4043,
+            points: 100
+        }
+    ]
+};
 
 module.exports = {
-    questions,
-    answers
+    temporaryTechnopediaContest,
+    questions: temporaryTechnopediaContest.questions,
+    answers: temporaryTechnopediaContest.questions.map((question) => question.answer)
 };
