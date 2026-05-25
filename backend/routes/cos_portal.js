@@ -252,10 +252,10 @@ router.post('/register-poc',async (req, res) => {
             typeof school_id !== 'string' ||
             typeof bpoc_name !== 'string' ||
             typeof bpoc_mail !== 'string' ||
-            typeof state !== 'string' ||
-            typeof branch_name !== 'string' ||
-            typeof city !== 'string' ||
-            typeof bpoc_contact !== 'string'
+            typeof state !== 'string'
+            // typeof branch_name !== 'string' ||
+            // typeof city !== 'string' ||
+            // typeof bpoc_contact !== 'string'
         ) {
             return res.status(400).json({
                 success: false,
