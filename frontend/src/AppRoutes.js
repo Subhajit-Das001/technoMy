@@ -41,6 +41,7 @@ import Question from './components/Pages/Contest/question';
 import TechnopediaLogin from './components/Pages/Technopedia/technopedia_login';
 import Technopedia from './components/Pages/Technopedia/technopedia';
 import TechnopediaQuestion from './components/Pages/Technopedia/technopedia-question';
+import TechnopediaYear from './components/Pages/Technopedia/technopediaYear';
 
 import CenterTable from './components/Pages/Center/CenterTable';
 import Merch from './components/Pages/Merch/merch';
@@ -56,7 +57,6 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/aboutus" element={<AboutUs />} />
       <Route path="/pyp" element={<Pyp />} />
-      <Route path="/technopedia" element={<Technopedia />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/login" element={<Login />} />
       <Route path="/videos" element={<Videos />} />
@@ -101,8 +101,9 @@ const AppRoutes = () => {
       <Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/center-list" element={<CenterTable />} />
       <Route path="/technopedia-login" element={<TechnopediaLogin />} />
-      <Route path="/technopedia" element={<Technopedia />} />
-      <Route path="/techno/:id/:letter" element={<TechnopediaQuestion />} />
+      <Route path="/technopedia" element={<TechnopediaYear/>} />
+      <Route path="/technopedia/:year/:id/:letter" element={<TechnopediaQuestion />} />
+       <Route path='/technopedia/:year' element={<Technopedia/>}/>
       <Route path="/Technothlon-Merch" element={<Merch/>} />    
         <Route path="/results" element={<ResultTable />} />
        </Routes>

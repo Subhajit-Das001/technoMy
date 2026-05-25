@@ -305,7 +305,12 @@ router.post('/register-poc',async (req, res) => {
         };
 
         // 7. Send the email
-        await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Mail sent:", info.response);
+} catch (mailError) {
+    console.error("Mail sending failed:", mailError);
+}
 
         // 8. Return success response to the frontend
         return res.status(200).json({

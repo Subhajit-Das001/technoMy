@@ -97,7 +97,7 @@ const capitalizeWords = (str) => {
         err.response.data.error ||
         "Registration failed."
       );
-      console.log(err);
+      // console.log(err);
     } else {
       setError("Server error. Please try again later.");
     }

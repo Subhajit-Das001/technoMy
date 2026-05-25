@@ -57,7 +57,7 @@ const app = express();
 app.use(helmet());
 
 // Global Rate Limiting
-app.use('/api', globalLimiter);
+// app.use('/api', globalLimiter);
 
 // Specific Body Limits for CSV Uploads
 app.use('/api/uploadcsv', express.json({ limit: '5mb' }));
