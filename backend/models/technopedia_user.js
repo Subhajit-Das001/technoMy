@@ -28,14 +28,14 @@ const TechnopediaAnswerSchema = new mongoose.Schema({
 
 // Contest Schema to store student responses and their scores
 const TechnopediaScoreSchema = new mongoose.Schema({
-    // Add teamId with a default value to avoid null values
     teamId: { type: String, default: () => new mongoose.Types.ObjectId().toString() },
     
     // User identification
-    phone: { type: String, required: true, unique: true },
+    // CRITICAL FIX 1: Removed `unique: true` from the phone field
+    phone: { type: String, required: true },
     name: { type: String, required: true },
-    school: { type: String, required: true }, // Added school field
-    student:{type: String, required: true},
+    school: { type: String, required: true },
+    student: { type: String, required: true },
     
     // Contest Details
     answers: [TechnopediaAnswerSchema],
@@ -53,21 +53,16 @@ const TechnopediaScoreSchema = new mongoose.Schema({
         total: { type: Number, default: 0 }
     },
     
-    // questionTimeSpent: {
-    //     question1: [{ type: Number }], // Array of time spent in seconds for each visit
-    //     question2: [{ type: Number }],
-    //     question3: [{ type: Number }]
-    // },
-    
     // Contest Status
     startTime: { type: Date, required: true },
-    endTime: { type: Date, required: false }, // Made optional to support no time limit contests
-    lastSubmissionTime: { type: Date }, // Track last submission
-    totalTimeSpent: { type: Number, default: 0 }, // Total time spent in seconds
+    endTime: { type: Date, required: false },
+    lastSubmissionTime: { type: Date },
+    totalTimeSpent: { type: Number, default: 0 },
     questionsAttempted: { type: Number, default: 0 },
     isStarted: { type: Boolean, default: false },
     isCompleted: { type: Boolean, default: false },
     isNewStudent: { type: Boolean, default: false },
+    year: { type: String, required: true },
     
     // Session management
     sessionId: { type: String }
@@ -75,42 +70,34 @@ const TechnopediaScoreSchema = new mongoose.Schema({
 
 // Update the calculateScore method
 TechnopediaScoreSchema.methods.calculateScore = function() {
-    const scores = {
-        question1: 0,
-        question2: 0,
-        question3: 0
-    };
+    // Dynamically initialize all 10 questions
+    const scores = {};
+    for (let i = 1; i <= 10; i++) {
+        scores[`question${i}`] = 0;
+    }
+    
+    let totalScore = 0;
 
     this.answers.forEach(answer => {
         let score;
         if (answer.isCorrect) {
-            switch(answer.questionId) {
-                case 1: 
-                    score = Math.max(0, 300 - (answer.totalTimeSpent/20000)); 
-                    break;
-                case 2: 
-                    score = Math.max(0, 600 - (answer.totalTimeSpent/15000)); 
-                    break;
-                case 3: 
-                    score = Math.max(0, 1000 - (answer.totalTimeSpent/10000)); 
-                    break;
-                default: 
-                    score = 0;
-            }
+            // Using a dynamic score calculation to cover all 10 questions
+            // (You can adjust the formulas per question if they vary)
+            score = Math.max(0, 300 - (answer.totalTimeSpent / 20000)); 
         } else if (answer.attempted) {
-            score = -(answer.totalTimeSpent/20000);
+            score = -(answer.totalTimeSpent / 20000);
         } else {
             score = 0;
         }
         
-        scores[`question${answer.questionId}`] = Math.round(score);
+        const roundedScore = Math.round(score);
+        scores[`question${answer.questionId}`] = roundedScore;
+        totalScore += roundedScore;
     });
 
     this.scores = {
-        question1: scores.question1,
-        question2: scores.question2,
-        question3: scores.question3,
-        total: scores.question1 + scores.question2 + scores.question3
+        ...scores,
+        total: totalScore
     };
 };
 
@@ -119,15 +106,13 @@ TechnopediaScoreSchema.methods.isValidTime = function() {
     const now = new Date();
     if (!this.startTime) return false;
     
-    // If no endTime is set, contest has no time limit
     if (!this.endTime) return true;
     
-    // Otherwise check if current time is within the contest window
     return (now >= this.startTime && now <= this.endTime);
 };
 
-// Remove the index on teamId and just keep the index on phone
-// TechnopediaScoreSchema.index({ phone: 1 }, { unique: true });
+// CRITICAL FIX 2: Added the compound index to allow multiple years per phone
+TechnopediaScoreSchema.index({ phone: 1, year: 1 }, { unique: true });
 
 const TechnopediaScore = mongoose.model('TechnopediaScore', TechnopediaScoreSchema);
 

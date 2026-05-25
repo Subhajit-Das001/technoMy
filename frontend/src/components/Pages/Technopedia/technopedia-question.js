@@ -144,7 +144,6 @@ function TechnopediaQuestion() {
       setError("");
 
       const userPhone = localStorage.getItem('userPhone');
-      // console.log('Frontend - userPhone from localStorage:', userPhone);
 
       if (!userPhone) {
         setError("Session expired. Please login again.");
@@ -164,10 +163,9 @@ function TechnopediaQuestion() {
         answer,
         phone: userPhone,
         timeSpentArray,
-        totalTimeSpent
+        totalTimeSpent,
+        year: year // ADDED: Passing the year to the backend
       };
-
-      // console.log('Frontend - sending request data:', requestData);
 
       const response = await axios.post(`${baseURL}/api/technopedia/submit`, requestData);
 
