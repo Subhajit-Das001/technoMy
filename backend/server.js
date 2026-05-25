@@ -26,8 +26,6 @@ const cityRepRoutes = require('./routes/cityrep');
 const CityStudentCount = require('./routes/citystudentcountroute');
 const announcementRoutes = require('./routes/announcementRoutes');
 const Cityrepportal = require('./routes/cityrep_portal');
-// const questionsRouter = require('./routes/questionRouter');
-// const checkAttemptRouter = require('./routes/checkAttemptRouter');
 const uploadCSVRouter = require('./routes/centre');
 const authRoutes = require('./routes/authRoutes');
 const contestRoutes = require('./routes/contestRoutes');
@@ -41,10 +39,6 @@ const offlineRegUpload = require('./routes/OfflineRegUpload');
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
 
-
-
-
-
 const uploadDir = path.join('uploads', 'cos');
 
 if (!fs.existsSync(uploadDir)) {
@@ -53,12 +47,42 @@ if (!fs.existsSync(uploadDir)) {
 
 const app = express();
 
-// Security Headers
+// ==========================================
+// 1. SECURITY & CORS (MUST BE FIRST)
+// ==========================================
 app.use(helmet());
 
-// Global Rate Limiting
-app.use('/api', globalLimiter);
+const allowedOrigins = [
+  'http://localhost:3000',  // React dev server
+  'http://localhost:3001',  // Backend server
+  'http://localhost:5173',  // Vite default
+  'https://technothlon.techniche.org.in',
+  'https://www.technothlon.techniche.org.in',
+  'https://technothlon-25.vercel.app' //testing website
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`Origin ${origin} not allowed by CORS`);
+      callback(null, true);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Preflight requests
+
+// ==========================================
+// 2. BODY PARSERS (MUST BE BEFORE ROUTES)
+// ==========================================
 // Specific Body Limits for CSV Uploads
 app.use('/api/uploadcsv', express.json({ limit: '5mb' }));
 app.use('/api/uploadcsv', express.urlencoded({ limit: '5mb', extended: true }));
@@ -71,52 +95,24 @@ app.use('/api/offlineReg', express.urlencoded({ limit: '5mb', extended: true }))
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
 
-// Define allowed origins
-const allowedOrigins = [
-  'http://localhost:3000',  // React dev server
-  'http://localhost:3001',  // Backend server
-  'http://localhost:5173',  // Vite default
-  'https://technothlon.techniche.org.in',
-  'https://www.technothlon.techniche.org.in',
-  'https://technothlon-25.vercel.app' //testing website
-];
+// ==========================================
+// 3. UNRESTRICTED ROUTES (BEFORE RATE LIMITER)
+// ==========================================
+// This route now has CORS and Body Parsing, but no rate limiting!
+app.use('/api/technopedia', technopediaRoutes);
 
-// CORS configuration
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) {
-      return callback(null, true);
-    }
+// ==========================================
+// 4. RATE LIMITER
+// ==========================================
+app.use('/api', globalLimiter);
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`Origin ${origin} not allowed by CORS`);
-      callback(null, true); // Still allow it for now, but log it
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
-};
-
-// Apply CORS before any routes
-app.use(cors(corsOptions));
-
-// For preflight requests
-app.options('*', cors(corsOptions));
-
-// Routes
+// ==========================================
+// 5. RESTRICTED ROUTES (AFTER RATE LIMITER)
+// ==========================================
 app.use('/api', teamRoutes);
 app.use('/dashboard', dashRoutes);
 app.use('/api/uploadcsv', uploadCsv);
 app.use('/api/feedback', feedback);
-// app.use('/api', questionsRouter);
-// app.use('/api', techpedResult);
-// app.use('/api', scoreRouter);
-// app.use('/api', checkAttemptRouter);
 app.use('/api/centre', uploadCSVRouter);
 app.use('/api/cityreps', cityRepRoutes);
 app.use('/api', CityStudentCount);
@@ -125,7 +121,6 @@ app.use('/api/cityrep_portal', Cityrepportal);
 app.use('/api', contestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', centerListRoutes);
-app.use('/api/technopedia', technopediaRoutes);
 app.use('/api/merch', merchAnalyticsRoutes);
 app.use('/api/cos_portal', cosPortalRoutes);
 app.use('/api/offlineReg', offlineRegUpload);

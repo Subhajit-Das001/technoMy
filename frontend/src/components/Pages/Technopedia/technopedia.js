@@ -41,7 +41,7 @@ import arcImage from '../../Assets/img/arc.png';
 
     const radius = 84;
     const circumference = Math.PI * radius;
-    const progress = (analysisData.collectiveScore / 1000) * circumference;
+    const progress = (analysisData.collectiveScore / 100) * circumference;
 
     return (
         <div className="TA-analysis-container">
@@ -69,7 +69,7 @@ import arcImage from '../../Assets/img/arc.png';
                             />
                         </svg>
                         <div className="TA-arc-label">
-                            <div className="TA-arc-score">{analysisData.collectiveScore}/1000</div>
+                            <div className="TA-arc-score">{analysisData.collectiveScore}/100</div>
                             <div className="TA-arc-sub">OVERALL SCORE</div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@ import arcImage from '../../Assets/img/arc.png';
                         <div className="TA-qh-cell">👁 Visits</div>
                         <div className="TA-qh-cell">📝 Attempts</div>
                         <div className="TA-qh-cell">Confidence</div>
-                        <div className="TA-qh-cell">TIQ</div>
+                        <div className="TA-qh-cell">Tech IQ</div>
                         <div className="TA-qh-cell">Efficiency</div>
                         <div className="TA-qh-cell">Consistency</div>
                         <div className="TA-qh-cell">Answer</div>
@@ -464,16 +464,17 @@ function Contest() {
                 throw new Error('Missing user information. Please login again.');
             }
 
-            const requestData = {
+                        const requestData = {
                 phone: userPhone,
                 name: userName,
                 school: userSchool,
-                studentType: studentType1
+                studentType: studentType1,
+                year: year // Add this line
             };
 
             // console.log('Request data:', requestData);
 
-            const response = await axios.post(`${baseURL}/api/technopedia/techno/start`, requestData);
+           const response = await axios.post(`${baseURL}/api/technopedia/techno/start`, requestData);
 
             if (response.data.success) {
                 // Set contest times (for tracking purposes only)
@@ -512,8 +513,7 @@ function Contest() {
             const userPhone = localStorage.getItem('userPhone');
             // console.log('Fetching analysis for phone:', userPhone);
 
-            const response = await axios.get(`${baseURL}/api/technopedia/analysis/${userPhone}`);
-
+const response = await axios.get(`${baseURL}/api/technopedia/analysis/${userPhone}/${year}`);
             // console.log('Analysis response:', response.data);
 
             if (response.data.success) {
@@ -561,8 +561,9 @@ function Contest() {
 
             // First end the contest
             const response = await axios.post(`${baseURL}/api/technopedia/techno/end`, {
-                phone: userPhone
-            });
+                 phone: userPhone,
+                year: year // Add this line
+});
 
             // console.log('End contest response:', response.data);
 
