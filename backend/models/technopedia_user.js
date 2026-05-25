@@ -127,7 +127,7 @@ TechnopediaScoreSchema.methods.isValidTime = function() {
 };
 
 // Remove the index on teamId and just keep the index on phone
-TechnopediaScoreSchema.index({ phone: 1 }, { unique: true });
+// TechnopediaScoreSchema.index({ phone: 1 }, { unique: true });
 
 const TechnopediaScore = mongoose.model('TechnopediaScore', TechnopediaScoreSchema);
 

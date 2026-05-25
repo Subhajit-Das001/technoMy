@@ -248,6 +248,21 @@ router.post('/register-poc',async (req, res) => {
     try {
         // 1. Extract data from the frontend request
         const { school_id,bpoc_name, bpoc_mail, state, ...otherData } = req.body;
+        if (
+            typeof school_id !== 'string' ||
+            typeof bpoc_name !== 'string' ||
+            typeof bpoc_mail !== 'string' ||
+            typeof state !== 'string' ||
+            typeof branch_name !== 'string' ||
+            typeof city !== 'string' ||
+            typeof bpoc_contact !== 'string'
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid input format. Expected string values."
+            });
+        }
+
         // 2. Check if the school_id exists in cos_school
         const schoolExists = await CosSchool.findOne({ school_id: school_id });
         if (!schoolExists) {
