@@ -114,7 +114,7 @@ ContestScoreSchema.methods.isValidTime = function() {
 };
 
 // Remove the index on teamId and just keep the index on phone
-ContestScoreSchema.index({ phone: 1 }, { unique: true });
+// ContestScoreSchema.index({ phone: 1 }, { unique: true });
 
 const ContestScore = mongoose.model('ContestScore', ContestScoreSchema);
 
