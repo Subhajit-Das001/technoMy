@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendProposalNotification(proposalData) {
   const mailOptions = {
-    from: "technothlon.iitg@gmail.com",
+    // from: "technothlon.iitg@gmail.com",
     to: ["heads.techno@gmail.com"],
     subject: `New School Proposal - ${proposalData.name}`,
     html: `
