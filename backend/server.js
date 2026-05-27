@@ -1,18 +1,18 @@
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config(); 
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
-const express = require('express');
 const fs = require('fs');
+const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const EventEmitter = require('events');
 const helmet = require('helmet');
 const { globalLimiter } = require('./middleware/auth');
-
-// Load environment variables
-dotenv.config();
 
 // Connect to MongoDB
 connectDB();

@@ -7,6 +7,8 @@ const fs = require("fs");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const whatsapp = "https://whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S"
+const instagram = "https://www.instagram.com/technothlon.iitg/"
+const technopedia = "https://technothlon.techniche.org.in/technopedia"
 const Offline26 = require("../models/offline26");
 const crypto = require("crypto");
 const UploadedFileHash = require("../models/uploadFileHash");
@@ -50,20 +52,63 @@ const upload = multer({
 
 // ================= EMAIL =================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.SENDER_EMAIL,
-    pass: process.env.SENDER_PASSWORD
-  }
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // Use SSL
+    auth: {
+        user: process.env.SENDER_EMAIL, // e.g., your_email@techniche.iitg.in
+        pass: process.env.SENDER_PASSWORD // See note below about App Passwords
+    },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100 
 });
+// =========================================================
+// ✅ BACKGROUND WORKER FUNCTION
+// =========================================================
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function sendEmail(email, roll, password) {
+async function processEmailsInBackground(docs) {
+    const total = docs.length;
+    let counter = 0;
+
+    console.log(`\n📤 Starting background email delivery for ${total} recipients...`);
+
+    for (const doc of docs) {
+        counter++;
+        console.log(`[${counter}/${total}] Sending to ${doc.rollNumber}`);
+
+        // Send to email1 and email2 sequentially instead of concurrently
+        let success1 = false, success2 = false;
+        
+        if (doc.email1) {
+            success1 = await sendEmail(doc.email1, doc.name1, doc.rollNumber, doc.password);
+            await delay(2000); // Wait 2 seconds before sending the next one
+        }
+        
+        if (doc.email2) {
+            success2 = await sendEmail(doc.email2, doc.name2, doc.rollNumber, doc.password);
+            await delay(2000); // Wait 2 seconds before moving to the next student
+        }
+
+        const success = success1 || success2;
+
+        // Update MongoDB for this specific record
+        await Offline26.updateOne(
+            { rollNumber: doc.rollNumber },
+            { $set: { mailSent: success } }
+        );
+    }
+
+    console.log('\n✅ All background emails processed successfully!');
+}
+async function sendEmail(email,name, roll, password) {
   try {
     await transporter.sendMail({
-      from: "Technothlon <technothlon.iitg@gmail.com>",
-      to: email,
-      subject: "Technothlon 2026 Registration",
-      html: ` <div style="font-family: Arial, sans-serif; padding: 20px;"> <h2 style="color: #4CAF50;">Registration Successful!</h2> <p>Hey Champs!</p> <p>Your registration for Technothlon '26 has been confirmed.</p> <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;"> <p><strong>Roll Number:</strong> ${roll}</p> <p><strong>Password:</strong> ${password}</p> </div> <p><em>(Your password is a fixed combination of your birth dates in DDMMYYYY format and cannot be changed later.)</em></p>                            <p>Follow us on WhatsApp: <a href="${whatsapp}">Join Channel</a></p> <p>Warm regards,<br>Team Technothlon</p> </div> `
+      from: "Technothlon-2026 <technothlon26@technicheiitg.in>",
+      to : email,
+      subject: `Technothlon 2026 Registration Confirmed - ${name}`,
+      html: ` <div style="font-family: Arial, sans-serif; padding: 20px;"> <h2 style="color: #4CAF50;">Registration Successful!</h2> <p>Hey ${name},</p> <p>Your registration for Technothlon '26 has been confirmed.</p> <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;"> <p><strong>Roll Number:</strong> ${roll}</p> <p><strong>Password:</strong> ${password}</p> </div> <p><em>(Your password is a fixed combination of your birth dates in DDMMYYYY format and cannot be changed later.)</em></p>                            <p>Gear up for the prelims — practice now with Technopedia 2026: <a href="${technopedia}">Begin now</a></p>   <p>For regular updates follow us on Instagram: <a href="${instagram}">Stay Tuned</a></p><p>Warm regards,<br>Team Technothlon</p> </div> `
     });
     console.log(`✅ Email sent to: ${email} | Roll: ${roll}`);
 
@@ -255,41 +300,23 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       fileName: req.file.originalname,
       uploadedBy: req.body?.UploadedBy || "unknown"
     });
-
     // =========================================================
-    // ✅ PHASE 3 → EMAILS
+    // ✅ PHASE 3 → EMAILS (BACKGROUND PROCESSING)
     // =========================================================
-    const total = validDocs.length;
-let counter = 0;
-
-    for (let doc of validDocs) {
-      counter++;
-
-  console.log(`📤 [${counter}/${total}] Processing ${doc.rollNumber}`);
-      const results = await Promise.allSettled([
-        doc.email1
-          ? sendEmail(doc.email1, doc.rollNumber, doc.password)
-          : null,
-        doc.email2
-          ? sendEmail(doc.email2, doc.rollNumber, doc.password)
-          : null
-      ]);
-
-      const success = results.some(
-        r => r?.status === "fulfilled" && r.value === true
-      );
-
-      await Offline26.updateOne(
-        { rollNumber: doc.rollNumber },
-        { $set: { mailSent: success } }
-      );
-    }
+    
+    // We execute this WITHOUT 'await' so the API responds immediately
+    // rather than timing out the client on large files.
+    processEmailsInBackground(validDocs).catch(err => {
+        console.error("Critical error in background email worker:", err);
+    });
 
     fs.unlinkSync(req.file.path);
 
+    // Respond to the client instantly
     return res.json({
       success: true,
-      processed: validDocs.length
+      processed: validDocs.length,
+      message: "Data uploaded successfully! Emails are being queued and sent in the background."
     });
 
   } catch (err) {
@@ -304,6 +331,8 @@ let counter = 0;
     });
   }
 });
+    
+
 // Protected by Shared Secret
 router.post("/retry-mails", isAdmin, async (req, res) => {
   try {
@@ -323,55 +352,28 @@ router.post("/retry-mails", isAdmin, async (req, res) => {
 
     if (pendingUsers.length === 0) {
       return res.json({
-        message: "No pending emails for this file 🎉"
+        message: "No pending emails for this file 🎉",
+        queued: 0
       });
     }
 
-    console.log(`📧 Retrying ${pendingUsers.length} emails for file: ${hashId}`);
+    console.log(`📧 Queuing ${pendingUsers.length} failed emails for retry...`);
 
-    let successCount = 0;
-    let total = pendingUsers.length;
-    let counter = 0;
+    // =========================================================
+    // ✅ BACKGROUND PROCESSING
+    // =========================================================
+    // We execute this WITHOUT 'await' so the API responds instantly.
+    // Ensure `processEmailsInBackground` is in the same file or imported.
+    processEmailsInBackground(pendingUsers).catch(err => {
+        console.error("Critical error in background retry worker:", err);
+    });
 
-    for (let doc of pendingUsers) {
-      counter++;
-
-      console.log(`🔁 [${counter}/${total}] Retrying ${doc.rollNumber}`);
-
-      const results = await Promise.allSettled([
-        doc.email1
-          ? sendEmail(doc.email1, doc.rollNumber, doc.password)
-          : null,
-        doc.email2
-          ? sendEmail(doc.email2, doc.rollNumber, doc.password)
-          : null
-      ]);
-
-      const success = results.some(
-        r => r?.status === "fulfilled" && r.value === true
-      );
-
-      if (success) {
-        successCount++;
-        console.log(`✅ [${counter}/${total}] Sent: ${doc.rollNumber}`);
-      } else {
-        console.log(`❌ [${counter}/${total}] Failed: ${doc.rollNumber}`);
-      }
-
-      await Offline26.updateOne(
-        { _id: doc._id },
-        { $set: { mailSent: success } }
-      );
-
-      // optional delay (prevents Gmail throttling)
-      await new Promise(r => setTimeout(r, 200));
-    }
-
+    // Respond to the client instantly
     return res.json({
-      message: "Retry completed",
-      success: successCount,
-      failed: total - successCount,
-      total
+      success: true,
+      message: "Retry initiated",
+      queued: pendingUsers.length,
+      info: "Emails are being retried in the background. They will update in the database automatically."
     });
 
   } catch (err) {
