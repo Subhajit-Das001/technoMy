@@ -59,10 +59,14 @@ useEffect(() => {
     }
   };
 
+  // HnadleFileChange function with Redis Enabled
+  // 1. The Gateway Handoff
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-setFailedFileName(file.name);
+
+    setFailedFileName(file.name);
+    
     // Validate file type
     const validTypes = [
       'text/csv',
@@ -82,73 +86,221 @@ setFailedFileName(file.name);
     formData.append("file", file);
 
     try {
+      // Hit the new Gateway API
       const response = await axios.post(`${baseURL}cos_portal/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, 
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          // You can show progress here if needed
-        },
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
 
-      if (response.data.success) {
-        toast.success(`Successfully processed ${response.data.processedCount} teams!`);
-        setFileHash(response.data.fileHash);
-        // Get the correct filename from backend response
-        const fileName = response.data.fileName || `cos_output_${Date.now()}.csv`;
-        const downloadUrl = `${baseURL}cos_portal/download/${fileName}`;
-        
-        // Download the file
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Save to local storage with correct filename
-        const newFile = {
-          createdAt: new Date().toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-          }),
-          fileName: fileName,
-          fileUrl: downloadUrl,
-          processedCount: response.data.processedCount
-        };
-
-        const updatedFiles = [newFile, ...uploadedFiles];
-        setUploadedFiles(updatedFiles);
-        localStorage.setItem("cos_uploadedFiles", JSON.stringify(updatedFiles));
-setFailedFileName(null);
-        // Refresh dashboard
-        fetchDashboardData();
+      // If successful, the backend returns a jobId. Start polling it.
+      if (response.data.jobId) {
+        pollJobStatus(response.data.jobId, file.name);
       }
     } catch (err) {
-      // console.error("Upload error:", err);
-      if (err.response?.data?.errors) {
-        const errorMessages = err.response.data.errors;
-        setError({
-          title: err.response.data.error || "Validation Errors",
-          messages: Array.isArray(errorMessages) ? errorMessages : [errorMessages]
-        });
-        toast.error(`Validation failed: ${err.response.data.message || 'Please check the errors below'}`);
-      } else {
-        setError({
-          title: "Upload Failed",
-          messages: [err.response?.data?.message || err.message || "An error occurred during upload"]
-        });
-        toast.error(err.response?.data?.message || "Upload failed. Please try again.");
-      }
-    } finally {
-      setUploading(false);
-      // Reset file input
-      e.target.value = '';
+      handleUploadError(err);
+      e.target.value = ''; // Reset file input
     }
   };
+
+  // 2. The Telemetry Poller (Checks Redis every 2 seconds)
+  // 2. The Telemetry Poller
+  const pollJobStatus = (jobId, originalFileName) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(`${baseURL}cos_portal/upload/status/${jobId}`, {
+          withCredentials: true,
+        });
+
+        const { state, result, failedReason } = res.data;
+
+        if (state === 'completed') {
+          clearInterval(interval);
+          handleUploadSuccess(result); 
+          
+          const fileInput = document.querySelector('.cos_kv_file_input');
+          if(fileInput) fileInput.value = ''; 
+          
+        } else if (state === 'failed') {
+          clearInterval(interval);
+          
+          let parsedError;
+          try { 
+            // FIX: Strip the "Error: " string that BullMQ attaches before parsing
+            const cleanReason = failedReason.replace(/^Error:\s*/, '');
+            parsedError = JSON.parse(cleanReason); 
+            
+            if (parsedError.fileHash) {
+              setFileHash(parsedError.fileHash);
+            }
+          } catch (e) { 
+            // Fallback if the error wasn't JSON formatted
+            parsedError = { message: failedReason }; 
+          }
+
+          handleUploadError({ response: { data: parsedError } });
+          
+          const fileInput = document.querySelector('.cos_kv_file_input');
+          if(fileInput) fileInput.value = '';
+        }
+      } catch (err) {
+        clearInterval(interval);
+        setUploading(false); // Guarantee UI unlocks on network drop
+        toast.error("Lost connection to server while checking status.");
+      }
+    }, 2000);
+  };
+
+  // 3. Success UI Handler
+  const handleUploadSuccess = (data) => {
+    toast.success(`Successfully processed ${data.processedCount} teams!`);
+    setFileHash(data.fileHash); // Save hash for the report module
+
+    const fileName = data.fileName;
+    const downloadUrl = `${baseURL}cos_portal/download/${fileName}`;
+    
+    // Trigger auto-download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Update state and local storage
+    const newFile = {
+      createdAt: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      fileName: fileName,
+      fileUrl: downloadUrl,
+      processedCount: data.processedCount
+    };
+
+    const updatedFiles = [newFile, ...uploadedFiles];
+    setUploadedFiles(updatedFiles);
+    localStorage.setItem("cos_uploadedFiles", JSON.stringify(updatedFiles));
+    
+    setFailedFileName(null);
+    setUploading(false);
+    fetchDashboardData();
+  };
+
+  // 4. Error UI Handler
+  // 4. Error UI Handler
+  const handleUploadError = (err) => {
+    // FIX: Force the loading spinner to stop immediately
+    setUploading(false); 
+    
+    const responseData = err.response?.data || {};
+
+    if (responseData.errors) {
+      // Handles multi-row validation errors (e.g. bad emails on rows 5, 10, 12)
+      setError({
+        title: responseData.error || "Validation Errors",
+        messages: Array.isArray(responseData.errors) ? responseData.errors : [responseData.errors]
+      });
+      toast.error(`Validation failed: ${responseData.message || 'Please check the errors below'}`);
+      
+    } else {
+      // Handles single systemic errors (e.g. "Limit Exceeded", "Duplicate File")
+      setError({
+        title: responseData.error || "Upload Failed",
+        messages: [responseData.message || err.message || "An error occurred during upload"]
+      });
+      toast.error(responseData.message || "Upload failed. Please try again.");
+    }
+  };
+//This is the normal HandleFIle change function without Redis Enabled
+
+
+//   const handleFileChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+// setFailedFileName(file.name);
+//     // Validate file type
+//     const validTypes = [
+//       'text/csv',
+//       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//       'application/vnd.ms-excel'
+//     ];
+    
+//     if (!validTypes.includes(file.type) && !file.name.endsWith('.csv') && !file.name.endsWith('.xlsx')) {
+//       toast.error('Invalid file type. Please upload CSV file only.');
+//       return;
+//     }
+
+//     setUploading(true);
+//     setError(null);
+
+//     const formData = new FormData();
+//     formData.append("file", file);
+
+//     try {
+//       const response = await axios.post(`${baseURL}cos_portal/upload`, formData, {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//         withCredentials: true, 
+//         onUploadProgress: (progressEvent) => {
+//           const percentCompleted = Math.round(
+//             (progressEvent.loaded * 100) / progressEvent.total
+//           );
+//           // You can show progress here if needed
+//         },
+//       });
+
+//       if (response.data.success) {
+//         toast.success(`Successfully processed ${response.data.processedCount} teams!`);
+//         setFileHash(response.data.fileHash);
+//         // Get the correct filename from backend response
+//         const fileName = response.data.fileName || `cos_output_${Date.now()}.csv`;
+//         const downloadUrl = `${baseURL}cos_portal/download/${fileName}`;
+        
+//         // Download the file
+//         const link = document.createElement('a');
+//         link.href = downloadUrl;
+//         link.download = fileName;
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+
+//         // Save to local storage with correct filename
+//         const newFile = {
+//           createdAt: new Date().toLocaleString("en-US", {
+//             timeZone: "Asia/Kolkata",
+//           }),
+//           fileName: fileName,
+//           fileUrl: downloadUrl,
+//           processedCount: response.data.processedCount
+//         };
+
+//         const updatedFiles = [newFile, ...uploadedFiles];
+//         setUploadedFiles(updatedFiles);
+//         localStorage.setItem("cos_uploadedFiles", JSON.stringify(updatedFiles));
+// setFailedFileName(null);
+//         // Refresh dashboard
+//         fetchDashboardData();
+//       }
+//     } catch (err) {
+//       // console.error("Upload error:", err);
+//       if (err.response?.data?.errors) {
+//         const errorMessages = err.response.data.errors;
+//         setError({
+//           title: err.response.data.error || "Validation Errors",
+//           messages: Array.isArray(errorMessages) ? errorMessages : [errorMessages]
+//         });
+//         toast.error(`Validation failed: ${err.response.data.message || 'Please check the errors below'}`);
+//       } else {
+//         setError({
+//           title: "Upload Failed",
+//           messages: [err.response?.data?.message || err.message || "An error occurred during upload"]
+//         });
+//         toast.error(err.response?.data?.message || "Upload failed. Please try again.");
+//       }
+//     } finally {
+//       setUploading(false);
+//       // Reset file input
+//       e.target.value = '';
+//     }
+//   };
 const handleSendReport = async (e) => {
     e.preventDefault();
     if (!reportMessage.trim()) {

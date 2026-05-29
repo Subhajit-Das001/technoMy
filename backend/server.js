@@ -13,7 +13,11 @@ const connectDB = require('./config/db');
 const EventEmitter = require('events');
 const helmet = require('helmet');
 const { globalLimiter } = require('./middleware/auth');
-
+// --- BULL-BOARD DASHBOARD SETUP ---
+const { createBullBoard } = require('@bull-board/api');
+const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
+const { ExpressAdapter } = require('@bull-board/express');
+const {testQueue,csvProcessingQueue} = require("./config/queue")
 // Connect to MongoDB
 connectDB();
 
@@ -47,6 +51,25 @@ if (!fs.existsSync(uploadDir)) {
 
 const app = express();
 
+// ==========================================
+//  Load Redis Workers
+// ==========================================
+require('./workers/testWorker');
+require('./workers/csvWorker');
+
+// Initialize the Express Adapter
+const serverAdapter = new ExpressAdapter();
+serverAdapter.setBasePath('/admin/queues');
+
+// Attach your queues to the board
+createBullBoard({
+  queues: [
+    new BullMQAdapter(testQueue) ,
+    new BullMQAdapter(csvProcessingQueue)
+  ],
+  serverAdapter: serverAdapter,
+});
+app.use('/admin/queues', serverAdapter.getRouter());
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
@@ -135,6 +158,26 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
+
+
+
+//Test- route for Redis 
+app.get('/api/test-redis', async  (req,res)=> {
+  try{
+    const job = await testQueue.add('Test-Job',{ 
+            testMessage: 'Hello from Express!',
+            timestamp: Date.now() 
+        });
+    res.json({ 
+            success: true, 
+            message: 'Job pushed to queue!', 
+            jobId: job.id 
+        });
+  }
+  catch(err){
+    res.status(500).json({error : "Failed to push the job",details : err.message});
+  }
+})
 
 // Start server
 const PORT = process.env.PORT || 4000;
