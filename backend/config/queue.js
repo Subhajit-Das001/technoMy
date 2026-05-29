@@ -2,11 +2,22 @@ const {Queue} = require("bullmq");
 const {Redis} = require("ioredis");
 
 
-const redisConnection = new Redis({
-    host: '127.0.0.1',
-    port: 6379,
-    maxRetriesPerRequest: null // Required by BullMQ
-});
+const redisConfig = {
+  maxRetriesPerRequest: null,
+  enableReadyCheck: false,
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD || undefined,
+};
+if (process.env.NODE_ENV === 'production') {
+  redisConfig.tls = {
+    rejectUnauthorized: false // Often required for managed providers like Render/DigitalOcean
+  };
+}
+
+const redisConnection = process.env.REDIS_URL 
+  ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, tls: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined })
+  : new Redis(redisConfig);
 
 redisConnection.on('connect',()=> console.log("✅ Redis Connected Successfully"));
 redisConnection.on('error',(err)=> console.log('❌ Redis connection error:', err));

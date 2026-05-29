@@ -17,6 +17,7 @@ const { globalLimiter } = require('./middleware/auth');
 const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { ExpressAdapter } = require('@bull-board/express');
+const basicAuth = require('express-basic-auth');
 const {testQueue,csvProcessingQueue} = require("./config/queue")
 // Connect to MongoDB
 connectDB();
@@ -69,7 +70,19 @@ createBullBoard({
   ],
   serverAdapter: serverAdapter,
 });
-app.use('/admin/queues', serverAdapter.getRouter());
+
+//Bull-Dashboard Auth
+const adminAuth = basicAuth({
+  users: {
+    // Fetches credentials securely from your .env file
+    [process.env.BULL_ADMIN_USER]: process.env.BULL_ADMIN_PASS
+  },
+  challenge: true, // Triggers the native browser login popup
+  unauthorizedResponse: 'Unauthorized: Access to the queue dashboard is securely restricted.'
+});
+
+
+app.use('/admin/queues',adminAuth, serverAdapter.getRouter());
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
