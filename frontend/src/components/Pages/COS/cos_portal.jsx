@@ -102,8 +102,7 @@ useEffect(() => {
     }
   };
 
-  // 2. The Telemetry Poller (Checks Redis every 2 seconds)
-  // 2. The Telemetry Poller
+// 2. The Telemetry Poller
   const pollJobStatus = (jobId, originalFileName) => {
     const interval = setInterval(async () => {
       try {
@@ -114,6 +113,10 @@ useEffect(() => {
         const { state, result, failedReason } = res.data;
 
         if (state === 'completed') {
+          // FIX: The Production Race Condition Safety Net. 
+          // If state is completed but result isn't saved yet, wait for the next tick!
+          if (!result) return; 
+
           clearInterval(interval);
           handleUploadSuccess(result); 
           
@@ -125,15 +128,10 @@ useEffect(() => {
           
           let parsedError;
           try { 
-            // FIX: Strip the "Error: " string that BullMQ attaches before parsing
             const cleanReason = failedReason.replace(/^Error:\s*/, '');
             parsedError = JSON.parse(cleanReason); 
-            
-            if (parsedError.fileHash) {
-              setFileHash(parsedError.fileHash);
-            }
+            if (parsedError.fileHash) setFileHash(parsedError.fileHash);
           } catch (e) { 
-            // Fallback if the error wasn't JSON formatted
             parsedError = { message: failedReason }; 
           }
 
@@ -144,34 +142,35 @@ useEffect(() => {
         }
       } catch (err) {
         clearInterval(interval);
-        setUploading(false); // Guarantee UI unlocks on network drop
+        setUploading(false);
         toast.error("Lost connection to server while checking status.");
       }
     }, 2000);
   };
 
-  // 3. Success UI Handler
+  // 3. Success UI Handler (No more backend file paths!)
   const handleUploadSuccess = (data) => {
     toast.success(`Successfully processed ${data.processedCount} teams!`);
-    setFileHash(data.fileHash); // Save hash for the report module
+    setFileHash(data.fileHash);
 
-    const fileName = data.fileName;
-    const downloadUrl = `${baseURL}cos_portal/download/${fileName}`;
+    // 1. Convert the raw text string into a downloadable file in the browser
+    const blob = new Blob([data.csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     
-    // Trigger auto-download
+    // 2. Trigger auto-download instantly
     const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = fileName;
+    link.href = url;
+    link.download = data.fileName || `credentials_${Date.now()}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    // Update state and local storage
+    // 3. Save to localStorage
     const newFile = {
       createdAt: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      fileName: fileName,
-      fileUrl: downloadUrl,
-      processedCount: data.processedCount
+      fileName: data.fileName,
+      processedCount: data.processedCount,
+      csvData: data.csvData // Storing the raw string so users can re-download it later
     };
 
     const updatedFiles = [newFile, ...uploadedFiles];
@@ -182,7 +181,6 @@ useEffect(() => {
     setUploading(false);
     fetchDashboardData();
   };
-
   // 4. Error UI Handler
   // 4. Error UI Handler
   const handleUploadError = (err) => {
@@ -329,13 +327,23 @@ const handleSendReport = async (e) => {
       setSendingReport(false);
     }
   };
-  const handleDownload = (fileUrl, fileName) => {
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = (file) => {
+    // 1. Check if it's a new file with the raw CSV string saved
+    if (file.csvData) {
+      const blob = new Blob([file.csvData], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file.fileName || `credentials_${Date.now()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url); // Clean up browser memory
+    } 
+    // 2. Fallback for old test files that only have the dead backend URL
+    else {
+      toast.error("This is a legacy test file. The data is no longer available on the server. Please upload a fresh CSV.");
+    }
   };
 
   const handleLogout = async () => {
@@ -510,7 +518,7 @@ const handleSendReport = async (e) => {
                       </div>
                     </div>
                     <button
-                      onClick={() => handleDownload(file.fileUrl, file.fileName)}
+                      onClick={() => handleDownload(file)}
                       className="cos_kv_download_button"
                     >
                       Download

@@ -242,7 +242,7 @@ console.log(`\n[WORKER] Picked up Job ID: ${job.id} | Branch: ${branch_id}`);
 
     await job.updateProgress(90);
 
-    // 7. Write Output Credentials File
+    // 7. Generate Output Data
     const outputData = processedData.map(row => {
       const formatOutDate = (d) => `${String(d.getUTCDate()).padStart(2, '0')}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${String(d.getUTCFullYear())}`;
       return {
@@ -254,12 +254,21 @@ console.log(`\n[WORKER] Picked up Job ID: ${job.id} | Branch: ${branch_id}`);
 
     const sanitizedSchoolName = branch.branch_name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase().substring(0, 50);
     const outputFileName = `${sanitizedSchoolName}_credentials_${Date.now()}.csv`;
-    const outputPath = `uploads/cos/${outputFileName}`;
     
+    // Create the raw CSV string
     const csvHeader = Object.keys(outputData[0]).join(',');
     const csvRows = outputData.map(row => Object.values(row).map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
-    await fs.writeFile(outputPath, [csvHeader, ...csvRows].join('\n'));
+    const rawCsvString = [csvHeader, ...csvRows].join('\n');
 
+    await job.updateProgress(100);
+
+    // RETURN THE RAW STRING directly to BullMQ
+    return {
+      processedCount: processedData.length,
+      fileName: outputFileName,
+      fileHash: fileHash,
+      csvData: rawCsvString // <--- NEW: Passing the data directly
+    };
     // // 8. Queue the Emails into the Mail Worker!
     // for (const team of teamsToInsert) {
     //   await emailQueue.add('Send-Credentials', {

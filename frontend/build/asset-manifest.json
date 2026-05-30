@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.d80952a6.css",
-    "main.js": "/static/js/main.0abb93f3.js",
+    "main.css": "/static/css/main.7b122d47.css",
+    "main.js": "/static/js/main.5fff6e1e.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -107,6 +107,7 @@
     "static/media/ac.png": "/static/media/ac.cae665abab473f0fc0a0.png",
     "static/media/iitg2.png": "/static/media/iitg2.3eebdb9cb3be7c56e5e6.png",
     "static/media/arc.png": "/static/media/arc.7a0a9083c322f28bee1d.png",
+    "static/media/readingbook.png": "/static/media/readingbook.75126336150b1595d1fb.png",
     "static/media/Birb.png": "/static/media/Birb.f19781ab5a9227746da4.png",
     "static/media/techno-owl.png": "/static/media/techno-owl.62b161acf6909d78d78d.png",
     "static/media/announcement.png": "/static/media/announcement.6458ec72c326fae7d4fe.png",
@@ -116,16 +117,17 @@
     "static/media/whatsapp.png": "/static/media/whatsapp.c5bd477bd14a788dbc64.png",
     "static/media/Hauts key 22.pdf": "/static/media/Hauts key 22.1b2016b0746399cea867.pdf",
     "static/media/techno_owl_logo.jpg": "/static/media/techno_owl_logo.b3b08b1c7d65c822049c.jpg",
+    "static/media/school.png": "/static/media/school.e3a187223a4407cef519.png",
     "static/media/AboutUs.png": "/static/media/AboutUs.c2a48c5f582fc54bff5b.png",
     "static/media/Juniors Key 21.pdf": "/static/media/Juniors Key 21.75c8b1a1930b3956332c.pdf",
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.d80952a6.css.map": "/static/css/main.d80952a6.css.map",
-    "main.0abb93f3.js.map": "/static/js/main.0abb93f3.js.map"
+    "main.7b122d47.css.map": "/static/css/main.7b122d47.css.map",
+    "main.5fff6e1e.js.map": "/static/js/main.5fff6e1e.js.map"
   },
   "entrypoints": [
-    "static/css/main.d80952a6.css",
-    "static/js/main.0abb93f3.js"
+    "static/css/main.7b122d47.css",
+    "static/js/main.5fff6e1e.js"
   ]
 }

@@ -920,31 +920,31 @@ router.get("/upload/status/:jobId", verifyToken, async (req, res) => {
 });
 
 
-// Download File Route
-router.get("/download/:fileName", verifyToken, (req, res) => {
-  try {
-    const fileName = path.basename(req.params.fileName);
-   const filePath = path.join('uploads', 'cos', fileName);
+// Download File Route -- Not Used Now
+// router.get("/download/:fileName", verifyToken, (req, res) => {
+//   try {
+//     const fileName = path.basename(req.params.fileName);
+//    const filePath = path.join('uploads', 'cos', fileName);
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'File not found' });
-    }
+//     if (!fs.existsSync(filePath)) {
+//       return res.status(404).json({ error: 'File not found' });
+//     }
 
-    res.download(filePath, fileName, (err) => {
-      if (err) {
-        console.error("Download error:", err);
-        if (!res.headersSent) {
-  res.status(500).json({
-    error: 'Error downloading file'
-  });
-}
-      }
-    });
-  } catch (err) {
-    console.error("Download error:", err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+//     res.download(filePath, fileName, (err) => {
+//       if (err) {
+//         console.error("Download error:", err);
+//         if (!res.headersSent) {
+//   res.status(500).json({
+//     error: 'Error downloading file'
+//   });
+// }
+//       }
+//     });
+//   } catch (err) {
+//     console.error("Download error:", err);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
 
 // Logout Route
 router.get('/logout', (req, res) => {
