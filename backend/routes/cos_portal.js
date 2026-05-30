@@ -22,6 +22,13 @@ const CosSchool = require("../models/cos_school");
 const CosBranch = require("../models/cos_branch");
 const CosStudent = require("../models/cos_student");
 const CosReport = require("../models/cos_report");
+const { csvProcessingQueue, redisConnection } = require("../config/queue");
+
+const rateLimit = require("express-rate-limit");
+
+
+
+
 // Helper function to format Date to DDMMYYYY (for password)
 // ================= DATE =================
 const parseDate = (value) => {
@@ -132,6 +139,14 @@ const verifyToken = (req, res, next) => {
     next();
   });
 }; 
+
+
+// Optional API Rate Limiter (Max 10 uploads per hour per IP)
+const uploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, 
+  max: 10,
+  message: { error: "Too many uploads from this IP, please try again after an hour." }
+});
 
 //COS-REPORTS
 router.post('/report', verifyToken, async (req, res) => {
@@ -495,354 +510,385 @@ router.post('/cos-payment', async (req, res) => {
 });
 
 // File Upload Route
-router.post("/upload", verifyToken, upload.single('file'), async (req, res) => {
+router.post("/upload", verifyToken, uploadLimiter,upload.single('file'), async (req, res) => {
+  console.log("📍 1. Request hit the /upload route!");
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const fileBuffer = fs.readFileSync(req.file.path);
+//     const fileBuffer = fs.readFileSync(req.file.path);
 
-const fileHash = crypto
-  .createHash("sha256")
-  .update(fileBuffer)
-  .digest("hex");
+// const fileHash = crypto
+//   .createHash("sha256")
+//   .update(fileBuffer)
+//   .digest("hex");
 
-// Check duplicate upload
-const existingFile = await UploadedFileHash.findOne({ hash: fileHash });
+// // Check duplicate upload
+// const existingFile = await UploadedFileHash.findOne({ hash: fileHash });
 
-if (existingFile) {
-  fs.unlinkSync(req.file.path);
+// if (existingFile) {
+//   fs.unlinkSync(req.file.path);
 
-  return res.status(400).json({
-    error: "Duplicate file upload",
-    message: "This file has already been processed."
-  });
-}
-    // ===============================================
-    const { school_id, branch_id } = req.user;
-    const branch = await CosBranch.findOne({ branch_id });
-
-    if (!branch) {
-      return res.status(404).json({ error: 'Branch not found' });
-    }
+//   return res.status(400).json({
+//     error: "Duplicate file upload",
+//     message: "This file has already been processed."
+//   });
+// }
+const { school_id, branch_id } = req.user;
+// ===============================================
+console.log(`📍 Attempting to lock branch: ${branch_id}`)
+    const lockKey = `upload_lock:${branch_id}`;
+    const acquiredLock = await redisConnection.set(lockKey, 'true', 'NX', 'EX', 600);
     
-    let jsonArray;
-    
-    // Parse file based on extension
-    if (req.file.originalname.endsWith('.xlsx')) {
-      const workbook = XLSX.readFile(req.file.path);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      jsonArray = XLSX.utils.sheet_to_json(worksheet);
-    } else {
-      jsonArray = await csv().fromFile(req.file.path);
-    }
-
-    // Validate columns - check only for required columns
-    const fileColumns = Object.keys(jsonArray[0] || {});
-    const missingColumns = REQUIRED_COLUMNS.filter(col => !fileColumns.includes(col));
-
-    if (missingColumns.length > 0) {
-      fs.unlinkSync(req.file.path);
-      return res.status(400).json({
-        error: 'Column validation failed',
-        message: `Missing required columns: ${missingColumns.join(', ')}`,
-        details: {
-          missingColumns: missingColumns,
-          foundColumns: fileColumns,
-          requiredColumns: REQUIRED_COLUMNS
-        }
-      });
-    }
- 
-    // Extra columns are ignored - we only care that required columns exist
-    // This allows schools to add serial numbers, notes, or leave blank columns
-
-    // Process and validate data
-    const processedData = [];
-    const errors = [];
-    const teamsToInsert = [];
-
-    for (let i = 0; i < jsonArray.length; i++) {
-      const row = jsonArray[i];
-      const rowNum = i + 2; // +2 because row 1 is header, and arrays are 0-indexed
-
-      // Check for line breaks in any field
-      let hasLineBreak = false;
-      for (const key in row) {
-        if (row[key] && typeof row[key] === 'string' && (row[key].includes('\n') || row[key].includes('\r'))) {
-          errors.push(`Row ${rowNum}: Line breaks are not allowed in field '${key}'`);
-          hasLineBreak = true;
-          break;
-        }
-      }
-      if (hasLineBreak) continue;
-
-      // Fill missing email/contact from partner
-      if (!row.email1 && row.email2) row.email1 = row.email2;
-      if (!row.email2 && row.email1) row.email2 = row.email1;
-      if (!row.contact1 && row.contact2) row.contact1 = row.contact2;
-      if (!row.contact2 && row.contact1) row.contact2 = row.contact1;
-
-      // Validate required fields
-      const requiredFields = ['name1', 'dob1', 'email1', 'contact1', 'class1', 
-                              'name2', 'dob2', 'email2', 'contact2', 'class2', 
-                              'squad', 'language'];
-      const missingFields = requiredFields.filter(field => !row[field] || row[field].toString().trim() === '');
-
-      if (missingFields.length > 0) {
-        errors.push(`Row ${rowNum}: Missing required fields: ${missingFields.join(', ')}`);
-        continue;
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(row.email1)) {
-        errors.push(`Row ${rowNum}: Invalid email format for email1: ${row.email1}`);
-        continue;
-      }
-      if (!emailRegex.test(row.email2)) {
-        errors.push(`Row ${rowNum}: Invalid email format for email2: ${row.email2}`);
-        continue;
-      }
- 
-      // Validate contact (should be 10 digits)
-      if (row.contact1 && !/^\d{10}$/.test(row.contact1.toString().replace(/\D/g, ''))) {
-        errors.push(`Row ${rowNum}: Invalid contact1 format (must be 10 digits): ${row.contact1}`);
-        continue;
-      }
-      if (row.contact2 && !/^\d{10}$/.test(row.contact2.toString().replace(/\D/g, ''))) {
-        errors.push(`Row ${rowNum}: Invalid contact2 format (must be 10 digits): ${row.contact2}`);
-        continue;
-      }
-
-      // Validate squad
-      if (!['Juniors', 'Hauts'].includes(row.squad)) {
-        errors.push(`Row ${rowNum}: Invalid squad value. Must be 'Juniors' or 'Hauts'`);
-        continue;
-      }
-
-      // Validate language
-      if (!['English', 'Hindi'].includes(row.language)) {
-        errors.push(`Row ${rowNum}: Invalid language value. Must be 'English' or 'Hindi'`);
-        continue;
-      }
-
-      // Validate city exists in cityToID
-      if (!cityToID[branch.city]) {
-        errors.push(`Row ${rowNum}: City '${branch.city}' not found in system. Please contact administrator.`);
-        continue;
-      }
-
-      // Parse dates - handle DD/MM/YY or DD/MM/YYYY format
-      let dob1, dob2;
-      try {
-        dob1 = parseDate(row.dob1);
-        if (!dob1 || isNaN(dob1.getTime())) {
-          errors.push(`Row ${rowNum}: Invalid date format for dob1: ${row.dob1}. Expected format: DD/MM/YYYY or Excel date`);
-          continue;
-        }
-      } catch (e) {
-        errors.push(`Row ${rowNum}: Invalid date format for dob1: ${row.dob1}. Expected format: DD/MM/YYYY or Excel date`);
-        continue;
-      }
-
-      try {
-        dob2 = parseDate(row.dob2);
-        if (!dob2 || isNaN(dob2.getTime())) {
-          errors.push(`Row ${rowNum}: Invalid date format for dob2: ${row.dob2}. Expected format: DD/MM/YYYY or Excel date`);
-          continue;
-        }
-      } catch (e) {
-        errors.push(`Row ${rowNum}: Invalid date format for dob2: ${row.dob2}. Expected format: DD/MM/YYYY or Excel date`);
-        continue;
-      }
-
-      // Increment Student Count for the city (for roll number generation)
-      const cityID = cityToID[branch.city];
-      const cityInfo = await CityStudentCount.findOneAndUpdate(
-        { cityID },
-        { $set: { city: branch.city }, $inc: { studentCount: 1 } },
-        { new: true, upsert: true }
-      );
-
-      // Generate roll number and password
-      const rollNumber = generateRollNumber(row.squad, row.language, branch.city, cityInfo.studentCount);
-      
-      // Generate password as dob1dob2 (DDMMYY format for each)
-      const pass1 = formatDateForPassword(dob1);
-      const pass2 = formatDateForPassword(dob2);
-      const generatedPassword = `${pass1}${pass2}`;
-
-      // Prepare data for database
-      const teamData = {
-        name1: row.name1.toString().trim(),
-        dob1: dob1,
-        email1: row.email1.toString().trim().toLowerCase(),
-        contact1: row.contact1.toString().replace(/\D/g, ''),
-        school1: branch.branch_name,
-        class1: row.class1.toString().trim(),
-        name2: row.name2.toString().trim(),
-        dob2: dob2,
-        email2: row.email2.toString().trim().toLowerCase(),
-        contact2: row.contact2.toString().replace(/\D/g, ''),
-        school2:branch.branch_name,
-        class2: row.class2.toString().trim(),
-        squad: row.squad,
-        language: row.language,
-        mode: 'online',
-        country: 'India',
-        state: branch.state,
-        city: branch.city,
-        zone: branch.zone,
-        view: 'School',
-        rollNumber: rollNumber,
-        password: generatedPassword,
-        school_id: branch.school_id,
-        branch_id: branch.branch_id,
-        csv_hash_id: fileHash,
-        isPaid: false
-      };
-
-      // Save to database
-      teamsToInsert.push(teamData);
-
-  processedData.push({
-  ...row,
-  rollNumber: rollNumber,
-  password: generatedPassword
-});
-    }
-
-    // If there are errors, return them
-    if (errors.length > 0) {
-      fs.unlinkSync(req.file.path);
-      return res.status(400).json({
-        error: 'Validation errors found',
-        errors: errors,
-        processedCount: processedData.length
-      });
-    }
-    // Generate hash only after validation succeeds
-
-
-    try {
-  await CosStudent.insertMany(teamsToInsert, {
-    ordered: true
-  });
-} catch (dbError) {
-  fs.unlinkSync(req.file.path);
-
-  return res.status(500).json({
-    error: "Database insertion failed",
-    message: dbError.message
-  });
-}
-
-
-
-    await UploadedFileHash.create({
-      hash: fileHash,
-      fileName: req.file.originalname,
-      uploadedBy: branch_id || "cos_portal"
+    // if (!acquiredLock) {
+    //   fs.unlinkSync(req.file.path); // Clean up the newly uploaded file
+    //   return res.status(429).json({ 
+    //     error: 'Upload in progress', 
+    //     message: 'Your previous CSV is still processing. Please wait.' 
+    //   });
+    // }
+    // Push all heavy data processing to the BullMQ Worker
+    console.log("📍 Lock acquired. Pushing to BullMQ...");
+    const job = await csvProcessingQueue.add('CSV-Job', {
+      school_id,
+      branch_id,
+      originalName: req.file.originalname,
+      filePath: req.file.path
     });
-
-
-
-    // Update school statistics
-    const juniorCount = processedData.filter(d => d.squad === 'Juniors').length;
-    const hautsCount = processedData.filter(d => d.squad === 'Hauts').length;
-
-    await CosBranch.findByIdAndUpdate(branch._id, {
-      $inc: { 
-        total_students_count: processedData.length * 2,
-        juniors_count: juniorCount,
-        hauts_count: hautsCount,
-        csv_count: 1
-      },
-      $push: { csv_submission_time: new Date() }
-    });
-    await CosSchool.findOneAndUpdate({ school_id: school_id }, {
-      $inc: { 
-        total_students_count: processedData.length * 2,
-        juniors_count: juniorCount,
-        hauts_count: hautsCount,
-        csv_count: 1
-      }
-    });
-
-
-    // Create output CSV with roll numbers and passwords
-    const outputData = processedData.map(row => {
-      // Format dates for CSV output as DD/MM/YYYY
-      const formatDate = (dateValue) => {
-        if (!dateValue) return '';
-        const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
-        if (isNaN(date.getTime())) return dateValue;
-        
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const year = String(date.getUTCFullYear());
-        
-        return `${day}/${month}/${year}`; // DD/MM/YYYY format
-      };
-
-      return {
-        name1: row.name1 || '',
-        dob1: formatDate(row.dob1),
-        email1: row.email1 || '',
-        contact1: row.contact1 || '',
-        class1: row.class1 || '',
-        name2: row.name2 || '',
-        dob2: formatDate(row.dob2),
-        email2: row.email2 || '',
-        contact2: row.contact2 || '',
-        class2: row.class2 || '',
-        squad: row.squad || '',
-        language: row.language || '',
-        rollNumber: row.rollNumber || '',
-        password: `="${row.password || ''}"`
-      };
-    });
-
-    // Generate output file name: school_submission_date
-    const submissionDate = new Date();
-    // Format date as YYYYMMDD
-    const dateStr = submissionDate.toISOString().split('T')[0].replace(/-/g, '');
-    // Sanitize school name for filename (remove special characters, spaces, etc.)
-    const sanitizedSchoolName = branch.branch_name
-      .replace(/[^a-zA-Z0-9]/g, '_')
-      .replace(/_+/g, '_')
-      .toLowerCase()
-      .substring(0, 50); // Limit length
-    const timestamp = Date.now();
-    const outputFileName = `${sanitizedSchoolName}_credentials_${timestamp}.csv`;
-    const outputPath = `uploads/cos/${outputFileName}`;
-    
-    // Convert to CSV
-    const csvHeader = Object.keys(outputData[0]).join(',');
-    const csvRows = outputData.map(row =>
-  Object.values(row)
-    .map(val => `"${String(val).replace(/"/g, '""')}"`)
-    .join(',')
-);
-    const csvContent = [csvHeader, ...csvRows].join('\n');
-    
-    fs.writeFileSync(outputPath, csvContent);
-
-    // Clean up uploaded file
-    fs.unlinkSync(req.file.path);
-
-    // Return success with file download URL
-    return res.json({
+    console.log(`✅  SUCCESS! Job pushed to Redis with ID: ${job.id}`);
+    return res.status(202).json({
       success: true,
-      message: `Successfully processed ${processedData.length} teams`,
-      processedCount: processedData.length,
-      fileUrl: `/api/cos_portal/download/${outputFileName}`,
-      fileName: outputFileName,
-      fileHash: fileHash,
-      filehash: fileHash
+      message: "File queued for processing.",
+      jobId: job.id
     });
+
+
+
+
+
+//     const branch = await CosBranch.findOne({ branch_id });
+
+//     if (!branch) {
+//       return res.status(404).json({ error: 'Branch not found' });
+//     }
+    
+//     let jsonArray;
+    
+//     // Parse file based on extension
+//     if (req.file.originalname.endsWith('.xlsx')) {
+//       const workbook = XLSX.readFile(req.file.path);
+//       const sheetName = workbook.SheetNames[0];
+//       const worksheet = workbook.Sheets[sheetName];
+//       jsonArray = XLSX.utils.sheet_to_json(worksheet);
+//     } else {
+//       jsonArray = await csv().fromFile(req.file.path);
+//     }
+
+//     // Validate columns - check only for required columns
+//     const fileColumns = Object.keys(jsonArray[0] || {});
+//     const missingColumns = REQUIRED_COLUMNS.filter(col => !fileColumns.includes(col));
+
+//     if (missingColumns.length > 0) {
+//       fs.unlinkSync(req.file.path);
+//       return res.status(400).json({
+//         error: 'Column validation failed',
+//         message: `Missing required columns: ${missingColumns.join(', ')}`,
+//         details: {
+//           missingColumns: missingColumns,
+//           foundColumns: fileColumns,
+//           requiredColumns: REQUIRED_COLUMNS
+//         }
+//       });
+//     }
+ 
+//     // Extra columns are ignored - we only care that required columns exist
+//     // This allows schools to add serial numbers, notes, or leave blank columns
+
+//     // Process and validate data
+//     const processedData = [];
+//     const errors = [];
+//     const teamsToInsert = [];
+
+//     for (let i = 0; i < jsonArray.length; i++) {
+//       const row = jsonArray[i];
+//       const rowNum = i + 2; // +2 because row 1 is header, and arrays are 0-indexed
+
+//       // Check for line breaks in any field
+//       let hasLineBreak = false;
+//       for (const key in row) {
+//         if (row[key] && typeof row[key] === 'string' && (row[key].includes('\n') || row[key].includes('\r'))) {
+//           errors.push(`Row ${rowNum}: Line breaks are not allowed in field '${key}'`);
+//           hasLineBreak = true;
+//           break;
+//         }
+//       }
+//       if (hasLineBreak) continue;
+
+//       // Fill missing email/contact from partner
+//       if (!row.email1 && row.email2) row.email1 = row.email2;
+//       if (!row.email2 && row.email1) row.email2 = row.email1;
+//       if (!row.contact1 && row.contact2) row.contact1 = row.contact2;
+//       if (!row.contact2 && row.contact1) row.contact2 = row.contact1;
+
+//       // Validate required fields
+//       const requiredFields = ['name1', 'dob1', 'email1', 'contact1', 'class1', 
+//                               'name2', 'dob2', 'email2', 'contact2', 'class2', 
+//                               'squad', 'language'];
+//       const missingFields = requiredFields.filter(field => !row[field] || row[field].toString().trim() === '');
+
+//       if (missingFields.length > 0) {
+//         errors.push(`Row ${rowNum}: Missing required fields: ${missingFields.join(', ')}`);
+//         continue;
+//       }
+
+//       // Validate email format
+//       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//       if (!emailRegex.test(row.email1)) {
+//         errors.push(`Row ${rowNum}: Invalid email format for email1: ${row.email1}`);
+//         continue;
+//       }
+//       if (!emailRegex.test(row.email2)) {
+//         errors.push(`Row ${rowNum}: Invalid email format for email2: ${row.email2}`);
+//         continue;
+//       }
+ 
+//       // Validate contact (should be 10 digits)
+//       if (row.contact1 && !/^\d{10}$/.test(row.contact1.toString().replace(/\D/g, ''))) {
+//         errors.push(`Row ${rowNum}: Invalid contact1 format (must be 10 digits): ${row.contact1}`);
+//         continue;
+//       }
+//       if (row.contact2 && !/^\d{10}$/.test(row.contact2.toString().replace(/\D/g, ''))) {
+//         errors.push(`Row ${rowNum}: Invalid contact2 format (must be 10 digits): ${row.contact2}`);
+//         continue;
+//       }
+
+//       // Validate squad
+//       if (!['Juniors', 'Hauts'].includes(row.squad)) {
+//         errors.push(`Row ${rowNum}: Invalid squad value. Must be 'Juniors' or 'Hauts'`);
+//         continue;
+//       }
+
+//       // Validate language
+//       if (!['English', 'Hindi'].includes(row.language)) {
+//         errors.push(`Row ${rowNum}: Invalid language value. Must be 'English' or 'Hindi'`);
+//         continue;
+//       }
+
+//       // Validate city exists in cityToID
+//       if (!cityToID[branch.city]) {
+//         errors.push(`Row ${rowNum}: City '${branch.city}' not found in system. Please contact administrator.`);
+//         continue;
+//       }
+
+//       // Parse dates - handle DD/MM/YY or DD/MM/YYYY format
+//       let dob1, dob2;
+//       try {
+//         dob1 = parseDate(row.dob1);
+//         if (!dob1 || isNaN(dob1.getTime())) {
+//           errors.push(`Row ${rowNum}: Invalid date format for dob1: ${row.dob1}. Expected format: DD/MM/YYYY or Excel date`);
+//           continue;
+//         }
+//       } catch (e) {
+//         errors.push(`Row ${rowNum}: Invalid date format for dob1: ${row.dob1}. Expected format: DD/MM/YYYY or Excel date`);
+//         continue;
+//       }
+
+//       try {
+//         dob2 = parseDate(row.dob2);
+//         if (!dob2 || isNaN(dob2.getTime())) {
+//           errors.push(`Row ${rowNum}: Invalid date format for dob2: ${row.dob2}. Expected format: DD/MM/YYYY or Excel date`);
+//           continue;
+//         }
+//       } catch (e) {
+//         errors.push(`Row ${rowNum}: Invalid date format for dob2: ${row.dob2}. Expected format: DD/MM/YYYY or Excel date`);
+//         continue;
+//       }
+
+//       // Increment Student Count for the city (for roll number generation)
+//       const cityID = cityToID[branch.city];
+//       const cityInfo = await CityStudentCount.findOneAndUpdate(
+//         { cityID },
+//         { $set: { city: branch.city }, $inc: { studentCount: 1 } },
+//         { new: true, upsert: true }
+//       );
+
+//       // Generate roll number and password
+//       const rollNumber = generateRollNumber(row.squad, row.language, branch.city, cityInfo.studentCount);
+      
+//       // Generate password as dob1dob2 (DDMMYY format for each)
+//       const pass1 = formatDateForPassword(dob1);
+//       const pass2 = formatDateForPassword(dob2);
+//       const generatedPassword = `${pass1}${pass2}`;
+
+//       // Prepare data for database
+//       const teamData = {
+//         name1: row.name1.toString().trim(),
+//         dob1: dob1,
+//         email1: row.email1.toString().trim().toLowerCase(),
+//         contact1: row.contact1.toString().replace(/\D/g, ''),
+//         school1: branch.branch_name,
+//         class1: row.class1.toString().trim(),
+//         name2: row.name2.toString().trim(),
+//         dob2: dob2,
+//         email2: row.email2.toString().trim().toLowerCase(),
+//         contact2: row.contact2.toString().replace(/\D/g, ''),
+//         school2:branch.branch_name,
+//         class2: row.class2.toString().trim(),
+//         squad: row.squad,
+//         language: row.language,
+//         mode: 'online',
+//         country: 'India',
+//         state: branch.state,
+//         city: branch.city,
+//         zone: branch.zone,
+//         view: 'School',
+//         rollNumber: rollNumber,
+//         password: generatedPassword,
+//         school_id: branch.school_id,
+//         branch_id: branch.branch_id,
+//         csv_hash_id: fileHash,
+//         isPaid: false
+//       };
+
+//       // Save to database
+//       teamsToInsert.push(teamData);
+
+//   processedData.push({
+//   ...row,
+//   rollNumber: rollNumber,
+//   password: generatedPassword
+// });
+//     }
+
+//     // If there are errors, return them
+//     if (errors.length > 0) {
+//       fs.unlinkSync(req.file.path);
+//       return res.status(400).json({
+//         error: 'Validation errors found',
+//         errors: errors,
+//         processedCount: processedData.length
+//       });
+//     }
+//     // Generate hash only after validation succeeds
+
+
+//     try {
+//   await CosStudent.insertMany(teamsToInsert, {
+//     ordered: true
+//   });
+// } catch (dbError) {
+//   fs.unlinkSync(req.file.path);
+
+//   return res.status(500).json({
+//     error: "Database insertion failed",
+//     message: dbError.message
+//   });
+// }
+
+
+
+//     await UploadedFileHash.create({
+//       hash: fileHash,
+//       fileName: req.file.originalname,
+//       uploadedBy: branch_id || "cos_portal"
+//     });
+
+
+
+//     // Update school statistics
+//     const juniorCount = processedData.filter(d => d.squad === 'Juniors').length;
+//     const hautsCount = processedData.filter(d => d.squad === 'Hauts').length;
+
+//     await CosBranch.findByIdAndUpdate(branch._id, {
+//       $inc: { 
+//         total_students_count: processedData.length * 2,
+//         juniors_count: juniorCount,
+//         hauts_count: hautsCount,
+//         csv_count: 1
+//       },
+//       $push: { csv_submission_time: new Date() }
+//     });
+//     await CosSchool.findOneAndUpdate({ school_id: school_id }, {
+//       $inc: { 
+//         total_students_count: processedData.length * 2,
+//         juniors_count: juniorCount,
+//         hauts_count: hautsCount,
+//         csv_count: 1
+//       }
+//     });
+
+
+//     // Create output CSV with roll numbers and passwords
+//     const outputData = processedData.map(row => {
+//       // Format dates for CSV output as DD/MM/YYYY
+//       const formatDate = (dateValue) => {
+//         if (!dateValue) return '';
+//         const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+//         if (isNaN(date.getTime())) return dateValue;
+        
+//         const day = String(date.getUTCDate()).padStart(2, '0');
+//         const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+//         const year = String(date.getUTCFullYear());
+        
+//         return `${day}/${month}/${year}`; // DD/MM/YYYY format
+//       };
+
+//       return {
+//         name1: row.name1 || '',
+//         dob1: formatDate(row.dob1),
+//         email1: row.email1 || '',
+//         contact1: row.contact1 || '',
+//         class1: row.class1 || '',
+//         name2: row.name2 || '',
+//         dob2: formatDate(row.dob2),
+//         email2: row.email2 || '',
+//         contact2: row.contact2 || '',
+//         class2: row.class2 || '',
+//         squad: row.squad || '',
+//         language: row.language || '',
+//         rollNumber: row.rollNumber || '',
+//         password: `="${row.password || ''}"`
+//       };
+//     });
+
+//     // Generate output file name: school_submission_date
+//     const submissionDate = new Date();
+//     // Format date as YYYYMMDD
+//     const dateStr = submissionDate.toISOString().split('T')[0].replace(/-/g, '');
+//     // Sanitize school name for filename (remove special characters, spaces, etc.)
+//     const sanitizedSchoolName = branch.branch_name
+//       .replace(/[^a-zA-Z0-9]/g, '_')
+//       .replace(/_+/g, '_')
+//       .toLowerCase()
+//       .substring(0, 50); // Limit length
+//     const timestamp = Date.now();
+//     const outputFileName = `${sanitizedSchoolName}_credentials_${timestamp}.csv`;
+//     const outputPath = `uploads/cos/${outputFileName}`;
+    
+//     // Convert to CSV
+//     const csvHeader = Object.keys(outputData[0]).join(',');
+//     const csvRows = outputData.map(row =>
+//   Object.values(row)
+//     .map(val => `"${String(val).replace(/"/g, '""')}"`)
+//     .join(',')
+// );
+//     const csvContent = [csvHeader, ...csvRows].join('\n');
+    
+//     fs.writeFileSync(outputPath, csvContent);
+
+//     // Clean up uploaded file
+//     fs.unlinkSync(req.file.path);
+
+//     // Return success with file download URL
+//     return res.json({
+//       success: true,
+//       message: `Successfully processed ${processedData.length} teams`,
+//       processedCount: processedData.length,
+//       fileUrl: `/api/cos_portal/download/${outputFileName}`,
+//       fileName: outputFileName,
+//       fileHash: fileHash,
+//       filehash: fileHash
+//     });
 
   } catch (err) {
     console.error("Upload error:", err);
@@ -855,6 +901,24 @@ if (existingFile) {
     });
   }
 });
+
+// 2. The Telemetry Route (For React Polling)
+router.get("/upload/status/:jobId", verifyToken, async (req, res) => {
+  try {
+    const job = await csvProcessingQueue.getJob(req.params.jobId);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+
+    const state = await job.getState();
+    const progress = job.progress;
+    const result = job.returnvalue;
+    const failedReason = job.failedReason;
+
+    res.json({ state, progress, result, failedReason });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch job status" });
+  }
+});
+
 
 // Download File Route
 router.get("/download/:fileName", verifyToken, (req, res) => {

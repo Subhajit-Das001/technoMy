@@ -28,10 +28,11 @@ const cosStudentsSchema = new mongoose.Schema({
     // --- Logistics & Linking ---
     school_id: { type: String, ref: 'cos_school', required: true },
     branch_id: { type: String, ref: 'cos_branch', required: true },
-    csv_hash_id: { type: String },
-    centre: { type: String },
-    rank: { type: Number },
+    csv_hash_id: { type: String, required:  true },
+    centre: { type: String,default: 'NA' },
+    rank: { type: Number ,default: 'NA'},
     isPaid: {type : Boolean, default : false},
+    mailSent: {type : Boolean, default : false},
 
      createdAt: {
             type: Date,
