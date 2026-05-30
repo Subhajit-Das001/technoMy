@@ -60,7 +60,7 @@ require('./workers/csvWorker');
 
 // Initialize the Express Adapter
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/admin/queues');
+serverAdapter.setBasePath('/api/admin/queues');
 
 // Attach your queues to the board
 createBullBoard({
@@ -82,7 +82,7 @@ const adminAuth = basicAuth({
 });
 
 
-app.use('/admin/queues',adminAuth, serverAdapter.getRouter());
+app.use('/api/admin/queues',adminAuth, serverAdapter.getRouter());
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
