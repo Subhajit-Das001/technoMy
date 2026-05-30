@@ -9,14 +9,8 @@ const redisConfig = {
   port: process.env.REDIS_PORT || 6379,
   password: process.env.REDIS_PASSWORD || undefined,
 };
-if (process.env.NODE_ENV === 'production') {
-  redisConfig.tls = {
-    rejectUnauthorized: false // Often required for managed providers like Render/DigitalOcean
-  };
-}
-
 const redisConnection = process.env.REDIS_URL 
-  ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, tls: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined })
+  ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null, tls: process.env.REDIS_URL.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined })
   : new Redis(redisConfig);
 
 redisConnection.on('connect',()=> console.log("✅ Redis Connected Successfully"));
