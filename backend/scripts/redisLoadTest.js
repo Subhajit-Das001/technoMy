@@ -3,7 +3,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 
 const API_URL = 'http://localhost:3001/api/cos_portal/upload'; 
-const COOKIE = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY2hvb2xfaWQiOiJJSVRHXzAwMSIsImJyYW5jaF9pZCI6IklJVEdfMDAxNzIxMiIsInNvdXJjZSI6IkNPUyIsImlhdCI6MTc4MDA4MjQ4NCwiZXhwIjoxNzgwMTA3Njg0fQ.4kivFOuOQceTuvUIgkVNwQdshd_E1r_7zcSx89LM_rI'; // <--- PASTE TOKEN HERE
+const COOKIE = 'token='; // <--- PASTE TOKEN HERE
 const NUM_REQUESTS = 998; // We will fire 10 concurrent uploads
 
 // Helper: Generates a unique CSV so the file hash check passes

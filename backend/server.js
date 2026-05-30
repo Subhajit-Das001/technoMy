@@ -60,7 +60,7 @@ require('./workers/csvWorker');
 
 // Initialize the Express Adapter
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/admin/queues');
+serverAdapter.setBasePath('/api/admin/queues');
 
 // Attach your queues to the board
 createBullBoard({

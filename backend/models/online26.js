@@ -53,7 +53,7 @@ const OnlineteamModel = new mongoose.Schema(
         },
 
         // --- Status ---
-        // Rank: { type: String, default: 'NA' },
+        Rank: { type: String, default: 'NA' },
         isPaid: { type: Boolean, default: false },
 
         createdAt: {

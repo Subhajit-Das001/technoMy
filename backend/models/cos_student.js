@@ -30,7 +30,7 @@ const cosStudentsSchema = new mongoose.Schema({
     branch_id: { type: String, ref: 'cos_branch', required: true },
     csv_hash_id: { type: String, required:  true },
     centre: { type: String,default: 'NA' },
-    rank: { type: Number ,default: 'NA'},
+    rank: { type: String ,default: 'NA'},
     isPaid: {type : Boolean, default : false},
     mailSent: {type : Boolean, default : false},
 
