@@ -82,7 +82,7 @@ const adminAuth = basicAuth({
 });
 
 
-app.use('/admin/queues', adminAuth, serverAdapter.getRouter());
+app.use('/api/admin/queues', adminAuth, serverAdapter.getRouter());
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
