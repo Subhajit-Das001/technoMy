@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 
 // Load environment variables
-dotenv.config(); 
+dotenv.config();
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const fs = require('fs');
@@ -18,7 +18,7 @@ const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { ExpressAdapter } = require('@bull-board/express');
 const basicAuth = require('express-basic-auth');
-const {testQueue,csvProcessingQueue} = require("./config/queue")
+const { testQueue, csvProcessingQueue } = require("./config/queue")
 // Connect to MongoDB
 connectDB();
 
@@ -65,7 +65,7 @@ serverAdapter.setBasePath('/admin/queues');
 // Attach your queues to the board
 createBullBoard({
   queues: [
-    new BullMQAdapter(testQueue) ,
+    new BullMQAdapter(testQueue),
     new BullMQAdapter(csvProcessingQueue)
   ],
   serverAdapter: serverAdapter,
@@ -82,7 +82,7 @@ const adminAuth = basicAuth({
 });
 
 
-app.use('/admin/queues',adminAuth, serverAdapter.getRouter());
+app.use('/admin/queues', adminAuth, serverAdapter.getRouter());
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
@@ -163,32 +163,32 @@ app.use('/api/offlineReg', offlineRegUpload);
 
 // Root route
 app.get('/health', (req, res) => {
-    res.send("Hello from Technothlon Server");
+  res.send("Hello from Technothlon Server");
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 
 
 //Test- route for Redis 
-app.get('/api/test-redis', async  (req,res)=> {
-  try{
-    const job = await testQueue.add('Test-Job',{ 
-            testMessage: 'Hello from Express!',
-            timestamp: Date.now() 
-        });
-    res.json({ 
-            success: true, 
-            message: 'Job pushed to queue!', 
-            jobId: job.id 
-        });
+app.get('/api/test-redis', async (req, res) => {
+  try {
+    const job = await testQueue.add('Test-Job', {
+      testMessage: 'Hello from Express!',
+      timestamp: Date.now()
+    });
+    res.json({
+      success: true,
+      message: 'Job pushed to queue!',
+      jobId: job.id
+    });
   }
-  catch(err){
-    res.status(500).json({error : "Failed to push the job",details : err.message});
+  catch (err) {
+    res.status(500).json({ error: "Failed to push the job", details: err.message });
   }
 })
 
