@@ -154,16 +154,15 @@ useEffect(() => {
     setFileHash(data.fileHash);
 
     // 1. Convert the raw text string into a downloadable file in the browser
-    const blob = new Blob([data.csvData], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
+    const encodedUri = `data:text/csv;charset=utf-8,${encodeURIComponent(data.csvData)}`;
     // 2. Trigger auto-download instantly
     const link = document.createElement('a');
-    link.href = url;
+    link.href = encodedUri;
     link.download = data.fileName || `credentials_${Date.now()}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
 
     // 3. Save to localStorage
     const newFile = {
@@ -328,21 +327,21 @@ const handleSendReport = async (e) => {
     }
   };
   const handleDownload = (file) => {
-    // 1. Check if it's a new file with the raw CSV string saved
     if (file.csvData) {
-      const blob = new Blob([file.csvData], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
+      // Use the synchronous Data URI method
+      const encodedUri = `data:text/csv;charset=utf-8,${encodeURIComponent(file.csvData)}`;
       const link = document.createElement('a');
-      link.href = url;
+      link.href = encodedUri;
       link.download = file.fileName || `credentials_${Date.now()}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url); // Clean up browser memory
     } 
-    // 2. Fallback for old test files that only have the dead backend URL
-    else {
-      toast.error("This is a legacy test file. The data is no longer available on the server. Please upload a fresh CSV.");
+    else if (file.fileUrl) {
+      // Fallback for files uploaded BEFORE our update
+      window.open(file.fileUrl, '_blank');
+    } else {
+      toast.error("File data is no longer available. Contact Administrator for re-sharing credentials.");
     }
   };
 
