@@ -546,7 +546,7 @@ const handleSendReport = async (e) => {
                   <strong>Unique Files:</strong> Ensure no two CSV files uploaded have the identical file name.
                 </li> */}
                 <li>
-                  <strong>Required Fields:</strong> The file must contain exactly <strong>14</strong> fields with case-sensitive titles.
+                  <strong>Required Fields:</strong> The file must contain exactly <strong>12</strong> fields with case-sensitive titles.
                 </li>
                 <li>
                   <strong>Column Headers:</strong> Use exactly these titles in row 1:

@@ -38,7 +38,7 @@ const feedbackLimiter = rateLimit({
 
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 15, 
+    max: 10, 
     message: { message: 'Too many auth attempts. Please try again after 15 minutes.' },
     standardHeaders: true,
     legacyHeaders: false,
@@ -60,6 +60,21 @@ const feedbackSchema = joi.object({
     feedbackType: joi.string().valid('bug', 'suggestion', 'other', 'technical', 'contest').required(),
     feedbackContent: joi.string().max(2000).required()
 });
+const cos_loginSchema = joi.object({
+    school_id: joi.string().required(),
+    branch_id: joi.string().required(),
+    bpoc_mail: joi.string().email().required()
+});
+const poc_registerSchema = joi.object({
+    branch_name: joi.string().required(),
+    school_id: joi.string().required(),
+    bpoc_name: joi.string().required(),
+    bpoc_mail: joi.string().email().required(),
+    bpoc_contact: joi.string().min(10).max(15).required(),
+    city: joi.string().required(),
+    state: joi.string().required(),
+    // zone: joi.string().required()
+});
 
 module.exports = {
     isAdmin,
@@ -68,6 +83,8 @@ module.exports = {
     authLimiter,
     schemas: {
         announcement: announcementSchema,
-        feedback: feedbackSchema
+        feedback: feedbackSchema,
+        cos_login : cos_loginSchema,
+        poc_register: poc_registerSchema
     }
 };

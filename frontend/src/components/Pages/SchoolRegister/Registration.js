@@ -409,7 +409,7 @@ const TeamReg = () => {
           <input type="email" autoComplete="off" name="confirmEmail1" id="confirmEmail1" placeholder="Re-enter email" required value={team.confirmEmail1} onChange={handleInput} onPaste={(e) => e.preventDefault()} />
 
           <label htmlFor="school1">School:</label>
-          <input type="text" autoComplete="off" name="school1" id="school1" required value={team.school1} onChange={handleSchool1Change} />
+          <input type="text" autoComplete="off" name="school1" id="school1" required value={team.school1} onChange={handleSchool1Change} readOnly={!!searchParams.get('school') || !!searchParams.get('school1')} style={ (searchParams.get('school') || searchParams.get('school1')) ? { backgroundColor: '#e9ecef', cursor: 'not-allowed' } : {} } />
 
           <label htmlFor="class1">Class:</label>
           <select name="class1" id="class1" required value={team.class1} onChange={handleInput}>
@@ -439,7 +439,7 @@ const TeamReg = () => {
           <input type="email" autoComplete="off" name="confirmEmail2" id="confirmEmail2" placeholder="Re-enter email" required value={team.confirmEmail2} onChange={handleInput} onPaste={(e) => e.preventDefault()} />
 
           <label htmlFor="school2">School:</label>
-          <input type="text" autoComplete="off" name="school2" id="school2" required value={team.school2} onChange={handleSchool2Change} />
+          <input type="text" autoComplete="off" name="school2" id="school2" required value={team.school2} onChange={handleSchool2Change} readOnly={!!searchParams.get('school') || !!searchParams.get('school2')} style={ (searchParams.get('school') || searchParams.get('school2')) ? { backgroundColor: '#e9ecef', cursor: 'not-allowed' } : {} } />
 
           <label htmlFor="class2">Class:</label>
           <select name="class2" id="class2" required value={team.class2} onChange={handleInput}>
