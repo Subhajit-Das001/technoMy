@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 import Loader from '../../design/loader/Loader';
 import iitg2 from '../../Assets/img/iitg2.png';
 import techniche from '../../Assets/img/technicheb.png';
@@ -54,8 +54,29 @@ const TeamReg = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+
+
+  //--- Take Schools from URL automatically---
+  useEffect(() => {
+    const generalSchool = searchParams.get('school');
+    const school1Param = searchParams.get('school1');
+    const school2Param = searchParams.get('school2');
+
+    if (generalSchool || school1Param || school2Param) {
+      setTeam(prev => ({
+        ...prev,
+        // Uses individual params if provided, otherwise falls back to general 'school' param
+        school1: school1Param || generalSchool || prev.school1,
+        school2: school2Param || generalSchool || prev.school2,
+      }));
+    }
+  }, [searchParams]);
+  
 
   // --- Handlers ---
+
 
   const handleAgreementChange = (e) => {
     const { name, checked } = e.target;
@@ -115,6 +136,7 @@ const TeamReg = () => {
     "Goa": "West",
     "Dadra and Nagar Haveli and Daman & Diu": "West"
   };
+  
 
   const handleStateChange = (e) => {
     const selectedState = e.target.value;

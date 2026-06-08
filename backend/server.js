@@ -76,7 +76,7 @@ const adminAuth = basicAuth({
   users: {
     // Fetches credentials securely from your .env file
     [process.env.BULL_ADMIN_USER]: process.env.BULL_ADMIN_PASS
-  },
+  }, 
   challenge: true, // Triggers the native browser login popup
   unauthorizedResponse: 'Unauthorized: Access to the queue dashboard is securely restricted.'
 });
@@ -87,7 +87,6 @@ app.use('/api/admin/queues', adminAuth, serverAdapter.getRouter());
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
 app.use(helmet());
-
 const allowedOrigins = [
   'http://localhost:3000',  // React dev server
   'http://localhost:3001',  // Backend server
@@ -96,7 +95,6 @@ const allowedOrigins = [
   'https://www.technothlon.techniche.org.in',
   'https://technothlon-25.vercel.app' //testing website
 ];
-
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -115,7 +113,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Preflight requests
-
 // ==========================================
 // 2. BODY PARSERS (MUST BE BEFORE ROUTES)
 // ==========================================
@@ -160,20 +157,15 @@ app.use('/api', centerListRoutes);
 app.use('/api/merch', merchAnalyticsRoutes);
 app.use('/api/cos_portal', cosPortalRoutes);
 app.use('/api/offlineReg', offlineRegUpload);
-
 // Root route
 app.get('/health', (req, res) => {
   res.send("Hello from Technothlon Server");
 });
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
-
-
-
 //Test- route for Redis 
 app.get('/api/test-redis', async (req, res) => {
   try {
@@ -195,3 +187,6 @@ app.get('/api/test-redis', async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));
+
+
+

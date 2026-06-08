@@ -367,24 +367,15 @@ router.post("/login", async (req, res) => {
   try {
     const school = await CosSchool.findOne({ school_id });
     const branch = await CosBranch.findOne({ branch_id });
-
     if (!school || !branch) {       
       return res.status(401).json({ message: "Invalid credentials" });
     }
-
-    // Update isvisit to false after first login
-    // if (school.isvisit) {
-    //   await COS_portal.findByIdAndUpdate(school._id, { isvisit: false });
-    // }
-
     const token = jwt.sign(
       { school_id : school.school_id, branch_id: branch.branch_id, source: "COS" },
       process.env.KEY,
       { expiresIn: "7h" }
     );
-
     res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
-
     return res.json({ 
       status: true, 
       message: "Login successful", 
