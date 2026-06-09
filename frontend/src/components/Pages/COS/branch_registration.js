@@ -180,7 +180,7 @@ const capitalizeWords = (str) => {
         <div className="poc_reg_modal_overlay">
           <div className="poc_reg_modal_content">
             <h2>Success</h2>
-            <p>Branch registered. Credentials have been sent through your mail.</p>
+            <p>Branch registered. Credentials have been sent through your mail. Kindly Check the spam/junk folders too.</p>
             <button 
               className="poc_reg_login_btn" 
               onClick={() => navigate('/school-registration')}

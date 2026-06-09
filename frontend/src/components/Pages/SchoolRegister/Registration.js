@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 import Loader from '../../design/loader/Loader';
 import iitg2 from '../../Assets/img/iitg2.png';
 import techniche from '../../Assets/img/technicheb.png';
@@ -54,8 +54,29 @@ const TeamReg = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+
+
+  //--- Take Schools from URL automatically---
+  useEffect(() => {
+    const generalSchool = searchParams.get('school');
+    const school1Param = searchParams.get('school1');
+    const school2Param = searchParams.get('school2');
+
+    if (generalSchool || school1Param || school2Param) {
+      setTeam(prev => ({
+        ...prev,
+        // Uses individual params if provided, otherwise falls back to general 'school' param
+        school1: school1Param || generalSchool || prev.school1,
+        school2: school2Param || generalSchool || prev.school2,
+      }));
+    }
+  }, [searchParams]);
+  
 
   // --- Handlers ---
+
 
   const handleAgreementChange = (e) => {
     const { name, checked } = e.target;
@@ -115,6 +136,7 @@ const TeamReg = () => {
     "Goa": "West",
     "Dadra and Nagar Haveli and Daman & Diu": "West"
   };
+  
 
   const handleStateChange = (e) => {
     const selectedState = e.target.value;
@@ -387,7 +409,7 @@ const TeamReg = () => {
           <input type="email" autoComplete="off" name="confirmEmail1" id="confirmEmail1" placeholder="Re-enter email" required value={team.confirmEmail1} onChange={handleInput} onPaste={(e) => e.preventDefault()} />
 
           <label htmlFor="school1">School:</label>
-          <input type="text" autoComplete="off" name="school1" id="school1" required value={team.school1} onChange={handleSchool1Change} />
+          <input type="text" autoComplete="off" name="school1" id="school1" required value={team.school1} onChange={handleSchool1Change} readOnly={!!searchParams.get('school') || !!searchParams.get('school1')} style={ (searchParams.get('school') || searchParams.get('school1')) ? { backgroundColor: '#e9ecef', cursor: 'not-allowed' } : {} } />
 
           <label htmlFor="class1">Class:</label>
           <select name="class1" id="class1" required value={team.class1} onChange={handleInput}>
@@ -417,7 +439,7 @@ const TeamReg = () => {
           <input type="email" autoComplete="off" name="confirmEmail2" id="confirmEmail2" placeholder="Re-enter email" required value={team.confirmEmail2} onChange={handleInput} onPaste={(e) => e.preventDefault()} />
 
           <label htmlFor="school2">School:</label>
-          <input type="text" autoComplete="off" name="school2" id="school2" required value={team.school2} onChange={handleSchool2Change} />
+          <input type="text" autoComplete="off" name="school2" id="school2" required value={team.school2} onChange={handleSchool2Change} readOnly={!!searchParams.get('school') || !!searchParams.get('school2')} style={ (searchParams.get('school') || searchParams.get('school2')) ? { backgroundColor: '#e9ecef', cursor: 'not-allowed' } : {} } />
 
           <label htmlFor="class2">Class:</label>
           <select name="class2" id="class2" required value={team.class2} onChange={handleInput}>

@@ -25,8 +25,12 @@ const CosReport = require("../models/cos_report");
 const { csvProcessingQueue, redisConnection } = require("../config/queue");
 
 const rateLimit = require("express-rate-limit");
-
-
+const { 
+    authLimiter, 
+    globalLimiter, 
+    isAdmin, 
+    schemas 
+} = require('../middleware/auth');
 
 
 // Helper function to format Date to DDMMYYYY (for password)
@@ -141,13 +145,17 @@ const verifyToken = (req, res, next) => {
 }; 
 
 
-// Optional API Rate Limiter (Max 10 uploads per hour per IP)
+// Optional API Rate Limiter (Max 5 uploads per hour per IP)
 const uploadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
   max: 10,
   message: { error: "Too many uploads from this IP, please try again after an hour." }
 });
-
+const validateBody = (schema) => (req, res, next) => {
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) return res.status(400).json({ success: false, errors: error.details.map(e => e.message) });
+    next();
+};
 //COS-REPORTS
 router.post('/report', verifyToken, async (req, res) => {
   try {
@@ -259,7 +267,7 @@ router.post('/report', verifyToken, async (req, res) => {
 
 
 //POC Register Route 
-router.post('/register-poc',async (req, res) => {
+router.post('/register-poc',authLimiter, validateBody(schemas.poc_register),async (req, res) => {
     try {
         // 1. Extract data from the frontend request
         const { school_id,bpoc_name, bpoc_mail, state, ...otherData } = req.body;
@@ -287,7 +295,13 @@ router.post('/register-poc',async (req, res) => {
                 message: `School ID not found. Please contact Administration.`
             });
         }
-
+        const emailExists = await CosBranch.findOne({ bpoc_mail: bpoc_mail });
+        if (emailExists) {
+            return res.status(400).json({
+                success: false,
+                message: "A branch has already been registered on the provided mail"
+            });
+        }
         // 3. Generate branch_id (school_id + 4 random numbers)
         // Math.random() * 9000 + 1000 ensures it is always exactly 4 digits
         const randomFourDigits = Math.floor(1000 + Math.random() * 9000);
@@ -348,7 +362,7 @@ router.post('/register-poc',async (req, res) => {
             message: "Registration complete. Confirmation email sent!",
             data: {
                 school_id,
-                branch_id
+                // branch_id
             }
         });
 
@@ -361,29 +375,52 @@ router.post('/register-poc',async (req, res) => {
     }
 });
 // Login Route
-router.post("/login", async (req, res) => {
-  const { school_id, branch_id, bpoc_mail} = req.body; // password is actually poc_id from frontend
+router.post("/login", authLimiter, validateBody(schemas.cos_login), async (req, res) => {
+  const { school_id, branch_id, bpoc_mail } = req.body;
+
+  // 1. Basic Input Validation
+  if (!school_id || !branch_id || !bpoc_mail) {
+    return res.status(400).json({ status: false, message: "Missing required fields" });
+  }
+
+  // Prevent NoSQL Injection by ensuring inputs are strictly strings
+  if (typeof school_id !== 'string' || typeof branch_id !== 'string' || typeof bpoc_mail !== 'string') {
+    return res.status(400).json({ status: false, message: "Invalid input format" });
+  }
 
   try {
-    const school = await CosSchool.findOne({ school_id });
-    const branch = await CosBranch.findOne({ branch_id });
+    // 2. Strict relational check: Find branch where ALL three match
+    const branch = await CosBranch.findOne({
+      branch_id: branch_id,
+      school_id: school_id,
+      bpoc_mail: bpoc_mail
+    });
 
-    if (!school || !branch) {       
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!branch) {       
+      return res.status(401).json({ status: false, message: "Invalid credentials" });
     }
 
-    // Update isvisit to false after first login
-    // if (school.isvisit) {
-    //   await COS_portal.findByIdAndUpdate(school._id, { isvisit: false });
-    // }
+    // 3. Enhancement: Verify the school exists in the CosSchool collection
+    const school = await CosSchool.findOne({ school_id: branch.school_id });
+    
+    if (!school) {
+      return res.status(401).json({ status: false, message: "Invalid credentials" });
+    }
 
+    // 4. Generate Token
     const token = jwt.sign(
-      { school_id : school.school_id, branch_id: branch.branch_id, source: "COS" },
+      { school_id: school.school_id, branch_id: branch.branch_id, source: "COS" },
       process.env.KEY,
-      { expiresIn: "7h" }
+      { expiresIn: "7h" } 
     );
 
-    res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
+    // 5. Secure Cookie Configuration
+    res.cookie("token", token, { 
+      maxAge: 7 * 60 * 60 * 1000, // Matched to 7 hours to sync with JWT expiry
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Requires HTTPS in production
+      sameSite: "strict" // Mitigates Cross-Site Request Forgery (CSRF)
+    });
 
     return res.json({ 
       status: true, 
@@ -395,7 +432,7 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ status: false, message: "Internal server error" });
   }
 });
 
@@ -433,7 +470,7 @@ router.get("/dashboard", verifyToken, async (req, res) => {
 
 
 // SCHOOL REGISTER 
-router.post('/school-register', async (req, res) => {
+router.post('/school-register',isAdmin, async (req, res) => {
     try {
         const { school_name, school_id, spoc_name, spoc_mail, spoc_phone } = req.body;
         let errors = [];
@@ -446,7 +483,6 @@ router.post('/school-register', async (req, res) => {
         if (existingSchool) {
             errors.push("A school with this ID is already registered.");
         }
-
         if (errors.length > 0) {
             return res.status(400).json({ status: false, errors });
         }
@@ -472,7 +508,7 @@ router.post('/school-register', async (req, res) => {
     }
 });
 //COS- Payment 
-router.post('/cos-payment', async (req, res) => {
+router.post('/cos-payment',isAdmin, async (req, res) => {
     try {
         const { school_id, branch_id } = req.body;
         let query = {};
