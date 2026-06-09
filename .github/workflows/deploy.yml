@@ -1,13 +1,15 @@
-name: Deploy to EC2
+name: Manual Full Deploy to EC2
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 1 — Build Frontend on GitHub Runner (free compute, no EC2 resources used)
+  # JOB 1 — Build Frontend on GitHub Runner
   # ─────────────────────────────────────────────────────────────────────────────
   build-frontend:
     name: Build Frontend
@@ -32,7 +34,7 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         env:
-          CI: false           # React: don't treat warnings as errors
+          CI: false          
           REACT_APP_NODE_ENV: production
         run: npm run build
 
@@ -41,16 +43,16 @@ jobs:
         with:
           name: frontend-build
           path: frontend/build/
-          retention-days: 1   # ephemeral — only needed for the deploy job below
+          retention-days: 1  
 
   # ─────────────────────────────────────────────────────────────────────────────
-  # JOB 2 — Deploy to EC2 (runs only if build succeeded)
+  # JOB 2 — Deploy to EC2
   # ─────────────────────────────────────────────────────────────────────────────
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     environment: production
-    needs: build-frontend   # ← hard dependency: will NOT run if build fails
+    needs: build-frontend   
 
     steps:
       - name: Download build artifact
@@ -93,14 +95,19 @@ jobs:
             echo "  Installing backend dependencies..."
             echo "──────────────────────────────────────"
             cd backend
-            npm install
+            npm ci --production
 
             echo "──────────────────────────────────────"
-            echo "  Restarting backend via PM2..."
+            echo "  Reloading backend via PM2..."
             echo "──────────────────────────────────────"
-            pm2 restart ${{ secrets.PM2_APP_NAME }} \
+            pm2 reload ${{ secrets.PM2_APP_NAME }} \
               || pm2 start server.js --name ${{ secrets.PM2_APP_NAME }}
             pm2 save
+
+            echo "──────────────────────────────────────"
+            echo "  Reloading Nginx..."
+            echo "──────────────────────────────────────"
+            sudo nginx -t && sudo systemctl reload nginx
 
             echo ""
             echo "Deployment complete!"
