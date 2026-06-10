@@ -4,11 +4,19 @@ import './profile.css';
 import './updates.css';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
-
+import {
+  FaInstagram,
+  FaFacebook,
+  FaXTwitter,
+  FaWhatsapp,
+} from "react-icons/fa6";
 const Updates = () => {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in/api/" : "http://localhost:3001/api/";
 
   const [user, setUser] = useState('');
+  const tp_link = "https://technothlon.techniche.org.in/technopedia";
+  const pyp = "https://technothlon.techniche.org.in/pyp";
+  const lwLink = "https://www.instagram.com/p/DZW7g43j1KS/?igsh=Z2pjcGdkZ3hydDdz";
   
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -22,22 +30,127 @@ const Updates = () => {
     fetchUserDetails();
   }, []);
 
+
   return (
     <div className="updates-main" style={{padding: '3.4vw'}}>
-    <div className="heading-banner">General Instructions</div>
+    {/* <div className="heading-banner">General Instructions</div> */}
     {/* <img src={techno} alt="Technothlon Owl" className="instructions-image" /> */}
     <div className="updates-content-wrapper">
-      <div className="updates-content-heading">TECHNOTHLON 2025 UPDATES</div>
+      <div className="updates-content-heading">TECHNOTHLON 2026 UPDATES</div>
       <div className="updates-contents">
-        <ul>
-        <li>Certificates are now available. Make sure to download your corresponding certificate.</li>
-<li>Online registration for Technothlon '26 is now live! Register your team today.</li>
-<li>Technopedia is live! Join now using your roll number and registered email or contact number.</li>
-<li>Prepare for the exam by practicing with our past year resources and study materials.</li> </ul>
+<ul>
+  
+  <li>
+    Explore and practice in your preferred language now.
+    {" "}
+    <a
+      href={tp_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: "#2563eb",
+        textDecoration: "underline",
+        fontWeight: 600,
+      }}
+    >
+      Technopedia is now available in Hindi! →
+    </a>
+  </li>
+        <li>
+     Challenge yourself daily with fresh questions ,  
+    {" "}
+    <a
+      href={lwLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: "#2563eb",
+        textDecoration: "underline",
+        fontWeight: 600,
+      }}
+    >
+     Logic Week is live now! →
+    </a>
+  </li>
+  <li>
+    Technopedia is live now. Practice a wide range of questions and receive a
+    personalized performance analysis report to track your progress.
+  </li>
+
+  <li>
+    Technopedia can be attempted individually using your roll number along with
+    your registered email address or contact number.
+    {" "}
+    <a
+      href={tp_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: "#2563eb",
+        textDecoration: "underline",
+        fontWeight: 600,
+      }}
+    >
+      Start practicing →
+    </a>
+  </li>
+
+  <li>
+    Previous year papers from the 2024 and 2025 editions of Technothlon, along
+    with their answer keys, are now available.
+    {" "}
+    <a
+      href={pyp}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: "#2563eb",
+        textDecoration: "underline",
+        fontWeight: 600,
+      }}
+    >
+      Click here to view →
+    </a>
+  </li>
+ <li>
+    Admit cards will be released during the first week of July. Please keep
+    checking the portal for updates.
+  </li>
+  <li>
+    Your login password is <strong>dob1+dob2</strong>, where{" "}
+    <strong>dob1</strong> and <strong>dob2</strong> are the dates of birth of
+    both participants in DD/MM/YYYY format.
+  </li>
+
+ 
+
+
+
+       </ul>
       </div>
     </div>
-    <p className="footer-note">For more updates, check our website or reach out to us directly.</p>
-  </div>
+<p className="footer-note">
+  All important announcements and updates will be displayed here in the Updates section.
+  Follow us on our social media platforms and stay tuned!
+</p> 
+<div className="social-links">
+  <a href="https://www.instagram.com/technothlon.iitg/" target="_blank" rel="noreferrer">
+    <FaInstagram />
+  </a>
+
+  <a href="https://x.com/TheTechnothlon" target="_blank" rel="noreferrer">
+    <FaXTwitter />
+  </a>
+
+  <a href="https://www.facebook.com/technothlon/" target="_blank" rel="noreferrer">
+    <FaFacebook />
+  </a>
+
+  <a href="https://www.whatsapp.com/channel/0029VaM9jc072WTqZJIaKL1S" target="_blank" rel="noreferrer">
+    <FaWhatsapp />
+  </a>
+</div>
+ </div>
   );
 };
 

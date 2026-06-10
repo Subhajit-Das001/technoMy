@@ -4,9 +4,9 @@ const ContestScore = require('../models/contest-score');
 const Contest = require('../models/contest');
 const crypto = require('crypto');
 const Announcement = require('../models/announcement');
-const Online25=require('../models/online25');
+const Online26=require('../models/online25');
 const { convertToIST } = require('../utils/timeUtils');
-const Offline25 = require('../models/Offline25'); // Import Offline25 model
+const Offline26 = require('../models/Offline25'); // Import Offline25 model
 const newStudent = require('../models/newStudent'); // Import newStudent model
 
 // Start contest

@@ -63,6 +63,7 @@ const TechnopediaScoreSchema = new mongoose.Schema({
     isCompleted: { type: Boolean, default: false },
     isNewStudent: { type: Boolean, default: false },
     year: { type: String, required: true },
+    language: { type: String, enum: ['en', 'hi'], default: 'en', required: true },
     
     // Session management
     sessionId: { type: String }
@@ -112,7 +113,7 @@ TechnopediaScoreSchema.methods.isValidTime = function() {
 };
 
 // CRITICAL FIX 2: Added the compound index to allow multiple years per phone
-TechnopediaScoreSchema.index({ phone: 1, year: 1 }, { unique: true });
+TechnopediaScoreSchema.index({ phone: 1, year: 1,language: 1 }, { unique: true });
 
 const TechnopediaScore = mongoose.model('TechnopediaScore', TechnopediaScoreSchema);
 

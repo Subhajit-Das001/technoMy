@@ -83,7 +83,7 @@ import arcImage from '../../Assets/img/arc.png';
                         <div className="TA-stat-divider" />
                         <div className="TA-stat-item">
                             <div className="TA-stat-icon">✅ Completion rate</div>
-                            <div className="TA-stat-val">{analysisData.completionRate}</div>
+                            <div className="TA-stat-val">{analysisData.completionRate}%</div>
                             <div className="TA-stat-sub">{analysisData.attemptedQuestions}/{analysisData.totalQuestions} questions</div>
                         </div>
                     </div>
@@ -220,7 +220,7 @@ import arcImage from '../../Assets/img/arc.png';
     );
 };
 function Contest() {
-    const { year } = useParams();
+    const { year,language } = useParams();
     const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
     const navigate = useNavigate();
 
@@ -259,6 +259,34 @@ function Contest() {
     const [showReloadConfirm, setShowReloadConfirm] = useState(false);
     const reloadAttemptedRef = useRef(false);
     const [questionLoading, setQuestionLoading] = useState(false);
+    const [contestName, setContestName] = useState("");
+    // English-Hindi Dictionary
+    const ui = {
+        en: {
+            practice: "PRACTICE QUESTIONS", totalQ: "Total Questions", totalPts: "Total Points", diff: "Difficulty mix",eh:"Easy-Hard",pts :"pts",
+            locked: "Locked", start: "🚀 Start Contest", end: "🏁 End Contest", solve: "Solve Now", solveAgain: "Solve Again",
+            back: "Back", starting: "Starting...", ending: "Ending...",
+            startContestTitle: "Start Contest?",
+        warningTimeLimit: "Warning: Once you start the contest, you can solve questions without any time limit.",
+        multipleSubmissions: "You can submit multiple answers for each question - your latest answer will be considered.",
+        negativeMarking: "Negative points will be awarded for incorrect answers.",
+        proceedConfirmation: "Are you sure you want to proceed?",
+        cancel: "Cancel",
+        startContestBtn: "Start Contest"
+        },
+        hi: {
+            practice: "अभ्यास प्रश्न", totalQ: "कुल प्रश्न", totalPts: "कुल अंक", diff: "कठिनाई स्तर",eh: "आसान-कठिन",pts:"अंक",
+            locked: "लॉक किया गया", start: "🚀 प्रतियोगिता शुरू करें", end: "🏁 प्रतियोगिता समाप्त करें", solve: "अभी हल करें", solveAgain: "फिर से हल करें",
+            back: "पीछे", starting: "शुरू हो रहा है...", ending: "समाप्त हो रहा है...",
+            startContestTitle: "प्रतियोगिता शुरू करें?",
+        warningTimeLimit: "चेतावनी: एक बार जब आप प्रतियोगिता शुरू कर देते हैं, तो आप बिना किसी समय सीमा के प्रश्नों को हल कर सकते हैं।",
+        multipleSubmissions: "आप प्रत्येक प्रश्न के लिए कई उत्तर सबमिट कर सकते हैं - आपके नवीनतम उत्तर पर विचार किया जाएगा।",
+        negativeMarking: "गलत उत्तरों के लिए नकारात्मक अंक दिए जाएंगे।",
+        proceedConfirmation: "क्या आप निश्चित रूप से आगे बढ़ना चाहते हैं?",
+        cancel: "रद्द करें",
+        startContestBtn: "प्रतियोगिता शुरू करें"
+        }
+    };
 
     // Check user authentication
     useEffect(() => {
@@ -381,14 +409,17 @@ function Contest() {
     }, [year]);
 
     // Separate preview fetch (no auth needed, just metadata)
-    const fetchQuestionsPreview = async () => {
+    const fetchQuestionsPreview = async (lang = language) => {
         try {
             setQuestionLoading(true)
             const questionPromises = Array.from({ length: 10 }, (_, i) => i + 1).map(id =>
-                axios.get(`${baseURL}/api/technopedia/questions/${year}/${id}`)
+                axios.get(`${baseURL}/api/technopedia/questions/${year}/${lang}/${id}`)
                 // No Authorization header needed for preview
             );
             const responses = await Promise.all(questionPromises);
+            if (responses.length > 0 && responses[0].data.contest) {
+            setContestName(responses[0].data.contest);
+        }
             const formattedQuestions = responses.map((response, index) => ({
                 id: index + 1,
                 title: response.data.title,
@@ -420,7 +451,7 @@ function Contest() {
             }
 
             const questionPromises = Array.from({ length: 10 }, (_, i) => i + 1).map(id =>
-                axios.get(`${baseURL}/api/technopedia/questions/${year}/${id}`, {
+                axios.get(`${baseURL}/api/technopedia/questions/${year}/${language}/${id}`, {
                     headers: {
                         Authorization: `Bearer ${sessionToken}`
                     }
@@ -428,7 +459,9 @@ function Contest() {
             );
 
             const responses = await Promise.all(questionPromises);
-
+            if (responses.length > 0 && responses[0].data.contest) {
+            setContestName(responses[0].data.contest);
+            }
             const formattedQuestions = responses.map((response, index) => ({
                 id: index + 1,
                 title: response.data.title,
@@ -469,7 +502,8 @@ function Contest() {
                 name: userName,
                 school: userSchool,
                 studentType: studentType1,
-                year: year // Add this line
+                year: year ,// Add this line,
+                language: language
             };
 
             // console.log('Request data:', requestData);
@@ -513,7 +547,7 @@ function Contest() {
             const userPhone = localStorage.getItem('userPhone');
             // console.log('Fetching analysis for phone:', userPhone);
 
-const response = await axios.get(`${baseURL}/api/technopedia/analysis/${userPhone}/${year}`);
+const response = await axios.get(`${baseURL}/api/technopedia/analysis/${userPhone}/${year}/${language}`);
             // console.log('Analysis response:', response.data);
 
             if (response.data.success) {
@@ -612,7 +646,7 @@ const response = await axios.get(`${baseURL}/api/technopedia/analysis/${userPhon
 
     const handleQuestionClick = (id, letter) => {
         // console.log('year:', year, 'id:', id, 'letter:', letter); // add this temporarily
-        navigate(`/technopedia/${year}/${id}/${letter}`);
+        navigate(`/technopedia/${year}/${language}/${id}/${letter}`);
     };
 
     const handleSnackbarClose = () => {
@@ -761,7 +795,7 @@ useEffect(() => {
                     onClick={handleBack}
                     className="back-button-contest"
                 >
-                    Back
+                {ui[language].back}
                 </Button>
             )}
             
@@ -786,14 +820,14 @@ useEffect(() => {
                     ) : (
                         <div className="TL-questions-section-c">
                             <div className='TL-question-heading'>
-                                <h1 className='heading-text'>PRACTICE QUESTIONS</h1>
+                                <h1 className='heading-text'>{contestName ? contestName : "PRACTICE Questions"}</h1>
                                 <div className='heading-card'>
                                     <div className='heading-card-detail'>
                                         <span className='heading-card-icon'>
                                             <ion-icon name="document-text-outline"></ion-icon>
                                         </span>
                                         <span className='heading-card-info'>
-                                            <p>Total Questions</p>
+                                            <p>{ui[language].totalQ}</p>
                                             <h1>{questions.length > 0 ? questions.length : 0}</h1>
                                         </span>
                                     </div>
@@ -802,7 +836,7 @@ useEffect(() => {
                                             <ion-icon name="star-outline"></ion-icon>
                                         </span>
                                         <span className='heading-card-info'>
-                                            <p>Total Points</p>
+                                            <p>{ui[language].totalPts}</p>
                                             <h1>{questions.reduce((total, question) => total + question.points, 0)}</h1 >
                                         </span>
                                     </div>
@@ -812,8 +846,8 @@ useEffect(() => {
                                         </span>
                                         <span className='heading-card-info'
                                         >
-                                            <p>Diffuculty mix</p>
-                                            <h1 >Easy-Hard</h1>
+                                            <p>{ui[language].diff}</p>
+                                            <h1 >{ui[language].eh}</h1>
                                         </span>
                                     </div>
                                 </div>
@@ -826,14 +860,14 @@ useEffect(() => {
                                                 <span className="question-letter">{question.letter}</span>
                                                 <span className="points-badge">
                                                     <span><ion-icon name="star"></ion-icon></span>
-                                                    <span>{question.points} pts</span>
+                                                    <span>{question.points} {ui[language].pts}</span>
                                                 </span>
                                             </div>
                                             <div className="question-content">
                                                 <h3 className="question-title">{question.title || `Question ${question.letter}`}</h3>
                                                 <div className="status-badge locked">
                                                     <span className="lock-icon">🔒</span>
-                                                    Locked
+                                                    {ui[language].locked}
                                                 </div>
                                             </div>
                                         </div>
@@ -846,7 +880,7 @@ useEffect(() => {
                                         onClick={handleStartContest}
                                         disabled={isLoading}
                                     >
-                                        <span>{isLoading ? 'Starting...' : '🚀 Start Contest'}</span>
+                                        <span>{isLoading ? `${ui[language].starting}` : `${ui[language].start}`}</span>
                                     </button>
                                 </div>
                             </div>
@@ -861,7 +895,7 @@ useEffect(() => {
                                 <div className={`question-card ${question.answered ? 'answered' : 'unlocked'}`}>
                                     <div className="question-header">
                                         <span className="question-letter">{question.letter}</span>
-                                        <span className="points-badge">{question.points} pts</span>
+                                        <span className="points-badge">{question.points} ${ui[language].pts}</span>
                                     </div>
                                     <div className="question-content">
                                         <h3 className="question-title">{question.title || `Question ${question.letter}`}</h3>
@@ -869,7 +903,7 @@ useEffect(() => {
                                             className={`solve-button ${question.answered ? 'answered' : ''}`}
                                             onClick={() => handleQuestionClick(question.id, question.letter)}
                                         >
-                                            {question.answered ? 'Solve Again' : 'Solve Now'} <span className="arrow">→</span>
+                                            {question.answered ? `${ui[language].solveAgain}` : `${ui[language].solve}`} <span className="arrow">→</span>
                                         </button>
                                     </div>
                                 </div>
@@ -882,7 +916,7 @@ useEffect(() => {
                                 onClick={handleEndContest}
                                 disabled={isLoading}
                             >
-                                <span>{isLoading ? 'Ending...' : '🏁 End Contest'}</span>
+                                <span>{isLoading ? `${ui[language].ending}` :  `${ui[language].end}`}</span>
                             </button>
                         </div>
                     </div>
@@ -1048,56 +1082,56 @@ useEffect(() => {
 
             {/* Start Contest Dialog */}
             <Dialog
-                open={openDialog}
-                onClose={() => !isLoading && setOpenDialog(false)}
-                disableBackdropClick={isLoading}
-                disableEscapeKeyDown={isLoading}
-            >
-                <DialogTitle>Start Contest?</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Warning: Once you start the contest, you can solve questions without any time limit.
-                        You can submit multiple answers for each question - your latest answer will be considered.
-                        Negative points will be awarded for incorrect answers.
-                        Are you sure you want to proceed?
-                    </DialogContentText>
-                    {error && (
-                        <div className="error-message" style={{
-                            color: 'red',
-                            marginTop: '10px',
-                            padding: '8px',
-                            backgroundColor: '#ffebee',
-                            borderRadius: '4px'
-                        }}>
-                            {error}
-                        </div>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        onClick={() => setOpenDialog(false)}
-                        color="primary"
-                        disabled={isLoading}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleConfirmStart}
-                        color="primary"
-                        variant="contained"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <>
-                                <span style={{ marginRight: '8px' }}>Starting...</span>
-                                <CircularProgress size={20} color="inherit" />
-                            </>
-                        ) : (
-                            'Start Contest'
-                        )}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+    open={openDialog}
+    onClose={() => !isLoading && setOpenDialog(false)}
+    disableBackdropClick={isLoading}
+    disableEscapeKeyDown={isLoading}
+>
+    <DialogTitle>{ui[language].startContestTitle}</DialogTitle>
+    <DialogContent>
+        <DialogContentText>
+            {ui[language].warningTimeLimit}{" "}
+            {ui[language].multipleSubmissions}{" "}
+            {ui[language].negativeMarking}{" "}
+            {ui[language].proceedConfirmation}
+        </DialogContentText>
+        {error && (
+            <div className="error-message" style={{
+                color: 'red',
+                marginTop: '10px',
+                padding: '8px',
+                backgroundColor: '#ffebee',
+                borderRadius: '4px'
+            }}>
+                {error}
+            </div>
+        )}
+    </DialogContent>
+    <DialogActions>
+        <Button
+            onClick={() => setOpenDialog(false)}
+            color="primary"
+            disabled={isLoading}
+        >
+            {ui[language].cancel}
+        </Button>
+        <Button
+            onClick={handleConfirmStart}
+            color="primary"
+            variant="contained"
+            disabled={isLoading}
+        >
+            {isLoading ? (
+                <>
+                    <span style={{ marginRight: '8px' }}>{ui[language].starting}</span>
+                    <CircularProgress size={20} color="inherit" />
+                </>
+            ) : (
+                ui[language].startContestBtn
+            )}
+        </Button>
+    </DialogActions>
+</Dialog>
 
             {/* Snackbar for notifications */}
             <Snackbar
