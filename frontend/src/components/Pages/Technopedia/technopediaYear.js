@@ -82,9 +82,18 @@ function TechnopediaYear() {
         navigate('/technopedia-login', { replace: true });
     };
 
-    const handleYearWiseQuestion = async (year) => {
-        navigate(`/technopedia/${year}`)
-    }
+    const handleYearWiseQuestion = async (year, language) => {
+    // Default to 'en' if language is missing (acts as a safety net for older database records)
+    const langRoute = language || 'en';
+    navigate(`/technopedia/${year}/${langRoute}`);
+};
+const latestContest = years.length > 0
+    ? years.reduce((latest, current) =>
+        new Date(current.startTime) > new Date(latest.startTime)
+            ? current
+            : latest
+    )
+    : null;
     return (
         <div className='technopedia-year'>
             <div className="TPY-header-section">
@@ -107,38 +116,52 @@ function TechnopediaYear() {
                     </p> */}
                 </div>
                 <div className="year-paper-container">
-                    {years.map((year, index) => (
-                        <div key={index} className="TL-year-wrapper">
-                            <div className='year-paper'>
-                                {year.year === new Date().getFullYear() && <p>Latest</p>}
-                                <div className='year-paper-details'>
-                                    <span className='year-paper-detail'>{year.year}</span>
-                                    <span className='year-paper-detail'>Practice Contest</span>
-                                </div>
-                                <div className='year-paper-icon'>
-                                    <ion-icon name="calendar-clear-outline"></ion-icon>
-                                </div>
-                            </div>
-                            <div className='year-paper-question'>
-                                <div className='year-paper-question-details'>
-                                    <span className='year-paper-icon'><ion-icon name="document-text-outline"></ion-icon></span>
-                                    <span className='year-paper-bold'>{year.questions.length}</span>
-                                    <span>Problem</span>
-                                </div>
-                                <div className='year-paper-question-details'>
-                                    <span className='year-paper-icon'><ion-icon name="star-outline"></ion-icon></span>
-                                    <span className='year-paper-bold'>{totalPoints(year)}</span>
-                                    <span>Points</span>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { handleYearWiseQuestion(year.year) }}
-                                className='year-paper-button'>
-                                <span>Start Solving</span>
-                                <ion-icon name="arrow-forward-outline"></ion-icon>
-                            </button>
-                        </div>
-                    ))}
+                    {years.map((year, index) => {
+                        const isLatest =
+        latestContest &&
+        year.startTime === latestContest.startTime;
+        return(
+    <div key={index} className={`TL-year-wrapper ${isLatest ? 'latest-contest' : ''}`}>
+         {isLatest && (
+        <div className="latest-badge">
+            
+        </div>
+    )}
+        <div className='year-paper'>
+            <div className='year-paper-details'>
+                <span className='year-paper-detail'>
+                    {/* Dynamically append -हिंदी if the language is 'hi' */}
+                    {year.year}{year.language === 'hi' ? '-हिंदी' : ''}
+                </span>
+                <span className='year-paper-detail'>Practice Contest</span>
+            </div>
+            <div className='year-paper-icon'>
+                <ion-icon name="calendar-clear-outline"></ion-icon>
+            </div>
+        </div>
+        
+        <div className='year-paper-question'>
+            <div className='year-paper-question-details'>
+                <span className='year-paper-icon'><ion-icon name="document-text-outline"></ion-icon></span>
+                <span className='year-paper-bold'>{year.questions.length}</span>
+                <span>Problem</span>
+            </div>
+            <div className='year-paper-question-details'>
+                <span className='year-paper-icon'><ion-icon name="star-outline"></ion-icon></span>
+                <span className='year-paper-bold'>{totalPoints(year)}</span>
+                <span>Points</span>
+            </div>
+        </div>
+        
+        <button
+            // Pass BOTH the year and the language to the navigation handler
+            onClick={() => { handleYearWiseQuestion(year.year, year.language) }}
+            className='year-paper-button'>
+            <span>Start Solving</span>
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+    </div>
+)})}
 
                 </div>
                 <div className='year-paper-footer'>

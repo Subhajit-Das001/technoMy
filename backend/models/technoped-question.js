@@ -15,6 +15,7 @@ const technopediaSchema = mongoose.Schema({
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     year:{type:String,required:true},
+    language: { type: String, enum: ['en', 'hi'], default: 'en', required: true },
     createdAt: { type: Date, default: Date.now }
 });
 

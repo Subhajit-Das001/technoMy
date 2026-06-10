@@ -1,11 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.7b122d47.css",
-<<<<<<<<< Temporary merge branch 1
-    "main.js": "/static/js/main.fe84bcf9.js",
-=========
-    "main.js": "/static/js/main.cabd2b33.js",
->>>>>>>>> Temporary merge branch 2
+    "main.css": "/static/css/main.b49678e3.css",
+    "main.js": "/static/js/main.601378b6.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -78,6 +74,7 @@
     "static/media/logo2.png": "/static/media/logo2.365368fcbab10ddc673b.png",
     "static/media/Silver_Juniors.png": "/static/media/Silver_Juniors.e6ae0b3c5f5d8b79e100.png",
     "static/media/Silver_Hauts.png": "/static/media/Silver_Hauts.81a3c23bfda726463f3a.png",
+    "static/media/oh.JPG": "/static/media/oh.cb4f4625f8fed206d066.JPG",
     "static/media/participation_Juniors.png": "/static/media/participation_Juniors.21b9fcea7e834edbbbfb.png",
     "static/media/participation_Hauts.png": "/static/media/participation_Hauts.7462dec5aa552d58d0fb.png",
     "static/media/Hauts English 20.pdf": "/static/media/Hauts English 20.0988b7ce3bfbd88275d4.pdf",
@@ -100,7 +97,6 @@
     "static/media/sr.jpg": "/static/media/sr.0552d20a4ccda5fb1312.jpg",
     "static/media/techno1.png": "/static/media/techno1.e1d55409b17d83992178.png",
     "static/media/HeroImgD.png": "/static/media/HeroImgD.d5b42bf2bb0eb9db661b.png",
-    "static/media/oh.JPG": "/static/media/oh.e810d97b3b6a38c642bb.JPG",
     "static/media/Juniors Key 22.pdf": "/static/media/Juniors Key 22.f73fe459ddac47d36d30.pdf",
     "static/media/ains.png": "/static/media/ains.9beb1811232198411ff0.png",
     "static/media/logo.png": "/static/media/logo.44c3e5a082e0c63c8b6e.png",
@@ -127,19 +123,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.7b122d47.css.map": "/static/css/main.7b122d47.css.map",
-<<<<<<<<< Temporary merge branch 1
-    "main.fe84bcf9.js.map": "/static/js/main.fe84bcf9.js.map"
+    "main.b49678e3.css.map": "/static/css/main.b49678e3.css.map",
+    "main.601378b6.js.map": "/static/js/main.601378b6.js.map"
   },
   "entrypoints": [
-    "static/css/main.7b122d47.css",
-    "static/js/main.fe84bcf9.js"
-=========
-    "main.cabd2b33.js.map": "/static/js/main.cabd2b33.js.map"
-  },
-  "entrypoints": [
-    "static/css/main.7b122d47.css",
-    "static/js/main.cabd2b33.js"
->>>>>>>>> Temporary merge branch 2
+    "static/css/main.b49678e3.css",
+    "static/js/main.601378b6.js"
   ]
 }

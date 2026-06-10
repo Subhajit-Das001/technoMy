@@ -146,28 +146,25 @@ router.post('/check-student', async (req, res) => {
     }
 });
 
-
+ 
 
 // Start contest
 router.post('/techno/start', async (req, res) => {
     try {
-        const { phone, name, school, studentType,year } = req.body;
+        const { phone, name, school, studentType,year,language= 'en' } = req.body;
         
-        console.log('Received start request:', { phone, name, school, studentType });
+        console.log('Received start request:', { phone, name, school, studentType,language });
         
         if (!phone || !name || !school || !studentType) {
             return res.status(400).json({ 
                 message: 'Phone number, name, school and student type are required' 
             });
         }
-
         // Always delete any previous contest records for this phone before starting a new one
-      
-
         // Don't clean the phone number, use it as is
         const cleanPhone = phone.trim();
         console.log('Phone cleaning:', { original: phone, cleaned: cleanPhone });
-          await TechnoScore.deleteMany({ phone: cleanPhone, year: year });
+          await TechnoScore.deleteMany({ phone: cleanPhone, year: year ,language:language});
 
         // Validate student type
         console.log('Student type received:', studentType);
@@ -188,6 +185,7 @@ router.post('/techno/start', async (req, res) => {
             school: school,
             student: studentType,
             year : year,
+            language: language,
             startTime: new Date(),
             // endTime is not set - no time limit
             isStarted: true,
@@ -263,32 +261,32 @@ router.post('/techno/start', async (req, res) => {
 // Submit answer - Allow multiple submissions
 router.post('/submit', async (req, res) => {
     try {
-        const { questionId, answer, phone, timeSpentArray,year } = req.body;
+        const { questionId, answer, phone, timeSpentArray,year ,language ='en'} = req.body;
         const submissionTime = new Date();
 
         console.log('Submit request data:', { questionId, answer, phone, timeSpentArray });
 
-        let technoScore = await TechnoScore.findOne({ phone: phone.trim(), year: year });
+        let technoScore = await TechnoScore.findOne({ phone: phone.trim(), year: year,language: language});
         console.log('Found contest:', technoScore ? 'Yes' : 'No');
         
+        // if (!technoScore) {
+        //     // Try to find all contests to debug
+        //     const allContests = await TechnoScore.find({}).select('phone name _id');
+        //     // console.log('All contests in database:', allContests);
+            
+        //     // Try searching with original phone number
+        //     console.log('Trying with original phone:', phone);
+        //     technoScore = await TechnoScore.findOne({ phone });
+        //     console.log('Found contest with original phone:', technoScore ? 'Yes' : 'No');
+            
+            
+        // }
         if (!technoScore) {
-            // Try to find all contests to debug
-            const allContests = await TechnoScore.find({}).select('phone name _id');
-            console.log('All contests in database:', allContests);
-            
-            // Try searching with original phone number
-            console.log('Trying with original phone:', phone);
-            technoScore = await TechnoScore.findOne({ phone });
-            console.log('Found contest with original phone:', technoScore ? 'Yes' : 'No');
-            
-            if (!technoScore) {
                 return res.status(404).json({ message: 'Contest not found' });
             }
-        }
-
         // Get question from contest model
 const technopedia = await Technopedia.findOne({ 
-            $or: [{ year: Number(year) }, { year: String(year) }] 
+            $or: [{ year: Number(year) }, { year: String(year) }] ,language: language
         }).sort({ createdAt: -1 });
                 const question = technopedia.questions.find(q => q.questionId === questionId);
         
@@ -434,6 +432,7 @@ const technopedia = await Technopedia.findOne({
                 question9: technoScore.scores.question9,
                 question10: technoScore.scores.question10
             },
+            year,
             message: 'Answer submitted successfully!'
         });
 
@@ -443,11 +442,11 @@ const technopedia = await Technopedia.findOne({
     }
 });
 // Enhanced Performance Analysis with Improved Formulas
-router.get('/analysis/:phone/:year', async (req, res) => {
+router.get('/analysis/:phone/:year/:language', async (req, res) => {
     try {
-        const { phone,year } = req.params;
+        const { phone,year,language } = req.params;
         
-        const technoScore = await TechnoScore.findOne({ phone: phone.trim(), year: year });
+        const technoScore = await TechnoScore.findOne({ phone: phone.trim(), year: year ,language :language});
         if (!technoScore) {
             return res.status(404).json({ message: 'Contest not found' });
         }
@@ -461,12 +460,12 @@ router.get('/analysis/:phone/:year', async (req, res) => {
         const wrongAnswers = technoScore.answers.filter(a => !a.isCorrect && a.attempted).length;
         
         // Enhanced accuracy calculation with weighted scoring
-        const accuracy = attemptedQuestions > 0 ? Math.round((correctAnswers / attemptedQuestions) * 100) : 0;
+        const accuracy = attemptedQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
         const completionRate = Math.round((attemptedQuestions / totalQuestions) * 100);
         
         // Get questions from Technopedia
         const technopedia = await Technopedia.findOne({ 
-            $or: [{ year: Number(year) }, { year: String(year) }] 
+            $or: [{ year: Number(year) }, { year: String(year) }] ,language:language
         }).sort({ createdAt: -1 });
         const questions = technopedia ? technopedia.questions : [];
         
@@ -816,7 +815,7 @@ router.post('/techno/end', async (req, res) => {
             if (!technoScoreCleaned) {
                 // Show all contests for debugging
                 const allContests = await TechnoScore.find({}).select('phone name isStarted isCompleted _id');
-                console.log('All contests in database:', allContests);
+                // console.log('All contests in database:', allContests);
                 return res.status(404).json({ message: 'No active contest found' });
             }
             
@@ -1094,13 +1093,13 @@ router.get('/questions/years', async (req, res) => {
 })
 
 // Get question year by ID
-router.get('/questions/:year/:id', async (req, res) => {
+router.get('/questions/:year/:language/:id', async (req, res) => {
     try {
-        const { year, id } = req.params;
+        const { year, id,language } = req.params;
         const questionId = Number(id);  // ✅ const — was global before
 
         const technopedia = await Technopedia.findOne({
-            $or: [{ year: Number(year) }, { year: String(year) }]
+            $or: [{ year: Number(year) }, { year: String(year) }],language: language
         }).sort({ createdAt: -1 });
 
         if (!technopedia) {
@@ -1113,6 +1112,7 @@ router.get('/questions/:year/:id', async (req, res) => {
         }
 
         res.json({
+            contest: technopedia.contest,
             title: question.title,
             content: question.content,
             points: question.points,

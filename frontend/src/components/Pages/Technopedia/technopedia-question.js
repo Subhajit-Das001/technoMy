@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 function TechnopediaQuestion() {
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
 
-  const { year, id, letter } = useParams();
+  const { year, id, letter ,language} = useParams();
   const navigate = useNavigate();
   const [question, setQuestion] = useState({
     title: "",
@@ -22,6 +22,28 @@ function TechnopediaQuestion() {
   const [timeSpentArray, setTimeSpentArray] = useState([]);
   const [currentTimeSpent, setCurrentTimeSpent] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const ui = {
+      en: { back: "Back", points: "Points Available", enter: "Enter your answer (Integer only)", placeholder: "Type your answer here...", prev: "Prev", next: "Next", submit: "Submit Answer", submitting: "Submitting...", success: "✓ Submitted Successfully!", que:"Question" },
+      hi: { back: "पीछे", points: "उपलब्ध अंक", enter: "अपना उत्तर दर्ज करें (केवल पूर्णांक)", placeholder: "अपना उत्तर यहाँ लिखें...", prev: "पिछला", next: "अगला", submit: "उत्तर सबमिट करें", submitting: "सबमिट हो रहा है...", success: "✓ सफलतापूर्वक सबमिट किया गया!",que:"प्रश्न " }
+  };
+const getQuestionNumber = (letter, language) => {
+  if (language === 'en') return letter;
+
+  const hindiNumbers = {
+    A: '१',
+    B: '२',
+    C: '३',
+    D: '४',
+    E: '५',
+    F: '६',
+    G: '७',
+    H: '८',
+    I: '९',
+    J: '१०'
+  };
+
+  return hindiNumbers[letter] || letter;
+};
 
   const saveTimeSpent = () => {
     if (visitStartTime) {
@@ -82,7 +104,7 @@ function TechnopediaQuestion() {
     const fetchQuestion = async () => {
       try {
         // Use the correct Technopedia endpoint
-        const response = await axios.get(`${baseURL}/api/technopedia/questions/${year}/${id}`);
+        const response = await axios.get(`${baseURL}/api/technopedia/questions/${year}/${language}/${id}`);
         setQuestion(response.data);
       } catch (error) {
         console.error("Error fetching question:", error);
@@ -90,7 +112,7 @@ function TechnopediaQuestion() {
         // Redirect back to technopedia page after 3 seconds if question not found
         if (error.response?.status === 404) {
           setTimeout(() => {
-            navigate(`/technopedia/${year}`);
+            navigate(`/technopedia/${year}/${language}`);
           }, 3000);
         }
       }
@@ -135,7 +157,7 @@ function TechnopediaQuestion() {
 
   const handleBack = () => {
     saveTimeSpent(); // Save time before navigating
-    navigate(`/technopedia/${year}`);
+    navigate(`/technopedia/${year}/${language}`);
   };
 
   const handleSubmit = async () => {
@@ -164,7 +186,8 @@ function TechnopediaQuestion() {
         phone: userPhone,
         timeSpentArray,
         totalTimeSpent,
-        year: year // ADDED: Passing the year to the backend
+        year: year, // ADDED: Passing the year to the backend
+        language: language
       };
 
       const response = await axios.post(`${baseURL}/api/technopedia/submit`, requestData);
@@ -200,12 +223,12 @@ function TechnopediaQuestion() {
   };
   const handleNextQuestion=()=>{
     if(parseInt(id)===10){
-      navigate(`/technopedia/${year}`);
+      navigate(`/technopedia/${year}/${language}`);
       return;
     }
     let newLetter=String.fromCharCode(letter.charCodeAt(0)+1);
     saveTimeSpent(); // Save time before navigating
-    navigate(`/technopedia/${year}/${parseInt(id) + 1}/${newLetter}`);
+    navigate(`/technopedia/${year}/${language}/${parseInt(id) + 1}/${newLetter}`);
   }
   const handlePrevQuestion=()=>{
     if(parseInt(id)===1){
@@ -213,7 +236,7 @@ function TechnopediaQuestion() {
     }
     let newLetter=String.fromCharCode(letter.charCodeAt(0)-1);
     saveTimeSpent(); // Save time before navigating
-    navigate(`/technopedia/${year}/${parseInt(id) - 1}/${newLetter}`);
+    navigate(`/technopedia/${year}/${language}/${parseInt(id) - 1}/${newLetter}`);
   }
   const checkFirstIndex=()=>{
     if(parseInt(id)===1){
@@ -233,28 +256,28 @@ function TechnopediaQuestion() {
     <div className="technopedia-question-container">
       <div className="technopedia-question-header">
         <button className="technopedia-back-button" onClick={handleBack}>
-          <span>←</span> Back
+          <span>←</span> {ui[language].back}
         </button>
       </div>
 
       <div className="technopedia-question-content">
         <h2 className="technopedia-question-title">
-          Question {letter} - {question.title}
+          {ui[language].que} {getQuestionNumber(letter, language)}  - {question.title}
         </h2>
-        <div className="technopedia-points">Points Available: {question.points}</div>
+        <div className="technopedia-points">{ui[language].points} : {question.points}</div>
 
         <div style={{ whiteSpace: "pre-line" }} className="technopedia-question-text">
           {question.content.replace(/\\n/g, "\n")}
         </div>
 
         <div className="technopedia-answer-section">
-          <label htmlFor="answer">Enter your answer (Integer only)</label>
+          <label htmlFor="answer">{ui[language].enter}</label>
           <input
             type="number"
             id="answer"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            placeholder="Type your answer here..."
+            placeholder={ui[language].placeholder}
             disabled={isSubmitting}
           />
 
@@ -264,13 +287,13 @@ function TechnopediaQuestion() {
             onClick={()=>{handlePrevQuestion()}}
             className="technopedia-btn prev">
               <ion-icon name="arrow-back-outline"></ion-icon>
-              <span>Prev</span>
+              <span>{ui[language].prev}</span>
             </button>
             <button 
             disabled={isSubmitting ||checkLastIndex() }
             onClick={()=>{handleNextQuestion()}}
             className="technopedia-btn next">
-              <span>Next</span>
+              <span>{ui[language].next}</span>
               <ion-icon name="arrow-forward-outline"></ion-icon>
             </button>
           </div>
@@ -279,7 +302,7 @@ function TechnopediaQuestion() {
             onClick={handleSubmit}
             disabled={!answer || isSubmitting}
           >
-            {isSubmitting ? 'Submitting...' : isSubmitted ? '✓ Submitted Successfully!' : 'Submit Answer'}
+            {isSubmitting ? `${ui[language].submitting}` : isSubmitted ? `${ui[language].success}` : `${ui[language].submit}`}
           </button>
         </div>
 

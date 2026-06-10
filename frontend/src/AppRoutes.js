@@ -102,8 +102,8 @@ const AppRoutes = () => {
       <Route path="/center-list" element={<CenterTable />} />
       <Route path="/technopedia-login" element={<TechnopediaLogin />} />
       <Route path="/technopedia" element={<TechnopediaYear/>} />
-      <Route path="/technopedia/:year/:id/:letter" element={<TechnopediaQuestion />} />
-       <Route path='/technopedia/:year' element={<Technopedia/>}/>
+      <Route path="/technopedia/:year/:language/:id/:letter" element={<TechnopediaQuestion />} />
+       <Route path='/technopedia/:year/:language' element={<Technopedia/>}/>
       <Route path="/Technothlon-Merch" element={<Merch/>} />    
         <Route path="/results" element={<ResultTable />} />
        </Routes>

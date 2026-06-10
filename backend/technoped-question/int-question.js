@@ -1,129 +1,90 @@
 const temporaryTechnopediaContest = {
-    contest: 'Technopedia Contest 2025',
-    year: '2025',
-    startTime: new Date('2025-11-10T00:00:00.000Z'),
-    endTime: new Date('2026-11-22T00:00:00.000Z'),
+    contest: 'टेक्नोपीडिया प्रतियोगिता 2026',
+    year: '2026-H ',
+    startTime: new Date('2026-06-10T00:00:00.000Z'),
+    endTime: new Date('2026-11-22T00:00:00.000Z'),    
     questions: [
-        {
-            questionId: 1,
-            letter: 'A',
-            title: 'Monochromatic Polygon Problem',
-            content: `There are an unlimited number of laser nodes that can emit either a green or blue light between any two of them.
-However, the team cannot control which color is produced between any given pair of nodes.
-To create an efficient light source, they need to ensure that at least one polygon (such as a triangle or square) is formed using rays all of the same color (e.g., an all-green triangle or an all-blue square).
-What is the smallest number of nodes needed to guarantee that such a monochromatic polygon will always be formed?
-Note: The nodes are always arranged as the vertices of a regular polygon.`,
-            answer: 6,
-            points: 100
-        },
-        {
-            questionId: 2,
-            letter: 'B',
-            title: 'Minimum Possible Score in a Team Game',
-            content: `A, B and C join a game as a team.
-Each of them has to independently answer 2021 yes-no questions (the questions are the same for everyone), in each of which either 'yes' or 'no' must be chosen.
-After that, the answers of A and B are compared and the number of questions in which they chose the same answer is recorded.
-The same is done for A's and C's answers, as well as for B's and C's answers.
-The score of the team in the game is the largest number recorded.
-Find the minimum possible score of the team in the game.`,
-            answer: 674,
-            points: 100
-        },
-        {
-            questionId: 3,
-            letter: 'C',
-            title: 'Steps on a Stopped Escalator',
-            content: `Jack and Paul are descending a similar escalator.
-Jack walks down, taking 250 steps to reach the bottom; Paul ran down, taking 375.
-Paul ran three steps in the time it took Jack to walk one.
-Find out how many steps will be visible when the escalator is stopped.`,
-            answer: 500,
-            points: 100
-        },
-        {
-            questionId: 4,
-            letter: 'D',
-            title: 'Minimum Students for Common Topic',
-            content: `In a class, every pair of students has a conversation, but always about exactly one of three different topics.
-Each pair chooses one topic and sticks to it.
-What is the minimum number of students required to guarantee that there will always be three students such that every pair among them talked about the same topic?`,
-            answer: 17,
-            points: 100
-        },
-        {
-            questionId: 5,
-            letter: 'E',
-            title: 'Danger Symbol on a Grid',
-            content: `On the 51x51 grid wall of the building, there is a danger symbol on one of the squares and Heart symbols on the other 2600 squares.
-In one move, a player may reverse the symbols (danger symbol to heart symbol and heart symbol to danger symbol) of any a*a subgrid where a > 1.
-The player has to reach a stage when each square on the grid is a Heart symbol in order to win.
-How many such places are possible for the danger symbol?`,
-            answer: 200,
-            points: 100
-        },
-        {
-            questionId: 6,
-            letter: 'F',
-            title: 'Alien Multiplication Problem',
-            content: `In a distant galaxy, Earth has been invaded by Aliens.
-These aliens have a special way of multiplying: the number of aliens (n) can be replaced by a * b aliens if a + 2b = n, where n, a, and b are natural numbers.
-If the alien population ever becomes exactly 2020, humanity’s hope is lost forever.
-The aliens know that after a sequence of such replacements, there are some numbers from which 2020 can never be reached, even if they keep multiplying forever.
-Find the sum of all initial numbers from which 2020 can’t be reached.`,
-            answer: 36,
-            points: 100
-        },
-        {
-            questionId: 7,
-            letter: 'G',
-            title: 'Unlocking the Door with Identical Keys',
-            content: `A door is locked with a special lock having two separate keyholes.
-One needs to put two keys in the keyholes and turn them at the same time to open the door.
-Aakash has a bunch of 8 identical keys, out of which 4 of them fit the lock and the other 4 don’t.
-To unlock the door, he can try different combinations using two keys at a time.
-What is the least number of attempts in which he can open the door?`,
-            answer: 28,
-            points: 100
-        },
-        {
-            questionId: 8,
-            letter: 'H',
-            title: 'Unique Word Game Scoring',
-            content: `Three boys played a "Word" game in which they each wrote down ten words.
-For each word a boy wrote, he scored three points if neither of the other boys had the same word;
-he scored one point if only one of the other boys had the same word.
-No points were awarded for words which all three boys had.
-When they added up their scores, they found that they each had different scores.
-Shyam had the smallest score (19 points), and James scored the most.
-How many points did James score?.`,
-            answer: 25,
-            points: 100
-        },
-        {
-            questionId: 9,
-            letter: 'I',
-            title: 'Elevator Problem with Fixed Movement',
-            content: `There are 85 floors in the tower and a single elevator to travel from one floor to another.
-There are no stairs.
-The elevator has a wiring mismatch due to which it can move exactly 7 floors upwards or 9 floors downwards.
-The elevator takes 34 seconds to move to the next allowed floor (34 seconds to climb 7 floors and 34 seconds to come down 9 floors).
-How much time does it take for the elevator to reach floor number 80 when it starts from the first floor?
-(Answer in seconds)`,
-            answer: 850,
-            points: 100
-        },
-        {
-            questionId: 10,
-            letter: 'J',
-            title: 'Milk-Drinking Dragons',
-            content: `There are 2022 milk-drinking dragons standing in a row.
-The first dragon has 1 pint of milk, the second has 2 pints, and so on, up to the 2022nd dragon which has 2022 pints.
-The first dragon will transfer half his milk and half a pint to the second one, then the second will transfer half his milk and half a pint to the third one, and so on until the 2021st dragon transfers half his milk and half a pint to the 2022nd one.
-How much milk (in pints) will the 2022nd dragon have after that?`,
-            answer: 4043,
-            points: 100
-        }
-    ]
+    {
+      "questionId": 1,
+      "letter": "A",
+      "title": "बगीचे में तीन भाई",
+      "content": "तीन भाइयों के पास कुल मिलाकर 24 सेब हैं। शुरुआत में, प्रत्येक भाई को उसकी वर्तमान आयु से 3 कम सेब मिलते हैं।\nसबसे छोटे भाई से शुरू करते हुए, फिर मंझला, और अंत में सबसे बड़े भाई तक, प्रत्येक भाई यह प्रक्रिया ठीक एक बार करता है:\n* वह अपने पास मौजूद सेबों का आधा हिस्सा रख लेता है, और बाकी आधे हिस्से को अन्य दो भाइयों के बीच बराबर बांट देता है।\n\nइन तीनों प्रक्रियाओं के बाद, प्रत्येक भाई के पास 8 सेब बचते हैं।\nएक अतिरिक्त शर्त यह है:\nभाइयों की वर्तमान आयु का गुणनफल, पूरी प्रक्रिया के दौरान आदान-प्रदान किए गए कुल सेबों की संख्या के दोगुने के बराबर है।\nसबसे छोटे और सबसे बड़े भाई की आयु का योग क्या होगा? यदि आपको लगता है कि ऐसी कोई स्थिति संभव नहीं है, तो 0 टाइप करें।",
+      "answer": "0",
+      "points": 100
+    },
+    {
+      "questionId": 2,
+      "letter": "B",
+      "title": "बिना कोनों वाला ग्रिड",
+      "content": "एक $10\\times10$ के ग्रिड में कुछ खानों (सेल्स) को चिह्नित किया गया है।\nएक $1\\times2$ आकार के डोमिनो को किन्हीं भी दो आसन्न (बगल वाले) खानों पर क्षैतिज या ऊर्ध्वाधर रूप से रखा जा सकता है।\nकम से कम कितने खानों को चिह्नित करना होगा ताकि:\n1. हर संभावित $1\\times2$ डोमिनो कम से कम एक चिह्नित खाने को कवर करे।\n2. हर पंक्ति (row) में कम से कम 4 चिह्नित खाने हों।\n3. हर स्तंभ (column) में कम से कम 4 चिह्नित खाने हों।\n4. चारों कोनों में से किसी भी खाने को चिह्नित न किया गया हो।",
+      "answer": "52",
+      "points": 100
+    },
+    {
+      "questionId": 3,
+      "letter": "C",
+      "title": "2556 अंकों का खेल",
+      "content": "एक खेल इस प्रकार खेला जाता है। हर कदम पर, आप बोर्ड से कोई भी संख्या $n>1$ चुनते हैं और उसे दो धनात्मक पूर्णांकों $a$ और $b$ से बदल देते हैं, जहाँ $a+b=n$ हो, और उस चाल के लिए आपको $ab$ अंक मिलते हैं।\nखेल तब समाप्त होता है जब बोर्ड पर हर संख्या 1 हो जाती है।\nएक खिलाड़ी यह खेल खेलता है और कुल 2556 अंक प्राप्त करता है। खिलाड़ी ने किस संख्या से शुरुआत की थी?",
+      "answer": "72",
+      "points": 100
+    },
+    {
+      "questionId": 4,
+      "letter": "D",
+      "title": "संतरों की पहेली",
+      "content": "एक समिति त्योहार के जश्न के लिए उपहार के पैकेट तैयार कर रही थी।\nसंतरों को पैकेटों में बराबर बांटते समय उन्होंने एक अजीब बात देखी:\n* यदि वे प्रत्येक पैकेट में 10 संतरे रखने की कोशिश करते, तो एक पैकेट में केवल 9 संतरे ही बचते।\n* यदि वे प्रत्येक पैकेट में 9 संतरे रखने की कोशिश करते, तो एक पैकेट में केवल 8 संतरे बचते।\n* यही बात 8, 7, 6,... से लेकर 2 संतरे प्रति पैकेट तक दोहराई गई, जहाँ हमेशा एक पैकेट में केवल 1 संतरा बचता था।\n\nसंतरों की कुल संख्या ज्ञात कीजिए।",
+      "answer": "2519",
+      "points": 100
+    },
+    {
+      "questionId": 5,
+      "letter": "E",
+      "title": "रिले रेस की उलझन",
+      "content": "एक रिले रेस में पांच धावक (R1-R5) बैटन (डंडा) लेकर दौड़ते हैं। प्रत्येक बैटन का एक रंग है: लाल (Re), हरा (Gr), या नीला (Bl)। धावक एक निश्चित कतार में खड़े हैं और केवल अपने एकदम बगल वाले धावक को ही बैटन पास कर सकते हैं।\n* जिसके हाथ में बैटन हो, उसे 'लोडेड' कहा जाता है।\n* जिसके हाथ में कोई बैटन न हो, उसे 'फ्री' कहा जाता है。\n\nशुरुआत में, लाल बैटन R1 के पास, हरा R3 के पास और नीला R5 के पास है।\n* नियम A - केवल बगल में पास: बैटन को केवल एकदम बगल वाले धावक (±1 स्थान) को ही दिया जा सकता है। बीच के धावकों को छोड़कर बैटन नहीं फेंका जा सकता।\n* नियम B - दोहरा बैटन नहीं: कोई भी धावक एक ही समय में दो बैटन नहीं पकड़ सकता। अगर कोई पास ऐसा करता है, तो वह चाल अमान्य है।\n* नियम C - रंगों का टकराव: लाल और हरे बैटन एक ही समय (किसी भी चाल के अंत में) आसन्न (बगल वाले) धावकों के पास नहीं हो सकते।\n* नियम D - नीला एंकर: नीला बैटन कभी भी अपने वर्तमान स्थान की संख्या से नीचे के स्थान पर नहीं जा सकता (यह केवल दाईं ओर जा सकता है या वहीं रुक सकता है)।\n\nवर्तमान में नीला R4 पर है, हरा R3 पर है, और लाल R1 पर है। कुछ चालों के बाद हरा बैटन R5 तक पहुँच जाता है। इस स्थिति में नीले बैटन की स्थिति के बारे में निम्नलिखित में से कौन सा कथन निश्चित रूप से सत्य है? यदि विकल्प A सही है तो 1 टाइप करें, विकल्प B के लिए 2 टाइप करें, इत्यादि।\n(A) हरे के पहुँचने से पहले ही नीला R5 पर चला गया होगा, जिससे टकराव की स्थिति उत्पन्न हुई।\n(B) नीला अभी भी R4 पर हो सकता है, क्योंकि R5 पर मौजूद हरा किसी भी नियम के तहत नीले को प्रभावित नहीं करता।\n(C) नीला फंस गया है - वह R5 पर नहीं जा सकता (वहाँ हरा है) और नियम D उसे वापस R3 पर जाने से रोकता है।\n(D) जब हरा R4 से हटेगा, तो नीला अपने आप R5 पर चला जाएगा।\n(E) प्रारंभिक स्थिति से शुरू करते हुए, हरे का R5 पर होना और नीले का R4 पर होना एक अमान्य स्थिति है।",
+      "answer": "5",
+      "points": 100
+    },
+    {
+      "questionId": 6,
+      "letter": "F",
+      "title": "कमरों का वफादारी तर्क",
+      "content": "एक क्लिनिक में एक दिन के लिए तीन कमरों (कमरा X, कमरा Y, कमरा Z) में अपॉइंटमेंट तय किए जाते हैं। दिन को चार समय स्लॉट (स्लॉट 1 से 4, क्रम में) में बांटा गया है। प्रत्येक कमरा एक स्लॉट में अधिकतम एक मरीज को देखता है। मरीजों को प्रकारों में बांटा गया है: सामान्य (G), विशेषज्ञ (Sp), या आपातकालीन (Em)। प्रत्येक मरीज का केवल एक ही प्रकार होता है।\n* नियम 1 - आपातकालीन प्राथमिकता: आपातकालीन मरीजों को हमेशा स्लॉट 1 या स्लॉट 2 में रखा जाना चाहिए। वे स्लॉट 3 या 4 में नहीं आ सकते।\n* नियम 2 - विशेषज्ञों का अलगाव: किन्हीं भी दो विशेषज्ञ मरीजों को किसी भी कमरे के एक ही समय स्लॉट में नहीं रखा जा सकता।\n* नियम 3 - कमरे की वफादारी: एक बार जब किसी कमरे में एक सामान्य मरीज को देखा जाता है, तो वह कमरा पूरे दिन केवल सामान्य मरीजों को ही देख सकता है।\n* नियम 4 - स्लॉट का बढ़ना: किसी कमरे में स्लॉट 3 और स्लॉट 4 का उपयोग तब तक नहीं किया जा सकता, जब तक कि उसी कमरे के स्लॉट 1 और 2 पहले से ही भरे न हों।\n\nयदि शेड्यूलिंग बोर्ड दिखाता है कि एक विशेषज्ञ (Sp) मरीज को स्लॉट 4 में कमरे Y में बुक किया गया है, तो उस दिन कमरे Y में कम से कम कुल कितने मरीजों का शेड्यूल होना चाहिए?",
+      "answer": "3",
+      "points": 100
+    },
+    {
+      "questionId": 7,
+      "letter": "G",
+      "title": "लक्ष्य 555",
+      "content": "तीन खिलाड़ी A, B, और C एक अनंत संख्या रेखा (number line) पर एक खेल खेलते हैं।\nशुरुआत में स्थिति 0 पर एक सिक्का रखा है।\nहर बारी में, कोई एक खिलाड़ी एक सिक्का चुनता है और ठीक एक प्रक्रिया करता है:\n1. दोगुना: सिक्के को $n$ से हटाकर $2n$ पर रख दें।\n2. विभाजन: $n$ पर रखे सिक्के को हटाकर दो सिक्के $n-1$ और $n+1$ पर रख दें।\n\nजो खिलाड़ी सबसे पहले स्थिति 555 पर एक सिक्का बनाता है, वह जीत जाता है। यह खेल कौन सा खिलाड़ी जीतेगा? खिलाड़ी A के लिए 10 टाइप करें, खिलाड़ी B के लिए 20 टाइप करें और खिलाड़ी C के लिए 30 टाइप करें। यदि उनमें से कोई नहीं जीतता है तो 0 टाइप करें।",
+      "answer": "0",
+      "points": 100
+    },
+    {
+      "questionId": 8,
+      "letter": "H",
+      "title": "सिलसिलेवार बंदी",
+      "content": "एक द्वीपसमूह में 6 द्वीप (I1 से I6) हैं। कुछ द्वीप पुलों से जुड़े हुए हैं। प्रत्येक पुल या तो खुला है या बंद है। यात्री द्वीपों के बीच यात्रा करना चाहते हैं। पुल का वॉर्डन द्वीपों को या तो पोर्ट (समुद्र द्वारा पहुँचा जा सकने वाला) या इनलैंड (समुद्र द्वारा न पहुँचा जा सकने वाला) के रूप में बांटता है। I1 और I6 पोर्ट हैं। I2, I3, I4, I5 इनलैंड (भीतरी) द्वीप हैं。\n* नियम 1 - पुल पर निर्भरता: एक इनलैंड द्वीप केवल तभी 'पहुँच योग्य' (Accessible) होता है जब उससे जुड़े कम से कम दो पुल खुले हों।\n* नियम 2 - पोर्ट की स्वतंत्रता: पुलों की स्थिति चाहे जो भी हो, पोर्ट द्वीपों तक हमेशा पहुँचा जा सकता है।\n* नियम 3 - सिलसिलेवार बंदी: यदि कोई इनलैंड द्वीप अपनी पहुँच खो देता है (खुले पुलों की संख्या 2 से कम हो जाती है), तो सुरक्षा उपाय के तौर पर उससे जुड़े सभी पुल तुरंत बंद कर दिए जाते हैं।\n* नियम 4 - यात्री प्रतिबंध: एक यात्री किसी पुल को केवल तभी पार कर सकता है जब पार करते समय उस पुल के दोनों सिरों वाले द्वीप 'पहुँच योग्य' हों।\n\nवर्तमान में I3 की ओर जाने वाले सभी पुल बंद हैं। I2 के पुल केवल I1 (पोर्ट) और I3 की ओर हैं। I4 के पुल केवल I3 और I6 (पोर्ट) की ओर हैं। I1 पर मौजूद एक यात्री I6 तक पहुँचना चाहता है। निम्नलिखित में से कौन सा कथन निश्चित रूप से सत्य है? यदि विकल्प A सही है तो 1 टाइप करें, विकल्प B के लिए 2 टाइप करें, इत्यादि।\n(A) यात्री सीधे I6 तक पहुँच सकता है क्योंकि दोनों पोर्ट हैं।\n(B) यात्री I6 तक नहीं पहुँच सकता; इसके अलावा, केवल एक पुल खुला होने के कारण I2 तक पहुँच खत्म हो जाती है, और नियम 3 के तहत I1-I2 पुल भी बंद हो जाता है।\n(C) I2 अपनी पहुँच खो देता है क्योंकि उसका केवल एक पुल (I1 की ओर) खुला है, इसलिए नियम 3 उस पुल को भी बंद कर देता है, जिससे I1 अलग-थलग हो जाता है।\n(D) यदि I3 के कम से कम दो पुल फिर से खोल दिए जाएं, तो यात्री $I2\\rightarrow I3\\rightarrow I4\\rightarrow I6$ के रास्ते I6 तक पहुँच सकता है।\n(E) यात्री I6 तक नहीं पहुँच सकता क्योंकि I3 के बंद होने से I2 और I4 के लिए भी नियम 3 लागू हो जाता है।",
+      "answer": "2",
+      "points": 100
+    },
+    {
+      "questionId": 9,
+      "letter": "I",
+      "title": "कॉम्बिनेशन लॉक - साइड चैनल की समस्या",
+      "content": "एक कॉम्बिनेशन लॉक में 3 डायल हैं, जिनमें से प्रत्येक पर 0-9 तक के अंक हैं। एक साइड चैनल यह बताता है कि आपके द्वारा अनुमान लगाया गया प्रत्येक डायल का अंक सही मान के 1 के अंतर के भीतर (चक्रीय रूप से) है या नहीं। खराब से खराब स्थिति (worst case) में सही कोड खोजने की गारंटी के लिए न्यूनतम कितने परीक्षणों (tests) की आवश्यकता होगी?",
+      "answer": "5",
+      "points": 100
+    },
+    {
+      "questionId": 10,
+      "letter": "J",
+      "title": "डिनर पार्टी की दुविधा",
+      "content": "आपने टेक्नोपीडिया के सभी प्रश्नों को पूरा करने का जश्न मनाने के लिए 52 लोगों की एक डिनर पार्टी आयोजित की है, जहाँ इस अध्याय के अंत का जश्न मनाने के लिए 'लेफ्ट' और 'राइट' नाम के दो खिलाड़ी बारी-बारी से जोड़ों (couples) को बैठा रहे हैं।\n'लेफ्ट' खिलाड़ी किसी भी महिला को उसके पार्टनर के बाईं ओर बैठाना पसंद करता है, जबकि 'राइट' का मानना है कि महिला को उसके पार्टनर के दाईं ओर बैठाना ही सही है। किसी भी पुरुष को उसकी अपनी पार्टनर के अलावा किसी अन्य महिला के बगल में नहीं बैठाया जा सकता। जो भी खिलाड़ी (लेफ्ट या राइट) सबसे पहले किसी जोड़े को बैठाने में असमर्थ होता है, उसे बचे हुए मेहमानों को वापस भेजने का शर्मनाक काम करना पड़ता है, और इसलिए उसे हारा हुआ माना जा सकता है।\n\nशाम के बीच में, लेफ्ट और राइट प्रतिस्पर्धा बंद करने का फैसला करते हैं। इसके बजाय, वे एक नए लक्ष्य के साथ सहयोग करने का निर्णय लेते हैं: वे एक 'डेडलॉक' (गतिरोध) तक पहुँचना चाहते हैं। यह एक ऐसी स्थिति है जहाँ न तो लेफ्ट और न ही राइट मेज पर कहीं भी किसी और जोड़े को बैठा सकें, और इसके लिए वे कम से कम संभव जोड़ों का उपयोग करना चाहते हैं। 52-सीटों वाली मेज पर खेल को पूरी तरह से डेडलॉक करने के लिए कम से कम कितने जोड़ों को बैठाया जाना चाहिए?",
+      "answer": "14",
+      "points": 100
+    }
+  ]
 };
 
 module.exports = {
