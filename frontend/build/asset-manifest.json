@@ -124,10 +124,10 @@
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
     "main.7b122d47.css.map": "/static/css/main.7b122d47.css.map",
-    "main.cabd2b33.js.map": "/static/js/main.cabd2b33.js.map"
+    "main.42f2a621.js.map": "/static/js/main.42f2a621.js.map"
   },
   "entrypoints": [
     "static/css/main.7b122d47.css",
-    "static/js/main.cabd2b33.js"
+    "static/js/main.42f2a621.js"
   ]
 }
