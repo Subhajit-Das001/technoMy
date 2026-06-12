@@ -386,6 +386,49 @@ router.post("/retry-mails", isAdmin, async (req, res) => {
   }
 });
 
+router.post("/resend-mail-all", isAdmin, async (req, res) => {
+  try {
+    // 🔍 Find ALL users across the entire collection whose mail failed
+    const pendingUsers = await Offline26.find({
+      mailSent: false
+    });
+
+    if (pendingUsers.length === 0) {
+      return res.json({
+        success: true,
+        message: "No pending emails found in the database! 🎉",
+        queued: 0
+      });
+    }
+
+    console.log(`📧 Queuing globally: ${pendingUsers.length} failed emails for retry...`);
+
+    // =========================================================
+    // ✅ BACKGROUND PROCESSING (Non-blocking)
+    // =========================================================
+    // We execute this WITHOUT 'await' so the global process runs in the background.
+    processEmailsInBackground(pendingUsers).catch(err => {
+      console.error("Critical error in global background retry worker:", err);
+    });
+
+    // Respond to the admin instantly
+    return res.json({
+      success: true,
+      message: "Global retry initiated successfully",
+      queued: pendingUsers.length,
+      info: `Processing ${pendingUsers.length} emails across the entire database in the background.`
+    });
+
+  } catch (err) {
+    console.error("Global retry error:", err);
+
+    return res.status(500).json({
+      error: "Global retry initialization failed",
+      message: err.message
+    });
+  }
+});
+
 
 //Generating A .vcf file 
 router.post("/generate-vcf", async (req, res) => {
