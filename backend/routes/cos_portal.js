@@ -148,7 +148,7 @@ const verifyToken = (req, res, next) => {
 // Optional API Rate Limiter (Max 5 uploads per hour per IP)
 const uploadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
-  max: 10,
+  max: 15,
   message: { error: "Too many uploads from this IP, please try again after an hour." }
 });
 const validateBody = (schema) => (req, res, next) => {
