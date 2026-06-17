@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -36,9 +36,9 @@ function Contest() {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
     const [contestTimeLeft, setContestTimeLeft] = useState(3600);
     const [questions, setQuestions] = useState([
-        { id: 1, letter: 'A', title: 'Lost Sequences in Number Maze', points: 300, content: '', attempted: false, answered: false },
-        { id: 2, letter: 'B', title: 'Bamboo Breakfast: Slicing to Share', points: 600, content: '', attempted: false, answered: false },
-        { id: 3, letter: 'C', title: "The Leader's Last Apple", points: 1000, content: '', attempted: false, answered: false }
+        // { id: 1, letter: 'A', title: 'Lost Sequences in Number Maze', points: 300, content: '', attempted: false, answered: false },
+        // { id: 2, letter: 'B', title: 'Bamboo Breakfast: Slicing to Share', points: 600, content: '', attempted: false, answered: false },
+        // { id: 3, letter: 'C', title: "The Leader's Last Apple", points: 1000, content: '', attempted: false, answered: false }
     ]);
     const [contestStarted, setContestStarted] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
@@ -50,10 +50,39 @@ function Contest() {
         question3: 0,
         total: 0
     });
+    // Custom Dialog state for Penalty Warning
+    const [penaltyWarning, setPenaltyWarning] = useState({ show: false, reason: '' });
     const [totalTimeSpent, setTotalTimeSpent] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [attemptLocked, setAttemptLocked] = useState(false);
-
+    const isProcessingPenalty = useRef(false);
+    const cameraStreamRef = useRef(null);
+    // Cleanup Camera on Unmount
+    useEffect(() => {
+        return () => {
+            if (cameraStreamRef.current) {
+                cameraStreamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+    // Fetch Questions Logic (Wrapped in useCallback so it can be safely used in useEffect)
+    const fetchQuestions = useCallback(async () => {
+        try {
+            const response = await axios.get(`${baseURL}/api/contest/questions`);
+            const answeredQuestions = JSON.parse(localStorage.getItem('answeredQuestions') || '[]');
+            
+            const formattedQuestions = response.data.map(q => ({
+                ...q,
+                title: ` ${q.title}`,
+                answered: answeredQuestions.includes(q.id.toString())
+            }));
+            
+            setQuestions(formattedQuestions);
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+            setError('Failed to load questions. Please refresh the page.');
+        }
+    }, [baseURL]);
     // Check user authentication
     useEffect(() => {
         const checkAuthentication = () => {
@@ -73,7 +102,91 @@ function Contest() {
         };
 
         checkAuthentication();
-    }, [navigate]);
+        fetchQuestions(); // Fetch immediately so pre-contest cards show up
+    }, [navigate, fetchQuestions]);
+    // useEffect(() => {
+    //     if (contestStarted) {
+    //         fetchQuestions();
+    //     }
+    // }, [contestStarted, fetchQuestions]);
+    //Anti Cheating Hook
+    useEffect(() => {
+        if (!contestStarted) return;
+
+        const handleViolation = async (reason) => {
+            if (isProcessingPenalty.current) return;
+            isProcessingPenalty.current = true;
+
+            try {
+                const userPhone = localStorage.getItem('userPhone');
+                const response = await axios.post(`${baseURL}/api/contest/penalty`, {
+                    phone: userPhone,
+                    reason: reason
+                });
+
+                if (response.data.isDisqualified) {
+                    alert('🚨 CONTEST TERMINATED 🚨\n\nYou have violated the contest rules multiple times. Your contest has been submitted automatically.');
+                    handleEndContest(); // Ensure clean exit
+                } else {
+                    setPenaltyWarning({ show: true, reason: reason });
+                }
+            } catch (err) {
+                console.error("Failed to log penalty:", err);
+            } finally {
+                setTimeout(() => { isProcessingPenalty.current = false; }, 2000);
+            }
+        };
+
+        const onVisibilityChange = () => {
+            if (document.hidden && !penaltyWarning.show) {
+                handleViolation('Switched tabs or minimized the browser window.');
+            }
+        };
+
+        const onFullscreenChange = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !penaltyWarning.show) {
+                handleViolation('Exited Fullscreen Mode.');
+            }
+        };
+
+        const disableActions = (e) => e.preventDefault();
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('contextmenu', disableActions);
+        document.addEventListener('copy', disableActions);
+
+        return () => {
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            document.removeEventListener('fullscreenchange', onFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+            document.removeEventListener('contextmenu', disableActions);
+            document.removeEventListener('copy', disableActions);
+        };
+    }, [contestStarted, baseURL, navigate, penaltyWarning.show]);
+
+    // Timer logic...
+    useEffect(() => {
+        if (contestStarted) {
+            const startTime = localStorage.getItem('contestStartTime');
+            const endTime = localStorage.getItem('contestEndTime');
+            if (!startTime || !endTime) return;
+
+            const end = new Date(endTime);
+            setContestTimeLeft(Math.max(Math.floor((end - new Date()) / 1000), 0));
+
+            const timer = setInterval(() => {
+                const timeLeft = Math.max(Math.floor((end - new Date()) / 1000), 0);
+                setContestTimeLeft(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleEndContest();
+                }
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [contestStarted]);
 
     // Check if contest is already started
     useEffect(() => {
@@ -91,31 +204,21 @@ function Contest() {
         if (contestStarted) {
             const startTime = localStorage.getItem('contestStartTime');
             const endTime = localStorage.getItem('contestEndTime');
-            
-            if (!startTime || !endTime) {
-                console.error('Missing contest time information');
-                return;
-            }
+            if (!startTime || !endTime) return;
 
-            // Set initial time
-            const now = new Date();
             const end = new Date(endTime);
-            const initialTimeLeft = Math.max(Math.floor((end - now) / 1000), 0);
-            setContestTimeLeft(initialTimeLeft);
+            
+            // Set initial
+            setContestTimeLeft(Math.max(Math.floor((end - new Date()) / 1000), 0));
 
-            // Start the timer
             const timer = setInterval(() => {
-                const currentTime = new Date();
-                const timeLeft = Math.max(Math.floor((end - currentTime) / 1000), 0);
-                
+                const timeLeft = Math.max(Math.floor((end - new Date()) / 1000), 0);
                 setContestTimeLeft(timeLeft);
-                
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     handleEndContest();
                 }
             }, 1000);
-
             return () => clearInterval(timer);
         }
     }, [contestStarted]);
@@ -135,7 +238,7 @@ function Contest() {
                     setContestDates(response.data);
                 }
             } catch (error) {
-                console.error('Error fetching times:', error);
+                console.error('Error fetching times:');
                 setError('Error fetching contest schedule');
             }
         };
@@ -171,7 +274,7 @@ function Contest() {
                     }
                 }
             } catch (error) {
-                console.error('Error fetching contest dates:', error);
+                console.error('Error fetching contest dates:');
                 setError('Error fetching contest dates');
             }
         };
@@ -207,62 +310,77 @@ function Contest() {
 
     // Handlers
     const handleStartContest = () => {
-        console.log('Start button clicked'); // Add debug log
+        // console.log('Start button clicked'); // Add debug log
         setOpenDialog(true);
     };
 
-    const fetchQuestions = async () => {
-        try {
-            const sessionToken = localStorage.getItem('sessionToken');
-            if (!sessionToken) {
-                throw new Error('No session token found');
-            }
+    // const fetchQuestions = async () => {
+    //     try {
+    //         const sessionToken = localStorage.getItem('sessionToken');
+    //         if (!sessionToken) {
+    //             throw new Error('No session token found');
+    //         }
 
-            const questionPromises = [1, 2, 3].map(id => 
-                axios.get(`${baseURL}/api/contest/questions/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${sessionToken}`
-                    }
-                })
-            );
+    //         const questionPromises = [1, 2, 3].map(id => 
+    //             axios.get(`${baseURL}/api/contest/questions/${id}`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${sessionToken}`
+    //                 }
+    //             })
+    //         );
             
-            const responses = await Promise.all(questionPromises);
+    //         const responses = await Promise.all(questionPromises);
             
-            setQuestions(prev => prev.map((q, index) => {
-                const responseData = responses[index].data;
-                return {
-                    ...q,
-                    title: ` ${responseData.title}`,
-                    letter: responseData.letter,
-                    points: responseData.points || q.points,
-                    content: responseData.content || ''
-                };
-            }));
-        } catch (error) {
-            console.error('Error fetching questions:', error);
-            setError('Failed to load questions. Please try again.');
-        }
-    };
+    //         setQuestions(prev => prev.map((q, index) => {
+    //             const responseData = responses[index].data;
+    //             return {
+    //                 ...q,
+    //                 title: ` ${responseData.title}`,
+    //                 letter: responseData.letter,
+    //                 points: responseData.points || q.points,
+    //                 content: responseData.content || ''
+    //             };
+    //         }));
+    //     } catch (error) {
+    //         console.error('Error fetching questions:', error);
+    //         setError('Failed to load questions. Please try again.');
+    //     }
+    // };
 
-    const handleConfirmStart = async () => {
+ const handleConfirmStart = async () => {
         try {
             setIsLoading(true);
             setError('');
+
+            // PRE-FLIGHT CHECK 1: Camera (Keeps stream active!)
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraStreamRef.current = stream; // Save stream to keep the light on
+            } catch (err) {
+                setError('Camera permission is required. Please allow camera access.');
+                setIsLoading(false);
+                return;
+            }
+
+            // PRE-FLIGHT CHECK 2: Fullscreen
+            try {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    await elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    await elem.webkitRequestFullscreen();
+                }
+            } catch (err) {
+                console.log("Fullscreen blocked or unsupported.");
+            }
             
             const userPhone = localStorage.getItem('userPhone');
             const userName = localStorage.getItem('userName');
             const userSchool = localStorage.getItem('userSchool');
             const studentType1 = localStorage.getItem('usertype');
 
-            if (!userPhone || !userName || !userSchool) {
-                throw new Error('Missing user information. Please login again.');
-            }
-
             const response = await axios.post(`${baseURL}/api/contest/start`, {
-                phone: userPhone,
-                name: userName,
-                school: userSchool,
-                studentType: studentType1
+                phone: userPhone, name: userName, school: userSchool, studentType: studentType1
             });
 
             if (response.data.allowed === false) {
@@ -273,89 +391,107 @@ function Contest() {
             }
 
             if (response.data.allowed === true || response.data.success) {
-                // Set contest times
                 const startTime = new Date();
-                const endTime = new Date(startTime.getTime() + 3600000); // 1 hour
-
-                // Save to localStorage
+                const endTime = new Date(startTime.getTime() + 3600000);
+                
                 localStorage.setItem('contestStartTime', startTime.toISOString());
                 localStorage.setItem('contestEndTime', endTime.toISOString());
                 localStorage.setItem('sessionToken', response.data.sessionToken);
                 localStorage.setItem('isContestActive', 'true');
 
-                // Update state
                 setContestStarted(true);
-                setContestTimeLeft(3600); // Set initial time left to 3600 seconds (1 hour)
                 setOpenDialog(false);
-
-                // Fetch questions
-                await fetchQuestions();
-            } else {
-                throw new Error(response.data.message || 'Failed to start contest');
             }
         } catch (error) {
             console.error('Contest start error:', error);
-            if (error.response?.data?.allowed === false) {
-                setError('You have already attempted this contest');
-                setAttemptLocked(true);
-                setOpenDialog(false);
-                return;
+            setError(error.response?.data?.message || 'Failed to start contest');
+            
+            // If starting failed, turn off the camera
+            if (cameraStreamRef.current) {
+                cameraStreamRef.current.getTracks().forEach(track => track.stop());
+                cameraStreamRef.current = null;
             }
-            setError(error.response?.data?.message || error.message || 'Failed to start contest');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleEndContest = async () => {
+    // const handleEndContest = async () => {
+    //     try {
+    //         const userPhone = localStorage.getItem('userPhone');
+            
+    //         if (!userPhone) {
+    //             setError('User phone not found');
+    //             navigate('/contest/login');
+    //             return;
+    //         }
+
+    //         const response = await axios.post(`${baseURL}/api/contest/end`, {
+    //             phone: userPhone
+    //         });
+
+    //         if (response.data.message === 'Contest ended successfully') {
+    //             setScores(response.data.scores);
+    //             setTotalTimeSpent(response.data.totalTimeSpent);
+
+    //             // Clear all localStorage items
+    //             const itemsToRemove = [
+    //                 'contestStartTime',
+    //                 'contestEndTime',
+    //                 'sessionId',
+    //                 'userPhone',
+    //                 'userName',
+    //                 'userRoll',
+    //                 'usertype',
+    //                 'answeredQuestions',
+    //                 'contestCompleted'
+    //             ];
+
+    //             itemsToRemove.forEach(item => localStorage.removeItem(item));
+                
+    //             // Force clear any remaining items
+    //             localStorage.clear();
+                
+    //             // Navigate to login page
+    //             navigate('/contest/login', { replace: true });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error ending contest:', error);
+    //         setError(error.response?.data?.message || 'Error ending contest');
+            
+    //         // If there's an error, still try to clear localStorage and redirect
+    //         localStorage.clear();
+    //         navigate('/contest/login', { replace: true });
+    //     }
+        
+    // };
+const handleEndContest = async () => {
         try {
             const userPhone = localStorage.getItem('userPhone');
-            
-            if (!userPhone) {
-                setError('User phone not found');
-                navigate('/contest/login');
-                return;
-            }
-
-            const response = await axios.post(`${baseURL}/api/contest/end`, {
-                phone: userPhone
-            });
-
-            if (response.data.message === 'Contest ended successfully') {
-                setScores(response.data.scores);
-                setTotalTimeSpent(response.data.totalTimeSpent);
-
-                // Clear all localStorage items
-                const itemsToRemove = [
-                    'contestStartTime',
-                    'contestEndTime',
-                    'sessionId',
-                    'userPhone',
-                    'userName',
-                    'userRoll',
-                    'usertype',
-                    'answeredQuestions',
-                    'contestCompleted'
-                ];
-
-                itemsToRemove.forEach(item => localStorage.removeItem(item));
-                
-                // Force clear any remaining items
-                localStorage.clear();
-                
-                // Navigate to login page
-                navigate('/contest/login', { replace: true });
+            if (userPhone) {
+                await axios.post(`${baseURL}/api/contest/end`, { phone: userPhone });
             }
         } catch (error) {
             console.error('Error ending contest:', error);
-            setError(error.response?.data?.message || 'Error ending contest');
-            
-            // If there's an error, still try to clear localStorage and redirect
-            localStorage.clear();
-            navigate('/contest/login', { replace: true });
+        } finally {
+            // 1. Turn off camera
+            if (cameraStreamRef.current) {
+                cameraStreamRef.current.getTracks().forEach(track => track.stop());
+                cameraStreamRef.current = null;
+            }
+
+            // 2. Exit fullscreen
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+
+            // 3. Clear storage and redirect
+            const itemsToRemove = ['contestStartTime', 'contestEndTime', 'sessionId', 'userPhone', 'userName', 'userRoll', 'usertype', 'answeredQuestions', 'contestCompleted', 'isContestActive'];
+            itemsToRemove.forEach(item => localStorage.removeItem(item));
+            navigate('/mega-contest', { replace: true });
         }
     };
-
     const handleBack = () => {
         if (contestStarted) {
             if (window.confirm('Are you sure you want to leave? This will end your contest and clear all data.')) {
@@ -535,54 +671,59 @@ function Contest() {
 
             <img src={birdLogo} alt="" className="bird-logo" />
 
-            <Dialog
-                open={openDialog}
-                onClose={() => !isLoading && setOpenDialog(false)}
-                disableBackdropClick={isLoading}
-                disableEscapeKeyDown={isLoading}
-            >
-                <DialogTitle>Start Contest?</DialogTitle>
+            <Dialog open={openDialog} onClose={() => !isLoading && setOpenDialog(false)} disableEscapeKeyDown={isLoading}>
+                <DialogTitle style={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ Strict Integrity Mode</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Warning: Once you start the contest, you cannot restart it. 
-                        You will have 1 hour to complete all questions.
-                        Negavtive points will be awarded for incorrect answers. 
-                        Are you sure you want to proceed?
+                        <strong>Before starting, please ensure:</strong>
+                        <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
+                            <li>Your camera remains on and accessible. Your presence and participation will be monitored during the entire contest.</li>
+                            <li>You remain in Fullscreen mode.</li>
+                            <li>You do not switch tabs, minimize the browser, or open other applications.</li>
+                        </ul>
+                        Violating these rules twice will result in <strong>immediate disqualification</strong>.
                     </DialogContentText>
                     {error && (
-                        <div className="error-message" style={{ 
-                            color: 'red', 
-                            marginTop: '10px',
-                            padding: '8px',
-                            backgroundColor: '#ffebee',
-                            borderRadius: '4px'
-                        }}>
+                        <div style={{ color: 'red', marginTop: '15px', padding: '10px', backgroundColor: '#ffebee', borderRadius: '4px', fontWeight: 'bold' }}>
                             {error}
                         </div>
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button 
-                        onClick={() => setOpenDialog(false)} 
-                        color="primary"
-                        disabled={isLoading}
-                    >
-                        Cancel
+                    <Button onClick={() => setOpenDialog(false)} disabled={isLoading}>Cancel</Button>
+                    <Button onClick={handleConfirmStart} color="error" variant="contained" disabled={isLoading}>
+                        {isLoading ? 'Verifying Environment...' : 'I Understand, Start Contest'}
                     </Button>
+                </DialogActions>
+            </Dialog>
+            {/* CUSTOM PENALTY WARNING DIALOG (Restores Fullscreen) */}
+            <Dialog open={penaltyWarning.show} disableEscapeKeyDown disableBackdropClick>
+                <DialogTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>⚠️ WARNING</DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: 'black', fontWeight: '500' }}>
+                        {penaltyWarning.reason}
+                        <br /><br />
+                        Please do not switch tabs, minimize the browser, or exit fullscreen. 
+                        <strong> One more violation will result in immediate disqualification.</strong>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
                     <Button 
-                        onClick={handleConfirmStart} 
-                        color="primary" 
-                        variant="contained"
-                        disabled={isLoading}
+                        variant="contained" 
+                        color="error" 
+                        onClick={() => {
+                            setPenaltyWarning({ show: false, reason: '' });
+                            
+                            // This works because the user physically clicked the button
+                            const elem = document.documentElement;
+                            if (elem.requestFullscreen) {
+                                elem.requestFullscreen().catch(err => console.log('Fullscreen failed:', err));
+                            } else if (elem.webkitRequestFullscreen) {
+                                elem.webkitRequestFullscreen();
+                            }
+                        }}
                     >
-                        {isLoading ? (
-                            <>
-                                <span style={{marginRight: '8px'}}>Starting...</span>
-                                <CircularProgress size={20} color="inherit" />
-                            </>
-                        ) : (
-                            'Start Contest'
-                        )}
+                        Acknowledge & Return to Fullscreen
                     </Button>
                 </DialogActions>
             </Dialog>

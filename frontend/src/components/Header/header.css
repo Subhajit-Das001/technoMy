@@ -164,7 +164,7 @@ margin-top: 20px;
 .contest-link-content{
   display: flex;
    align-items: center;
-      animation: pulseEmoji 2s infinite;
+      /* animation: pulseEmoji 2s infinite; */
       color: hsl(0, 100%, 50%);
   padding: 0.5rem 0.7rem;
   background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
@@ -211,7 +211,6 @@ margin-top: 20px;
   display: flex;
    align-items: center;
     gap:5px;
-      animation: pulseEmoji 2s infinite;
       color: #ff0000;
   padding: 0.5rem 4rem;
   background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);

@@ -22,9 +22,19 @@ const ParticipateButton = ({ contestStartTime, contestEndTime, isContestActive =
   // Get user phone to determine if they are logged in
   const phone = localStorage.getItem('userPhone');
 
-  useEffect(() => {
+useEffect(() => {
     const interval = setInterval(() => {
-      setPhase(getPhase(contestWindow.startTime, contestWindow.endTime));
+      setPhase((prevPhase) => {
+        const currentPhase = getPhase(contestWindow.startTime, contestWindow.endTime);
+        
+        // Catch the exact second the countdown hits 00:00:00
+        if (prevPhase === 'before' && currentPhase === 'live') {
+          alert("Contest has started! Click OK to refresh and enter the contest arena.");
+          window.location.reload(); // This automatically refreshes the page for them!
+        }
+        
+        return currentPhase;
+      });
     }, 1000);
 
     return () => clearInterval(interval);
@@ -138,7 +148,7 @@ const ParticipateButton = ({ contestStartTime, contestEndTime, isContestActive =
       return { disabled: true, label: 'SUBMITTED', status: '✅ Your contest attempt is already submitted.', route: null, isGreen: false  };
     }
 
-    if (phase === 'live' && activeStatus !== false) {
+    if (phase === 'live' && activeStatus ) {
       // if (attemptStatus.isStarted) {
       //   return { disabled: false, label: 'RESUME CONTEST 🚀', status: '⚠️ Your contest is in progress.', route: '/contest/arena' };
       // }

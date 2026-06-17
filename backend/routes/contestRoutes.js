@@ -316,12 +316,10 @@ router.get('/dates', async (req, res) => {
         res.status(500).json({ message: 'Error fetching contest dates' });
     }
 });
-// Get question by ID
-router.get('/questions/:id', async (req, res) => {
+// Get ALL questions (Safe version without answers)
+// Get ALL questions METADATA (Strictly NO content or answers)
+router.get('/questions', async (req, res) => {
     try {
-        const questionId = parseInt(req.params.id);
-        
-        // Find the latest contest and get the specific question
         const contest = await Contest.findOne()
             .sort({ createdAt: -1 })
             .select('questions');
@@ -330,13 +328,54 @@ router.get('/questions/:id', async (req, res) => {
             return res.status(404).json({ message: 'No contest found' });
         }
 
-        const question = contest.questions.find(q => q.questionId === questionId);
-        
-        if (!question) {
-            return res.status(404).json({ message: 'Question not found' });
+        // Map through to ensure NO content and NO answer leak before start
+        const safeQuestions = contest.questions.map(q => ({
+            id: q.questionId,
+            title: q.title,
+            points: q.points,
+            letter: q.letter
+        }));
+
+        res.json(safeQuestions);
+    } catch (error) {
+        console.error('Error fetching questions:', error);
+        res.status(500).json({ message: 'Error fetching questions' });
+    }
+});
+// Get question by ID
+// Get specific question CONTENT (Locked behind active session)
+router.get('/questions/:id', async (req, res) => {
+    try {
+        // 1. Check for Authorization Header
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ message: 'Unauthorized. You must start the contest first.' });
         }
 
-        // Return question without the answer
+        const sessionToken = authHeader.split(' ')[1];
+
+        // 2. Verify the session actually belongs to an ACTIVE contest
+        const activeContest = await ContestScore.findOne({
+            sessionId: sessionToken,
+            isStarted: true,
+            isCompleted: false
+        });
+
+        if (!activeContest) {
+            return res.status(403).json({ message: 'Active contest session not found. Contest may have ended.' });
+        }
+
+        const questionId = parseInt(req.params.id);
+        const contest = await Contest.findOne()
+            .sort({ createdAt: -1 })
+            .select('questions');
+
+        if (!contest) return res.status(404).json({ message: 'No contest found' });
+
+        const question = contest.questions.find(q => q.questionId === questionId);
+        if (!question) return res.status(404).json({ message: 'Question not found' });
+
+        // 3. Return question content (STILL omitting the answer)
         res.json({
             title: question.title,
             content: question.content,
@@ -345,7 +384,7 @@ router.get('/questions/:id', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching question:', error);
-        res.status(500).json({ message: 'Error fetching question' });
+        res.status(500).json({ message: 'Error fetching question content' });
     }
 });
 
@@ -425,6 +464,7 @@ router.get("/stats", async (req, res) => {
   }
 });
 // Get contest status (Checks if contest is currently active)
+// Get contest status (Checks if contest is currently active)
 router.get('/status', async (req, res) => {
     try {
         const contest = await Contest.findOne()
@@ -435,9 +475,10 @@ router.get('/status', async (req, res) => {
             return res.json({ isContestActive: false });
         }
 
-        const now = new Date();
-        const start = new Date(contest.startTime);
-        const end = new Date(contest.endTime);
+        const now = Date.now(); // Universal ms
+        // Use the helper to force the DB time into proper universal time
+        const start = new Date(forceISTtoUTC(contest.startTime)).getTime();
+        const end = new Date(forceISTtoUTC(contest.endTime)).getTime();
 
         const isActive = now >= start && now <= end;
 
@@ -554,4 +595,46 @@ router.get('/results-status', async (req, res) => {
     }
 });
 
+//Anti-cheating Route
+// Post a penalty strike
+router.post('/penalty', async (req, res) => {
+    try {
+        const { phone, reason } = req.body;
+
+        const contest = await ContestScore.findOne({ 
+            phone: phone.trim(),
+            isStarted: true,
+            isCompleted: false
+        });
+        if (!contest) {
+            return res.status(404).json({ message: 'No active contest found' });
+        }
+        // Increment penalty and log the reason
+        contest.penalties += 1;
+        contest.penaltyReasons.push(`${new Date().toISOString()}: ${reason}`);
+
+        let isDisqualified = false;
+
+        // Two-strike rule
+        if (contest.penalties >= 3) {
+            contest.isCompleted = true;
+            contest.endTime = new Date();
+            contest.totalTimeSpent = Math.floor((contest.endTime - contest.startTime) / 1000);
+            contest.calculateScore(); // Or zero their score if you prefer
+            isDisqualified = true;
+        }
+
+        await contest.save();
+
+        res.json({ 
+            success: true, 
+            penalties: contest.penalties,
+            isDisqualified
+        });
+
+    } catch (error) {
+        console.error('Penalty error:', error);
+        res.status(500).json({ message: 'Error recording penalty' });
+    }
+});
 module.exports = router;
