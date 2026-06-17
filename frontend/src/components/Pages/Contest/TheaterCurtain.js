@@ -22,7 +22,7 @@ const TheaterCurtain = ({ startTime, endTime, contestTitle }) => {
       } else if (now > start) {
         // Contest has started - fully open curtains
         setCurtainOffset(100);
-      }
+      } 
     };
 
     updateCurtainPosition();

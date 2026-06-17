@@ -133,10 +133,11 @@ app.use(express.urlencoded({ limit: '2mb', extended: true }));
 // ==========================================
 // This route now has CORS and Body Parsing, but no rate limiting!
 app.use('/api/technopedia', technopediaRoutes);
-
+app.use('/api/contest', contestRoutes);
 // ==========================================
 // 4. RATE LIMITER
 // ==========================================
+app.set("trust proxy", 1);
 app.use('/api', globalLimiter);
 
 // ==========================================
@@ -151,7 +152,6 @@ app.use('/api/cityreps', cityRepRoutes);
 app.use('/api', CityStudentCount);
 app.use('/api/announcement', announcementRoutes);
 app.use('/api/cityrep_portal', Cityrepportal);
-app.use('/api', contestRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', centerListRoutes);
 app.use('/api/merch', merchAnalyticsRoutes);

@@ -1,6 +1,6 @@
 // AppRoutes.js
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React , { useEffect, useState }from 'react';
+import { Navigate,Route, Routes } from 'react-router-dom';
 
 import Home from './components/Pages/Home/home';
 import Pyp from './components/Pages/Pyp/Pyp';
@@ -14,7 +14,7 @@ import COSLogin from './components/Pages/COS/cos_login';
 import COSPortal from './components/Pages/COS/cos_portal';
 
 import Leaderboard from './components/Pages/Contest/Leaderboard';
-
+ 
 
 import Login from './components/Pages/Login/login';
 import Register from './components/Pages/Register/register';
@@ -37,7 +37,10 @@ import Registration from './components/Pages/SchoolRegister/Registration'
 
 import Contestlogin from './components/Pages/Contest/contest_login';
 import Contest from './components/Pages/Contest/Contest';
+import MegaContest from './components/Pages/Contest/MegaContest';
 import Question from './components/Pages/Contest/question';
+import useAuthContext from './hooks/useAuthContext';
+
 import TechnopediaLogin from './components/Pages/Technopedia/technopedia_login';
 import Technopedia from './components/Pages/Technopedia/technopedia';
 import TechnopediaQuestion from './components/Pages/Technopedia/technopedia-question';
@@ -47,6 +50,51 @@ import CenterTable from './components/Pages/Center/CenterTable';
 import Merch from './components/Pages/Merch/merch';
 import ResultTable from './components/Pages/ResultTable/ResultTable';
 import POCRegistration from './components/Pages/COS/branch_registration';
+
+
+
+const ProtectedContestArena = () => {
+  const { isAuthenticated } = useAuthContext();
+  const [contestWindow, setContestWindow] = useState(null);
+  const [contestWindowStatus, setContestWindowStatus] = useState('loading');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchContestWindow = async () => {
+      try {
+        const response = await fetch('/api/contest/dates');
+        if (!response.ok) throw new Error('Unable to fetch contest dates');
+        const data = await response.json();
+        if (isMounted) {
+          setContestWindow({
+            startTime: new Date(data.startTime),
+            endTime: new Date(data.endTime),
+          });
+          setContestWindowStatus('ready');
+        }
+      } catch (error) {
+        if (isMounted) {
+          setContestWindow(null);
+          setContestWindowStatus('error');
+        }
+      }
+    };
+
+    fetchContestWindow();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (!isAuthenticated) return <Navigate to="/contest/login" replace />;
+  if (contestWindowStatus === 'loading') return null;
+  if (contestWindowStatus === 'error' || !contestWindow) return <Navigate to="/mega-contest" replace />;
+
+  const now = Date.now();
+  const isContestWindowOpen = now >= contestWindow.startTime.getTime() && now <= contestWindow.endTime.getTime();
+  return isContestWindowOpen ? <Contest /> : <Navigate to="/mega-contest" replace />;
+};
 
 const AppRoutes = () => {
   return (
@@ -97,8 +145,11 @@ const AppRoutes = () => {
       {/* Contest Routes */}
       <Route path="/contest/login" element={<Contestlogin />} />
       <Route path="/contest" element={<Contest />} />
+      <Route path="/contest/arena" element={<ProtectedContestArena />} />
       <Route path="/contest/:id/:letter" element={<Question />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/mega-contest" element={<MegaContest />} />
+
       <Route path="/center-list" element={<CenterTable />} />
       <Route path="/technopedia-login" element={<TechnopediaLogin />} />
       <Route path="/technopedia" element={<TechnopediaYear/>} />

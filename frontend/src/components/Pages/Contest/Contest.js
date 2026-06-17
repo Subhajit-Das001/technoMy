@@ -11,7 +11,7 @@ import {
     DialogTitle, 
     Avatar,
     CircularProgress 
-} from '@mui/material';
+} from '@mui/material'; 
 import './Contest.css';
 import technoLogo from '../../Assets/img/techno_contest.png';
 import starLogo from '../../Assets/img/star.png';
@@ -52,6 +52,7 @@ function Contest() {
     });
     const [totalTimeSpent, setTotalTimeSpent] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [attemptLocked, setAttemptLocked] = useState(false);
 
     // Check user authentication
     useEffect(() => {
@@ -171,9 +172,7 @@ function Contest() {
                 }
             } catch (error) {
                 console.error('Error fetching contest dates:', error);
-                if (error.response?.status !== 404) {
-                    setError('Error fetching contest dates');
-                }
+                setError('Error fetching contest dates');
             }
         };
 
@@ -242,7 +241,6 @@ function Contest() {
         } catch (error) {
             console.error('Error fetching questions:', error);
             setError('Failed to load questions. Please try again.');
-            handleEndContest(); // End contest if questions can't be loaded
         }
     };
 
@@ -267,7 +265,14 @@ function Contest() {
                 studentType: studentType1
             });
 
-            if (response.data.success) {
+            if (response.data.allowed === false) {
+                setError('You have already attempted this contest');
+                setAttemptLocked(true);
+                setOpenDialog(false);
+                return;
+            }
+
+            if (response.data.allowed === true || response.data.success) {
                 // Set contest times
                 const startTime = new Date();
                 const endTime = new Date(startTime.getTime() + 3600000); // 1 hour
@@ -290,6 +295,12 @@ function Contest() {
             }
         } catch (error) {
             console.error('Contest start error:', error);
+            if (error.response?.data?.allowed === false) {
+                setError('You have already attempted this contest');
+                setAttemptLocked(true);
+                setOpenDialog(false);
+                return;
+            }
             setError(error.response?.data?.message || error.message || 'Failed to start contest');
         } finally {
             setIsLoading(false);
@@ -429,7 +440,7 @@ function Contest() {
                         
                     {/* </div> */}
 
-
+                        {!attemptLocked && (
                         <div className="start-section-c">
                             <button 
                                 className="start-button" 
@@ -439,6 +450,7 @@ function Contest() {
                                 <span>{isLoading ? 'Starting...' : '🚀 Start Contest'}</span>
                             </button>
                     </div>
+                        )}
                 </div>
 
 

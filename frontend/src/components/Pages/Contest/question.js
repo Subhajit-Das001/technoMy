@@ -11,7 +11,7 @@ function Question() {
   const [question, setQuestion] = useState({
     title: "",
     content: "",
-    points: 0
+    points: 0 
   });
   const [answer, setAnswer] = useState("");
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
@@ -86,7 +86,6 @@ function Question() {
       } catch (error) {
         console.error("Error fetching question:", error);
         setError("Failed to load question. Please try again or contact support.");
-        // Redirect back to contest page after 3 seconds if question not found
         if (error.response?.status === 404) {
           setTimeout(() => {
             navigate('/contest');

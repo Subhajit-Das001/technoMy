@@ -4,13 +4,22 @@ const ContestScore = require('../models/contest-score');
 const Contest = require('../models/contest');
 const crypto = require('crypto');
 const Announcement = require('../models/announcement');
-const Online26=require('../models/online25');
+const Online26=require('../models/online26');
 const { convertToIST } = require('../utils/timeUtils');
-const Offline26 = require('../models/Offline25'); // Import Offline25 model
+const Offline26 = require('../models/Offline26'); // Import Offline25 model
 const newStudent = require('../models/newStudent'); // Import newStudent model
+const cosStudent = require('../models/cos_student'); //COS Students
+const moment = require('moment-timezone');
 
+const forceISTtoUTC = (dbDate) => {
+    if (!dbDate) return null;
+    // 1. Convert DB date to a raw string (e.g., "2026-06-21 11:00:00")
+    const rawString = moment.utc(dbDate).format('YYYY-MM-DD HH:mm:ss');
+    // 2. Tell moment this raw time is specifically in Kolkata, then export as universal ISO
+    return moment.tz(rawString, "Asia/Kolkata").toISOString();
+};
 // Start contest
-router.post('/contest/start', async (req, res) => {
+router.post('/start', async (req, res) => {
     try {
         const { phone, name, school, studentType } = req.body;
         
@@ -23,7 +32,7 @@ router.post('/contest/start', async (req, res) => {
         }
 
         // Validate student type
-        if (!['offline', 'online', 'new'].includes(studentType)) {
+        if (!['offline', 'online','cos', 'new'].includes(studentType)) {
             return res.status(400).json({
                 message: 'Invalid student type. Must be offline, online, or new'
             });
@@ -87,7 +96,7 @@ router.post('/contest/start', async (req, res) => {
 });
 
 // Submit answer
-router.post('/contest/submit', async (req, res) => {
+router.post('/submit', async (req, res) => {
     try {
         const { questionId, answer, phone, timeSpentArray } = req.body;
         const submissionTime = new Date();
@@ -197,7 +206,7 @@ router.post('/contest/submit', async (req, res) => {
 });
 
 // End contest
-router.post('/contest/end', async (req, res) => {
+router.post('/end', async (req, res) => {
     try {
         const { phone } = req.body;
         
@@ -242,51 +251,43 @@ router.post('/contest/end', async (req, res) => {
 });
 
 // Get contest times
-router.get('/contest/times', async (req, res) => {
+router.get('/times', async (req, res) => {
     try {
         const { phone, sessionId } = req.query;
 
-        // Get global contest schedule
         const contestSchedule = await Contest.findOne()
             .sort({ createdAt: -1 })
             .select('startTime endTime');
 
-        if (!contestSchedule) {
-            return res.status(404).json({ message: 'No contest schedule found' });
-        }
+        if (!contestSchedule) return res.status(404).json({ message: 'No schedule found' });
 
-        // Convert contest schedule times to IST
-        const scheduleStartIST = convertToIST(contestSchedule.startTime);
-        const scheduleEndIST = convertToIST(contestSchedule.endTime);
+        const globalStart = forceISTtoUTC(contestSchedule.startTime);
+        const globalEnd = forceISTtoUTC(contestSchedule.endTime);
 
-        // If phone and sessionId provided, get individual timer
         let individualTimer = null;
         if (phone && sessionId) {
             const userContest = await ContestScore.findOne({
-                phone,
-                sessionId,
-                isStarted: true,
-                isCompleted: false
+                phone, sessionId, isStarted: true, isCompleted: false
             });
 
             if (userContest) {
-                const contestStartIST = convertToIST(userContest.startTime);
-                const contestEndIST = convertToIST(userContest.endTime);
-                const nowIST = convertToIST(new Date());
-
+                const userStart = forceISTtoUTC(userContest.startTime);
+                const userEnd = forceISTtoUTC(userContest.endTime);
+                
+                // Calculate time left safely using absolute timestamps
+                const nowTS = Date.now();
+                const endTS = new Date(userEnd).getTime();
+                
                 individualTimer = {
-                    startTime: contestStartIST.toISOString(),
-                    endTime: contestEndIST.toISOString(),
-                    timeLeft: Math.max(0, contestEndIST - nowIST)
+                    startTime: userStart,
+                    endTime: userEnd,
+                    timeLeft: Math.max(0, endTS - nowTS)
                 };
             }
         }
 
         res.json({
-            schedule: {
-                startTime: scheduleStartIST.toISOString(),
-                endTime: scheduleEndIST.toISOString(),
-            },
+            schedule: { startTime: globalStart, endTime: globalEnd },
             individualTimer,
             timezone: 'Asia/Kolkata'
         });
@@ -298,32 +299,25 @@ router.get('/contest/times', async (req, res) => {
 });
 
 // Get contest dates
-router.get('/contest/dates', async (req, res) => {
+router.get('/dates', async (req, res) => {
     try {
         const contest = await Contest.findOne()
             .sort({ createdAt: -1 })
             .select('startTime endTime');
         
-        if (!contest) {
-            return res.status(404).json({ message: 'No contest found' });
-        }
-
-        // Convert times to IST
-        const istStartTime = convertToIST(contest.startTime);
-        const istEndTime = convertToIST(contest.endTime);
+        if (!contest) return res.status(404).json({ message: 'No contest found' });
 
         res.json({
-            startTime: istStartTime.toISOString(),
-            endTime: istEndTime.toISOString(),
+            startTime: forceISTtoUTC(contest.startTime), 
+            endTime: forceISTtoUTC(contest.endTime),
             timezone: 'Asia/Kolkata'
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching contest dates' });
     }
 });
-
 // Get question by ID
-router.get('/contest/questions/:id', async (req, res) => {
+router.get('/questions/:id', async (req, res) => {
     try {
         const questionId = parseInt(req.params.id);
         
@@ -356,10 +350,10 @@ router.get('/contest/questions/:id', async (req, res) => {
 });
 
 // Get leaderboard
-router.get('/contest/leaderboard', async (req, res) => {
+router.get('/leaderboard', async (req, res) => {
     try {
         // First check if leaderboard should be shown
-        const announcement = await Announcement.findOne({ id: 1 });
+        const announcement = await Announcement.findOne({ id: 4});
         if (!announcement) {
             return res.status(403).json({ 
                 message: 'Leaderboard is not yet available',
@@ -412,6 +406,151 @@ router.get('/contest/leaderboard', async (req, res) => {
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
         res.status(500).json({ message: 'Error fetching leaderboard' });
+    }
+});
+router.get("/stats", async (req, res) => {
+  try {
+    const totalStudents = await newStudent.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      totalStudents,
+    });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch stats",
+    });
+  }
+});
+// Get contest status (Checks if contest is currently active)
+router.get('/status', async (req, res) => {
+    try {
+        const contest = await Contest.findOne()
+            .sort({ createdAt: -1 })
+            .select('startTime endTime');
+            
+        if (!contest) {
+            return res.json({ isContestActive: false });
+        }
+
+        const now = new Date();
+        const start = new Date(contest.startTime);
+        const end = new Date(contest.endTime);
+
+        const isActive = now >= start && now <= end;
+
+        res.json({ isContestActive: isActive });
+    } catch (error) {
+        console.error('Error fetching contest status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Get user attempt status (Checks if they started/completed the contest)
+router.get('/score', async (req, res) => {
+    try {
+        const { phone } = req.query;
+        
+        if (!phone) {
+            return res.status(400).json({ message: 'Phone number is required' });
+        }
+
+        const attempt = await ContestScore.findOne({ phone: phone.trim() });
+
+        if (!attempt) {
+            return res.json({ isStarted: false, isCompleted: false });
+        }
+
+        res.json({
+            isStarted: attempt.isStarted,
+            isCompleted: attempt.isCompleted
+        });
+    } catch (error) {
+        console.error('Error fetching score status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+// GET /api/contest/my-results
+// GET /api/contest/my-results
+router.get('/my-results', async (req, res) => {
+    try {
+        // 1. Check if results are published (Announcement ID: 4)
+        const resultsAnnouncement = await Announcement.findOne({ id: 4 });
+        if (!resultsAnnouncement) {
+            return res.json({ showResults: false });
+        }
+
+        const userPhone = req.query.phone; // Or from req.user
+        
+        // --- THE FIX: If no phone is provided, still tell the frontend results are live ---
+        if (!userPhone) {
+            return res.json({ showResults: true, hasAttempted: false });
+        }
+
+        // 2. Fetch User's Score
+        const userScore = await ContestScore.findOne({ phone: userPhone });
+        if (!userScore || !userScore.isCompleted) {
+            return res.json({ showResults: true, hasAttempted: false });
+        }
+
+        // 3. Calculate Telemetry
+        let attempted = 0;
+        let correct = 0;
+        let incorrect = 0;
+
+        userScore.answers.forEach(ans => {
+            if (ans.attempted) attempted++;
+            if (ans.isCorrect) correct++;
+            if (ans.attempted && !ans.isCorrect) incorrect++;
+        });
+
+        const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+        const totalScore = Math.round(userScore.scores.total);
+
+        // 4. Calculate Rank
+        const higherRankCount = await ContestScore.countDocuments({
+            isCompleted: true,
+            $or: [
+                { 'scores.total': { $gt: userScore.scores.total } },
+                { 
+                    'scores.total': userScore.scores.total, 
+                    totalTimeSpent: { $lt: userScore.totalTimeSpent } 
+                }
+            ]
+        });
+
+        res.json({
+            showResults: true,
+            hasAttempted: true,
+            data: {
+                totalScore,
+                attempted,
+                correct,
+                incorrect,
+                accuracy,
+                rank: higherRankCount + 1
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching results:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+// GET /api/contest/results-status (Public Route)
+// GET /api/contest/results-status (PUBLIC ROUTE - No auth required)
+router.get('/results-status', async (req, res) => {
+    try {
+        const resultsAnnouncement = await Announcement.findOne({ id: 4 });
+        res.json({ 
+            showResults: !!resultsAnnouncement,
+            hasAttempted: false 
+        });
+    } catch (error) {
+        console.error('Error fetching results status:', error);
+        res.status(500).json({ showResults: false });
     }
 });
 
