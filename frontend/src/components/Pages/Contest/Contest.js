@@ -130,7 +130,7 @@ function Contest() {
         };
 
         const onVisibilityChange = () => {
-            if (document.hidden && !penaltyWarning.show) {
+            if (document.hidden) {
                 handleViolation('Switched tabs or minimized the browser window.');
             }
         };
