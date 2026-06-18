@@ -10,7 +10,7 @@ import PrizesSection from './PrizesSection';
 import ResourcesGrid from './ResourcesGrid';
 import ResultsCard from './ResultsCard';
 import useAuthContext from '../../../hooks/useAuthContext';
-const REGISTRATION_DISPLAY_OFFSET = 2000;
+const REGISTRATION_DISPLAY_OFFSET = 2314;
 
 const useContestSchedule = () => {
    const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
