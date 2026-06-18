@@ -616,7 +616,7 @@ router.post('/penalty', async (req, res) => {
         let isDisqualified = false;
 
         // Two-strike rule
-        if (contest.penalties >= 3) {
+        if (contest.penalties >= 2) {
             contest.isCompleted = true;
             contest.endTime = new Date();
             contest.totalTimeSpent = Math.floor((contest.endTime - contest.startTime) / 1000);

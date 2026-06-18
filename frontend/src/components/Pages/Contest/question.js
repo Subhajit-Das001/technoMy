@@ -21,6 +21,28 @@ function Question() {
   const [visitStartTime, setVisitStartTime] = useState(null);
   const [timeSpentArray, setTimeSpentArray] = useState([]);
   const [currentTimeSpent, setCurrentTimeSpent] = useState(0);
+  // Anti-Cheat: Disable Copy, Paste, Right-Click, and Text Selection
+  useEffect(() => {
+    const disableActions = (e) => {
+      e.preventDefault();
+      // Optional: You can add a quick toast/alert here telling them copying is disabled
+    };
+
+    document.addEventListener('contextmenu', disableActions); // Disables right-click
+    document.addEventListener('copy', disableActions);        // Disables copy (Ctrl+C)
+    document.addEventListener('cut', disableActions);         // Disables cut (Ctrl+X)
+    document.addEventListener('paste', disableActions);       // Disables paste (Ctrl+V) in the input field
+    document.addEventListener('selectstart', disableActions); // Disables highlighting/selecting text
+
+    return () => {
+      // Cleanup when they leave the question page
+      document.removeEventListener('contextmenu', disableActions);
+      document.removeEventListener('copy', disableActions);
+      document.removeEventListener('cut', disableActions);
+      document.removeEventListener('paste', disableActions);
+      document.removeEventListener('selectstart', disableActions);
+    };
+  }, []);
 
   const saveTimeSpent = () => {
     if (visitStartTime) {
@@ -40,10 +62,10 @@ function Question() {
         const newTotal = previousTotal + timeSpentMs;
         localStorage.setItem(`totalTimeSpent_question_${id}`, newTotal.toString());
         
-        console.log(`Question ${id} visit recorded:`, {
-          timeSpentMs,
-          totalTimeSpent: newTotal
-        });
+        // console.log(`Question ${id} visit recorded:`, {
+        //   timeSpentMs,
+        //   totalTimeSpent: newTotal
+        // });
       }
     }
   };
@@ -77,16 +99,27 @@ function Question() {
     return { emoji: "💪", phase: "Comeback Mode" };
   };
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        // Fixed endpoint URL
-        const response = await axios.get(`${baseURL}/api/contest/questions/${id}`);
+        // 🚨 THE FIX IS HERE: Grab the token and send it in the headers!
+        const sessionToken = localStorage.getItem('sessionToken');
+        
+        if (!sessionToken) {
+            navigate('/mega-contest'); // Kick them back if they have no active session
+            return;
+        }
+
+        const response = await axios.get(`${baseURL}/api/contest/questions/${id}`, {
+            headers: {
+                Authorization: `Bearer ${sessionToken}`
+            }
+        });
         setQuestion(response.data);
       } catch (error) {
         console.error("Error fetching question:", error);
         setError("Failed to load question. Please try again or contact support.");
-        if (error.response?.status === 404) {
+        if (error.response?.status === 404 || error.response?.status === 401) {
           setTimeout(() => {
             navigate('/contest');
           }, 3000);
@@ -96,7 +129,6 @@ function Question() {
 
     fetchQuestion();
 
-    // Check for contest end time
     const endTime = localStorage.getItem('contestEndTime');
     if (!endTime) {
       navigate('/contest');
@@ -117,7 +149,7 @@ function Question() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [id, navigate]);
+  }, [id, navigate, baseURL]);
 
   useEffect(() => {
     setVisitStartTime(new Date());

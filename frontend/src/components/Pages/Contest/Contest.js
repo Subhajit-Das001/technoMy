@@ -56,15 +56,7 @@ function Contest() {
     const [isLoading, setIsLoading] = useState(false);
     const [attemptLocked, setAttemptLocked] = useState(false);
     const isProcessingPenalty = useRef(false);
-    const cameraStreamRef = useRef(null);
-    // Cleanup Camera on Unmount
-    useEffect(() => {
-        return () => {
-            if (cameraStreamRef.current) {
-                cameraStreamRef.current.getTracks().forEach(track => track.stop());
-            }
-        };
-    }, []);
+
     // Fetch Questions Logic (Wrapped in useCallback so it can be safely used in useEffect)
     const fetchQuestions = useCallback(async () => {
         try {
@@ -355,7 +347,7 @@ function Contest() {
             // PRE-FLIGHT CHECK 1: Camera (Keeps stream active!)
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                cameraStreamRef.current = stream; // Save stream to keep the light on
+                window.contestCameraStream = stream;
             } catch (err) {
                 setError('Camera permission is required. Please allow camera access.');
                 setIsLoading(false);
@@ -407,9 +399,9 @@ function Contest() {
             setError(error.response?.data?.message || 'Failed to start contest');
             
             // If starting failed, turn off the camera
-            if (cameraStreamRef.current) {
-                cameraStreamRef.current.getTracks().forEach(track => track.stop());
-                cameraStreamRef.current = null;
+            if (window.contestCameraStream) {
+                window.contestCameraStream.getTracks().forEach(track => track.stop());
+                window.contestCameraStream = null;
             }
         } finally {
             setIsLoading(false);
@@ -475,9 +467,9 @@ const handleEndContest = async () => {
             console.error('Error ending contest:', error);
         } finally {
             // 1. Turn off camera
-            if (cameraStreamRef.current) {
-                cameraStreamRef.current.getTracks().forEach(track => track.stop());
-                cameraStreamRef.current = null;
+            if (window.contestCameraStream) {
+                window.contestCameraStream.getTracks().forEach(track => track.stop());
+                window.contestCameraStream.current = null;
             }
 
             // 2. Exit fullscreen
