@@ -1,6 +1,6 @@
 const {Queue} = require("bullmq");
 const {Redis} = require("ioredis");
-
+require('dotenv').config();
 
 const redisConfig = {
   maxRetriesPerRequest: null,
@@ -18,10 +18,12 @@ redisConnection.on('error',(err)=> console.log('❌ Redis connection error:', er
 
 const testQueue = new Queue('Test-Queue',{connection : redisConnection});
 const csvProcessingQueue = new Queue('CSV-Queue',{connection : redisConnection});
+const resendMailingQueue = new Queue('Resend-Queue', {connection : redisConnection});
 
 
 module.exports = {
     redisConnection,
     testQueue,
-    csvProcessingQueue
+    csvProcessingQueue,
+    resendMailingQueue
 };
