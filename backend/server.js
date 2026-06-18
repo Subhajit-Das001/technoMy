@@ -185,7 +185,7 @@ app.get('/api/test-redis', async (req, res) => {
 })
 
 // Start server
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));
 
 
