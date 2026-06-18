@@ -17,6 +17,7 @@ const Updates = () => {
   const tp_link = "https://technothlon.techniche.org.in/technopedia";
   const pyp = "https://technothlon.techniche.org.in/pyp";
   const lwLink = "https://www.instagram.com/p/DZW7g43j1KS/?igsh=Z2pjcGdkZ3hydDdz";
+  const mc_link = "https://technothlon.techniche.org.in/mega-contest"
   
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -39,7 +40,22 @@ const Updates = () => {
       <div className="updates-content-heading">TECHNOTHLON 2026 UPDATES</div>
       <div className="updates-contents">
 <ul>
-  
+  <li>
+    Get ready for the Mega Contest on 21 June, 11:00 AM! Register for free and stand a chance to win exciting prizes.
+    {" "}
+    <a
+      href={mc_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: "#2563eb",
+        textDecoration: "underline",
+        fontWeight: 600,
+      }}
+    >
+      Participate Now! →
+    </a>
+  </li>
   <li>
     Explore and practice in your preferred language now.
     {" "}

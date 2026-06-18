@@ -157,10 +157,10 @@ function Header() {
         
         {showContest  && (
           <Link
-            to="/contest/login"
+            to="/mega-contest"
             className={`hlinkss contest-link ${clickedLink === "contest" ? "clicked" : ""}`}
             onClick={() => setClickedLink("contest")}
-          >
+          > 
   
               <span className="contest-link-content">💻 Contest</span>
           </Link>

@@ -60,6 +60,13 @@ const ContestScoreSchema = new mongoose.Schema({
     isStarted: { type: Boolean, default: false },
     isCompleted: { type: Boolean, default: false },
     isNewStudent: { type: Boolean, default: false },
+    penalties: { 
+    type: Number, 
+    default: 0 
+  },
+  penaltyReasons: [{ 
+    type: String 
+  }],
     
     // Session management
     sessionId: { type: String }

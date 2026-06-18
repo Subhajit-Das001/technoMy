@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Online26 = require('../models/online26');
 const Offline26 = require('../models/offline26');
+const cosStudent = require('../models/cos_student');
 const NewStudent = require('../models/newStudent');
 const jwt = require('jsonwebtoken');
 const { authLimiter } = require('../middleware/auth');
@@ -18,62 +19,79 @@ router.post('/check-student', authLimiter, async (req, res) => {
 
     console.log('Cleaned input:', { cleanPhone, cleanRollNumber });
 
-    // Check Offline25 database first
-    const offlineStudent = await Offline26.findOne({ rollNumber: cleanRollNumber });
+    // 1. Check Offline26
+const offlineStudent = await Offline26.findOne({
+  rollNumber: cleanRollNumber,
+});
 
-    if (offlineStudent) {
-      // Check if phone matches either contact
-      const isContact1 = offlineStudent.contact1 === cleanPhone;
-      const isContact2 = offlineStudent.contact2 === cleanPhone;
+if (offlineStudent) {
+  const isContact1 = offlineStudent.contact1 === cleanPhone;
+  const isContact2 = offlineStudent.contact2 === cleanPhone;
 
-      if (!offlineStudent.isPaid) {
-        return res.json({
-          exists: false,
-          message: 'Payment pending. Please complete payment to access the contest.'
-        });
-      }
+  if (!isContact1 && !isContact2) {
+    return res.json({
+      exists: false,
+      message: "Invalid phone number.",
+    });
+  }
 
-      if (isContact1 || isContact2) {
-        const selectedSchool = isContact1 ? offlineStudent.school1 : offlineStudent.school2;
+  return res.json({
+    exists: true,
+    name: isContact1 ? offlineStudent.name1 : offlineStudent.name2,
+    email: isContact1 ? offlineStudent.email1 : offlineStudent.email2,
+    phone: cleanPhone,
+    school: isContact1 ? offlineStudent.school1 : offlineStudent.school2,
+    studentType: "offline",
+  });
+}
 
-        return res.json({
-          exists: true,
-          name: isContact1 ? offlineStudent.name1 : offlineStudent.name2,
-          email: isContact1 ? offlineStudent.email1 : offlineStudent.email2,
-          phone: cleanPhone,
-          school: selectedSchool,
-          studentType: "offline",
-        });
-      }
-    }
+// 2. Check Online26 only if not found in Offline26
+const onlineStudent = await Online26.findOne({
+  rollNumber: cleanRollNumber,
+});
 
-    else {
-      // If not found in Offline25, check Online25 database
-      const onlineStudent = await Online26.findOne({ rollNumber: cleanRollNumber });
-      if (onlineStudent) {
-        // Check if phone matches either contact
-        const isContact1 = onlineStudent.contact1 === cleanPhone;
-        const isContact2 = onlineStudent.contact2 === cleanPhone;
+if (onlineStudent) {
+  const isContact1 = onlineStudent.contact1 === cleanPhone;
+  const isContact2 = onlineStudent.contact2 === cleanPhone;
 
-        if (isContact1 || isContact2) {
-          const selectedSchool = isContact1 ? onlineStudent.school1 : onlineStudent.school2;
+  if (!isContact1 && !isContact2) {
+    return res.json({
+      exists: false,
+      message: "Invalid phone number.",
+    });
+  }
 
-          return res.json({
-            exists: true,
-            name: isContact1 ? onlineStudent.name1 : onlineStudent.name2,
-            email: isContact1 ? onlineStudent.email1 : onlineStudent.email2,
-            phone: cleanPhone,
-            school: selectedSchool,
-            studentType: "online",
-          });
-        }
-      }
+  return res.json({
+    exists: true,
+    name: isContact1 ? onlineStudent.name1 : onlineStudent.name2,
+    email: isContact1 ? onlineStudent.email1 : onlineStudent.email2,
+    phone: cleanPhone,
+    school: isContact1 ? onlineStudent.school1 : onlineStudent.school2,
+    studentType: "online",
+  });
+}
 
-      return res.json({
-        exists: false,
-        message: 'Student not found. Please check your details or register as a new student.'
-      });
-    }
+// 3. Check CosStudent only if not found above
+const studemt = await cosStudent.findOne({
+  rollNumber: cleanRollNumber,
+});
+
+if (student) {
+  return res.json({
+    exists: true,
+    name: student.name,
+    email: student.email,
+    phone: cleanPhone,
+    school: student.school,
+    studentType: "cos",
+  });
+}
+
+// 4. Not found anywhere
+return res.json({
+  exists: false,
+  message: "Student not found.",
+});
   } catch (error) {
     console.error('Error details:', error);
     res.status(500).json({

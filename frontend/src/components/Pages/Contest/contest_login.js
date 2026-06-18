@@ -17,7 +17,7 @@ const toProperCase = (str) => {
     .join(' ');
 };
 
-const StudentAuth = () => {
+const StudentAuth = ({ pageTitle = 'Contest', contestPath = '/mega-contest' }) => {
   const navigate = useNavigate();
   const baseURL = process.env.NODE_ENV === "production" ? "https://technothlon.techniche.org.in" : "http://localhost:3001";
 
@@ -32,56 +32,51 @@ const StudentAuth = () => {
     city: ''
   });
   const [message, setMessage] = useState('');
-  const [contestDates, setContestDates] = useState({
-    startTime: null,
-    endTime: null
-  });
   const [contestTime, setContestTime] = useState({
     startTime: null,
     endTime: null,
-    isContestStarted: false
+    hasContestStarted: false,
+    isContestStarted: false,
+    isContestEnded: false
   });
+  const [deviceRegistrationBlocked, setDeviceRegistrationBlocked] = useState(false);
+
+  useEffect(() => {
+    setDeviceRegistrationBlocked(localStorage.getItem('device_registered') === 'true');
+  }, []);
 
   useEffect(() => {
     const fetchContestTimes = async () => {
       try {
         // Fixed: Use GET request to the correct endpoint
-        const response = await axios.get(`${baseURL}/api/contest/dates`);
+       const response = await axios.get(`${baseURL}/api/contest/dates`);
         const { startTime, endTime } = response.data;
 
-        const now = new Date();
-        const startTimeDate = new Date(startTime);
-        const endTimeDate = new Date(endTime);
+        const nowTS = Date.now(); // Universal current time in milliseconds
+        const startTS = new Date(startTime).getTime(); // Absolute start time in ms
+        const endTS = new Date(endTime).getTime(); // Absolute end time in ms
 
-        // Convert all times to timestamps for accurate comparison
-        const nowTS = now.getTime();
-        const startTS = startTimeDate.getTime();
-        const endTS = endTimeDate.getTime();
-
-        const isContestActive = nowTS >= startTS && nowTS <= endTS;
-        
-        // console.log('Time Debug:', {
-        //   now: now.toISOString(),
-        //   start: startTimeDate.toISOString(),
-        //   end: endTimeDate.toISOString(),
-        //   isActive: isContestActive
-        // });
-
+        // Clean, mathematical state checks
+        const hasContestStarted = nowTS >= startTS;
+        const isContestEnded = nowTS > endTS;
+        const isContestActive = hasContestStarted && !isContestEnded;
         setContestTime({
-          startTime: startTimeDate,
-          endTime: endTimeDate,
-          isContestStarted: isContestActive
-        });
-
-        setContestDates({
-          startTime: startTimeDate.toISOString(),
-          endTime: endTimeDate.toISOString()
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+          hasContestStarted,
+          isContestStarted: isContestActive,
+          isContestEnded
         });
 
       } catch (error) {
         console.error('Error fetching contest times:', error);
-        // Set fallback message
-        setMessage('Unable to fetch contest timing. Please try again later.');
+        setContestTime({
+          startTime: null,
+          endTime: null,
+          hasContestStarted: false,
+          isContestStarted: false,
+          isContestEnded: false
+        });
       }
     };
 
@@ -92,33 +87,17 @@ const StudentAuth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const now = new Date().getTime();
-    const start = new Date(contestDates.startTime).getTime();
-    const end = new Date(contestDates.endTime).getTime();
-    
-    // Debug log
-    console.log('Submit Time Check:', {
-      now: new Date().toISOString(),
-      start: contestDates.startTime,
-      end: contestDates.endTime,
-      isActive: now >= start && now <= end
-    });
-  
-    // Check contest timing for login/signin operations only (not for signup/registration)
-    const isLoginOperation = isRegistered || (!isRegistered && newStudentMode === 'signin');
-    
-    if (isLoginOperation && !(now >= start && now <= end)) {
-      setMessage('Contest has not started yet or has ended. Please check the timing.');
+
+    if (!isRegistered && newStudentMode === 'signup' && deviceRegistrationBlocked) {
+      setMessage('This device has already been used to register.');
       return;
     }
-    
-    // For signup, allow registration even before contest starts
-    if (!isRegistered && newStudentMode === 'signup') {
-      // Allow signup anytime - no time restriction
-      console.log('Signup operation - no time restriction');
-    }
 
+    if (!isRegistered && newStudentMode === 'signup' && contestTime.hasContestStarted) {
+      setMessage('Registration is now closed. Contest has started.');
+      return;
+    }
+ 
     try {
       // For registered students (using roll number)
       if (isRegistered) {
@@ -141,7 +120,7 @@ const StudentAuth = () => {
           localStorage.removeItem('answeredQuestions');
           
           setMessage(`Welcome back, ${response.data.name}!`);
-          navigate('/contest', { replace: true });
+          navigate(contestPath, { replace: true });
         } else {
           setMessage(response.data.message);
         }
@@ -161,6 +140,8 @@ const StudentAuth = () => {
           const response = await axios.post(`${baseURL}/api/auth/register-new`, formattedData);
 
           if (response.data.success) {
+            localStorage.setItem('device_registered', 'true');
+            setDeviceRegistrationBlocked(true);
             setMessage(response.data.message);
             // Clear form data except email and phone for signin
             const signinData = {
@@ -198,7 +179,7 @@ const StudentAuth = () => {
             
             setMessage('Successfully signed in!');
             setTimeout(() => {
-              navigate('/contest', { replace: true });
+              navigate(contestPath, { replace: true });
             }, 1000);
           } else {
             setMessage(response.data.message);
@@ -206,11 +187,23 @@ const StudentAuth = () => {
         }
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || 'An error occurred');
+      if (error.code === 'ERR_NETWORK') {
+        setMessage('Backend server is not reachable. Please start the backend on port 3001.');
+      } else {
+        setMessage(error.response?.data?.message || error.message || 'An error occurred');
+      }
     }
   };
 
   // Update the signin form inputs
+  const isSignupBlocked = !isRegistered && newStudentMode === 'signup' && (
+    deviceRegistrationBlocked || contestTime.hasContestStarted
+  );
+
+  const signupBlockMessage = deviceRegistrationBlocked
+    ? 'This device has already been used to register.'
+    : 'Registration is now closed. Contest has started.';
+
   const renderForm = () => {
     if (isRegistered) {
       return (
@@ -257,6 +250,11 @@ const StudentAuth = () => {
         </div>
 
         {newStudentMode === 'signup' ? (
+          isSignupBlocked ? (
+            <div className="timing-info">
+              <small>{signupBlockMessage}</small>
+            </div>
+          ) : (
           <>
             <input
               type="text"
@@ -294,6 +292,7 @@ const StudentAuth = () => {
               required
             />
           </>
+          )
         ) : (
           <>
             <input
@@ -318,6 +317,8 @@ const StudentAuth = () => {
 
   console.log('Contest Status:', {
     isContestStarted: contestTime.isContestStarted,
+    isContestEnded: contestTime.isContestEnded,
+    hasContestStarted: contestTime.hasContestStarted,
     now: new Date().toISOString(),
     startTime: contestTime.startTime?.toISOString(),
     endTime: contestTime.endTime?.toISOString()
@@ -330,7 +331,9 @@ const StudentAuth = () => {
           {contestTime.startTime && (
             <>
               <h3 className="contest-status">
-                {!contestTime.isContestStarted 
+                {contestTime.isContestEnded
+                  ? "Contest has ended"
+                  : !contestTime.isContestStarted 
                   ? "Contest starts in:" 
                   : "Contest ends in:"}
               </h3>
@@ -370,22 +373,30 @@ const StudentAuth = () => {
           }
         >
           <h2>
-            {isRegistered ? 'Registered Student Login' : 
-            (newStudentMode === 'signup' ? 'New Student Registration' : 'New Student Sign In')}
+            {isRegistered ? `${pageTitle} Registered Student Login` : 
+            (newStudentMode === 'signup' ? `${pageTitle} New Student Registration` : `${pageTitle} New Student Sign In`)}
           </h2>
           
           {renderForm()}
 
-          <button type="submit" className="submit-button">
-            {isRegistered ? 'Login' : 
-            (newStudentMode === 'signup' ? 'Register' : 'Sign In')}
+          <button type="submit" className="submit-button" disabled={isSignupBlocked}>
+            {isSignupBlocked
+              ? 'Registration Closed'
+              : isRegistered ? 'Login' : 
+              (newStudentMode === 'signup' ? 'Register' : 'Sign In')}
           </button>
-          
-          {/* Show timing message for login operations when contest is not active */}
+
+          {isSignupBlocked && (
+            <div className="timing-info">
+              <small>{signupBlockMessage}</small>
+            </div>
+          )}
+
+          {/* Login is always open; exam access is controlled from Mega Contest. */}
           {!contestTime.isContestStarted && (isRegistered || newStudentMode === 'signin') && (
             <div className="timing-info">
               <small>
-                {isRegistered ? 'Login' : 'Sign In'} will be available when the contest starts
+                You can login now. The exam arena unlocks from the Mega Contest page when the contest starts.
               </small>
             </div>
           )}
@@ -396,7 +407,7 @@ const StudentAuth = () => {
       
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/mega-contest')}
         className="back-button"
         variant="contained"
       >
