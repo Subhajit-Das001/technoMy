@@ -18,7 +18,7 @@ const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { ExpressAdapter } = require('@bull-board/express');
 const basicAuth = require('express-basic-auth');
-const { testQueue, csvProcessingQueue } = require("./config/queue")
+const { testQueue, csvProcessingQueue, resendMailingQueue } = require("./config/queue")
 // Connect to MongoDB
 connectDB();
 
@@ -39,6 +39,7 @@ const technopediaRoutes = require('./routes/Technopedia_Route');
 const merchAnalyticsRoutes = require('./routes/merchAnalytics');
 const cosPortalRoutes = require('./routes/cos_portal');
 const offlineRegUpload = require('./routes/OfflineRegUpload');
+const resendMailRoutes = require('./routes/resendMailingRoutes');
 
 // Configure event emitter
 EventEmitter.defaultMaxListeners = 20;
@@ -57,6 +58,7 @@ const app = express();
 // ==========================================
 require('./workers/testWorker');
 require('./workers/csvWorker');
+require('./workers/emailWorker');
 
 // Initialize the Express Adapter
 const serverAdapter = new ExpressAdapter();
@@ -66,7 +68,8 @@ serverAdapter.setBasePath('/api/admin/queues');
 createBullBoard({
   queues: [
     new BullMQAdapter(testQueue),
-    new BullMQAdapter(csvProcessingQueue)
+    new BullMQAdapter(csvProcessingQueue),
+    new BullMQAdapter(resendMailingQueue)
   ],
   serverAdapter: serverAdapter,
 });
@@ -81,6 +84,7 @@ const adminAuth = basicAuth({
   unauthorizedResponse: 'Unauthorized: Access to the queue dashboard is securely restricted.'
 });
 
+app.use(express.json({ limit: '50mb' }))
 
 app.use('/api/admin/queues', adminAuth, serverAdapter.getRouter());
 // ==========================================
@@ -134,6 +138,7 @@ app.use(express.urlencoded({ limit: '2mb', extended: true }));
 // This route now has CORS and Body Parsing, but no rate limiting!
 app.use('/api/technopedia', technopediaRoutes);
 app.use('/api/contest', contestRoutes);
+app.use('/api/v1/emails', resendMailRoutes);
 // ==========================================
 // 4. RATE LIMITER
 // ==========================================

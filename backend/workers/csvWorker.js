@@ -309,4 +309,4 @@ console.log(`\n[WORKER] Picked up Job ID: ${job.id} | Branch: ${branch_id}`);
   }
 }, { connection: redisConnection, concurrency: 5 });
 
-console.log("🚀 CSV Processing Worker is active and listening...");
+console.log("🎧 CSV Processing Worker is active and listening...");
