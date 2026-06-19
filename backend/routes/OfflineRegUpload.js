@@ -105,7 +105,7 @@ async function processEmailsInBackground(docs) {
 async function sendEmail(email,name, roll, password) {
   try {
     await transporter.sendMail({
-      from: "Technothlon-2026 <technothlon26@technicheiitg.in>",
+      from: `Technothlon-2026 <${process.env.SENDER_MAIL}>`,
       to : email,
       subject: `Technothlon 2026 Registration Confirmed - ${name}`,
       html: ` <div style="font-family: Arial, sans-serif; padding: 20px;"> <h2 style="color: #4CAF50;">Registration Successful!</h2> <p>Hey ${name},</p> <p>Your registration for Technothlon '26 has been confirmed.</p> <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;"> <p><strong>Roll Number:</strong> ${roll}</p> <p><strong>Password:</strong> ${password}</p> </div> <p><em>(Your password is a fixed combination of your birth dates in DDMMYYYY format and cannot be changed later.)</em></p>                            <p>Gear up for the prelims — practice now with Technopedia 2026: <a href="${technopedia}">Begin now</a></p>   <p>For regular updates follow us on Instagram: <a href="${instagram}">Stay Tuned</a></p><p>Warm regards,<br>Team Technothlon</p> </div> `
@@ -118,8 +118,6 @@ async function sendEmail(email,name, roll, password) {
     return false;
   }
 }
-
-
 // ================= DATE =================
 const parseDate = (value) => {
   if (!value) return null;

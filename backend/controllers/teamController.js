@@ -15,10 +15,10 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
     auth: {
-        user: 'technothlon.iitg@gmail.com',
+        user: process.env.SENDER_EMAIL,
         pass: process.env.SENDER_PASSWORD
     },
-});
+}); 
 
 // Helper function to format Date to DDMMYYYY
 const formatDateForPassword = (dateInput) => {
@@ -38,7 +38,8 @@ const TeamController = {
         try {
             const { email1, email2, contact1, contact2, state } = req.body;
 
-            // 1. Check NewStudent registration (same as before)
+            // 1. Check NewStudent registration (same as before) 
+            //This is to check if the participant of Mega Contest is registering or not.
             const matchingStudent1 = await NewStudent.findOne({ $or: [{ email: email1 }, { contact: contact1 }] });
             const matchingStudent2 = await NewStudent.findOne({ $or: [{ email: email2 }, { contact: contact2 }] });
 
@@ -97,6 +98,60 @@ const TeamController = {
             if (!team) {
                 return res.status(404).json({ error: "Team not found" });
             }
+            //Resend Mail to registered Students 
+            // Retry Email Logic
+if (paymentStatus === "retry") {
+
+    // Registration exists but payment was never completed
+    if (!team.isPaid) {
+        return res.status(400).json({
+            error: "Please complete the payment first."
+        });
+    }
+
+    // Already paid -> resend email only
+    try {
+        await transporter.sendMail({
+            from: `Technothlon-2026 <${process.env.SENDER_MAIL}>`,
+            to: [team.email1, team.email2],
+            subject: "Registration Confirmation for Technothlon '26",
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2 style="color: #4CAF50;">Registration Successful!</h2>
+                    <p>Hey Champs!</p>
+                    <p>Your registration for Technothlon '26 has been confirmed.</p>
+
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p><strong>Name1:</strong> ${team.name1}</p>
+                        <p><strong>Name2:</strong> ${team.name2}</p>
+                        <p><strong>Roll Number:</strong> ${team.rollNumber}</p>
+                        <p><strong>Password:</strong> ${team.password}</p>
+                    </div>
+
+                    <p><em>(Your password is a fixed combination of your birth dates in DDMMYYYY format and cannot be changed later.)</em></p>
+
+                    <p>Follow us on WhatsApp: <a href="${whatsapp}">Join Channel</a></p>
+
+                    <p>Warm regards,<br>Team Technothlon</p>
+                </div>
+            `
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Confirmation email resent successfully.",
+            rollNumber: team.rollNumber,
+            password: team.password
+        });
+
+    } catch (err) {
+        console.error("Retry Email Error:", err);
+
+        return res.status(500).json({
+            error: "Failed to resend email. Please try again later."
+        });
+    }
+}
 
             // Idempotency check
             if (team.isPaid) {
@@ -159,7 +214,7 @@ const TeamController = {
             // We use a separate try-catch so email errors don't crash the server or stop the response
             try {
                 await transporter.sendMail({
-                    from: '"Technothlon" <technothlon.iitg@gmail.com>',
+                    from: `Technothlon-2026 <${process.env.SENDER_MAIL}>`,
                     to: [team.email1, team.email2],
                     subject: "Registration Confirmation for Technothlon '26",
                     html: `

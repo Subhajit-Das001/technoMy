@@ -10,12 +10,25 @@ const emailWorker = new Worker(
   async (job) => {
     // Extract the dynamic data passed from the JSON route
     const { batch, subject, title,replyTo } = job.data;
-    console.log(`📦 Processing Job ${job.id}: Sending ${batch.length} emails.`);
+    // console.log(`📦 Processing Job ${job.id}: Sending ${batch.length} emails.`);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // 2. FILTER OUT BAD EMAILS BEFORE SENDING TO RESEND
+    const validBatch = batch.filter(recipient => {
+      const emailStr = recipient.email ? recipient.email.trim() : '';
+      return emailRegex.test(emailStr);
+    });
 
+    if (validBatch.length === 0) {
+      console.log(`⚠️ Job ${job.id} skipped: No valid emails found in this batch.`);
+      return { skipped: true };
+    }
+
+    console.log(`📦 Processing Job ${job.id}: Sending ${validBatch.length} valid emails (dropped ${batch.length - validBatch.length} bad ones).`);
     // Map the JSON array into Resend's payload structure
-    const preparedPayloads = batch.map(recipient => ({
+    const preparedPayloads = validBatch.map(recipient => ({
       from: '"Kabya from Technothlon" <contest@updates.technicheiitg.in>',
-      to: [recipient.email],
+      to: [recipient.email.trim()],
       reply_to: replyTo,
       subject: `Details for Sunday's contest, ${recipient.name}`,
 //       html: `
