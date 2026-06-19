@@ -25,9 +25,20 @@ const emailWorker = new Worker(
     }
 
     console.log(`📦 Processing Job ${job.id}: Sending ${validBatch.length} valid emails (dropped ${batch.length - validBatch.length} bad ones).`);
+
+    const teamNames = [
+      'Kabya', 
+      'Poulomi', 
+      'Shreshtha', 
+      'Ritik', 
+      'Uday', 
+      'Deep', 
+    ];
     // Map the JSON array into Resend's payload structure
-    const preparedPayloads = validBatch.map(recipient => ({
-      from: '"Kabya from Technothlon" <contest@updates.technicheiitg.in>',
+    const preparedPayloads = validBatch.map(recipient => {
+      const randomSenderName = teamNames[Math.floor(Math.random() * teamNames.length)];
+      return {
+      from: `"${randomSenderName} from Technothlon" <${process.env.RESEND_SENDER_EMAIL}>`,
       to: [recipient.email.trim()],
       reply_to: replyTo,
       subject: `Details for Sunday's contest, ${recipient.name}`,
@@ -121,8 +132,8 @@ const emailWorker = new Worker(
           <p>You can register for the contest here: <a href="https://technothlon.techniche.org.in/mega-contest">https://technothlon.techniche.org.in/mega-contest</a></p>
           
           <p>Are you pairing up for this edition too? If yes, you can check the details on the website and register your team.<br>
-          <p>Let me know if you have any questions. I'm happy to help.</p>
-          <p>Best Regards,<br>Team Technothlon</p>
+          <p>If you have any questions, mail me at : <a href="mailto:technothlon.iitg@gmail.com?subject=RE%3A%20Sunday%27s%20Mega%20Contest%20Details" style="font-weight: bold;">technothlon.iitg@gmail.com</a></p>
+            <p>Best Regards,<br> ${randomSenderName} <br> Chief-Organiser <br> Team Technothlon</p>
 
           <span style="color: #f9fafb; font-size: 10px; display: none;">Ref: ${Date.now()}-${Math.random().toString(36).substring(7)}</span>
         </div>
@@ -131,7 +142,7 @@ headers: {
         // Crucial: Spam filters read this header, so pass the Google Form link here too
         'List-Unsubscribe': `<${unsubscribeUrl}>`
       }
-    }));
+    }});
 
     const { data, error } = await resend.batch.send(preparedPayloads);
 
