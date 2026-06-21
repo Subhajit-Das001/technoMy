@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>Get ready for the Mega Contest on 21 June, 11:00 AM! Register for free and stand a chance to win exciting prizes.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>Mega Contest 2026 results are out now! Head to the Announcements section to check your results.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
