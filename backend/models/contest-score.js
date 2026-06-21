@@ -44,13 +44,6 @@ const ContestScoreSchema = new mongoose.Schema({
         question3: { type: Number, default: 0 }, // 1000 points
         total: { type: Number, default: 0 }
     },
-    
-    // questionTimeSpent: {
-    //     question1: [{ type: Number }], // Array of time spent in seconds for each visit
-    //     question2: [{ type: Number }],
-    //     question3: [{ type: Number }]
-    // },
-    
     // Contest Status
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
@@ -67,6 +60,8 @@ const ContestScoreSchema = new mongoose.Schema({
   penaltyReasons: [{ 
     type: String 
   }],
+  adjustedTotalScore: { type: Number, default: 0 },
+    isPrizeEligible: { type: Boolean, default: true },
     
     // Session management
     sessionId: { type: String }

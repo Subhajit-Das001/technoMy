@@ -72,7 +72,7 @@ if (onlineStudent) {
 }
 
 // 3. Check CosStudent only if not found above
-const studemt = await cosStudent.findOne({
+const student = await cosStudent.findOne({
   rollNumber: cleanRollNumber,
 });
 

@@ -18,7 +18,7 @@ const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { ExpressAdapter } = require('@bull-board/express');
 const basicAuth = require('express-basic-auth');
-const { testQueue, csvProcessingQueue, resendMailingQueue } = require("./config/queue")
+const { testQueue, csvProcessingQueue, resendMailingQueue,smtpMailingQueue } = require("./config/queue")
 // Connect to MongoDB
 connectDB();
 
@@ -58,6 +58,7 @@ const app = express();
 // ==========================================
 require('./workers/testWorker');
 require('./workers/csvWorker');
+require('./workers/smtpWorker');
 require('./workers/emailWorker');
 
 // Initialize the Express Adapter
@@ -69,7 +70,8 @@ createBullBoard({
   queues: [
     new BullMQAdapter(testQueue),
     new BullMQAdapter(csvProcessingQueue),
-    new BullMQAdapter(resendMailingQueue)
+    new BullMQAdapter(resendMailingQueue),
+    new BullMQAdapter(smtpMailingQueue)
   ],
   serverAdapter: serverAdapter,
 });
