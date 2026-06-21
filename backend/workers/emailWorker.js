@@ -172,3 +172,5 @@ emailWorker.on('failed', (job, err) => {
 });
 
 module.exports = emailWorker;
+
+console.log('🎧 Resend Mailing Worker is listening for jobs...');

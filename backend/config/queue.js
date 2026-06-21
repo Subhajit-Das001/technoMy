@@ -18,12 +18,16 @@ redisConnection.on('error',(err)=> console.log('❌ Redis connection error:', er
 
 const testQueue = new Queue('Test-Queue',{connection : redisConnection});
 const csvProcessingQueue = new Queue('CSV-Queue',{connection : redisConnection});
+//For RESEND API MAILING
 const resendMailingQueue = new Queue('Resend-Queue', {connection : redisConnection});
+// for 13-Mails Mailing
+const smtpMailingQueue = new Queue('SMTP-Queue', {connection : redisConnection});
 
 
 module.exports = {
     redisConnection,
     testQueue,
     csvProcessingQueue,
-    resendMailingQueue
+    resendMailingQueue,
+    smtpMailingQueue
 };

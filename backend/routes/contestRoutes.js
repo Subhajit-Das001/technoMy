@@ -57,7 +57,7 @@ router.post('/start', async (req, res) => {
             school: school,
             student: studentType,  // Store the student type
             startTime: new Date(),
-            endTime: new Date(Date.now() + 60 * 60 * 1000),
+            endTime: new Date(Date.now() + 60 * 60 * 1000), 
             isStarted: true,
             isCompleted: false,
             questionsAttempted: 0,
@@ -402,23 +402,26 @@ router.get('/leaderboard', async (req, res) => {
 
         // Get all completed contests with scores
         const leaderboard = await ContestScore.find({ 
-            isCompleted: true
+            isCompleted: true,
+            isPrizeEligible: true // Removes highly penalized students from public view
         })
-        .select('name school scores answers totalTimeSpent')
-        .sort({ 'scores.total': -1, totalTimeSpent: 1 }) // Sort by total score (desc) and time (asc)
+        .select('name school adjustedTotalScore answers totalTimeSpent')
+        .sort({ 'adjustedTotalScore': -1, totalTimeSpent: 1 }) // Sort by total score (desc) and time (asc)
         .limit(100); // Limit to top 100
 
         // Update the leaderboard route's formatting logic:
 
         const formattedLeaderboard = leaderboard.map(entry => {
             const questionStatus = {
-                A: { status: 'not-attempted', time: null },
-                B: { status: 'not-attempted', time: null },
-                C: { status: 'not-attempted', time: null }
+                A: { status: 'not-attempted', time: null,score: 0 },
+                B: { status: 'not-attempted', time: null ,score: 0},
+                C: { status: 'not-attempted', time: null, score: 0}
             };
-
+            const processedQuestions = new Set();
             // Map answers to their respective questions
             entry.answers.forEach(answer => {
+                if (processedQuestions.has(answer.questionId)) return; // Skip duplicates
+                processedQuestions.add(answer.questionId);
                 const letter = String.fromCharCode(64 + answer.questionId); // Convert 1,2,3 to A,B,C
                 questionStatus[letter] = {
                     status: answer.isCorrect ? 'correct' : (answer.attempted ? 'incorrect' : 'not-attempted'),
@@ -430,7 +433,7 @@ router.get('/leaderboard', async (req, res) => {
             return {
                 name: entry.name,
                 school: entry.school,
-                totalScore: Math.round(entry.scores.total), // Ensure total score is rounded
+                totalScore: Math.round(entry.adjustedTotalScore), // Ensure total score is rounded
                 totalTime: entry.totalTimeSpent,
                 questionA: questionStatus.A,
                 questionB: questionStatus.B,
@@ -540,23 +543,31 @@ router.get('/my-results', async (req, res) => {
         let attempted = 0;
         let correct = 0;
         let incorrect = 0;
-
+        let calculatedTimeMs = 0;
+        const processedQuestions = new Set();
         userScore.answers.forEach(ans => {
+            if (processedQuestions.has(ans.questionId)) return; // Skip duplicates
+            processedQuestions.add(ans.questionId);
             if (ans.attempted) attempted++;
             if (ans.isCorrect) correct++;
             if (ans.attempted && !ans.isCorrect) incorrect++;
+            calculatedTimeMs += (ans.totalTimeSpent || 0);
         });
 
         const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
-        const totalScore = Math.round(userScore.scores.total);
+        const totalScore = Math.round(userScore.adjustedTotalScore);
 
+        const finalTotalTime = userScore.totalTimeSpent > 0 
+            ? userScore.totalTimeSpent 
+            : Math.floor(calculatedTimeMs / 1000);
         // 4. Calculate Rank
-        const higherRankCount = await ContestScore.countDocuments({
+       const higherRankCount = await ContestScore.countDocuments({
             isCompleted: true,
+            // REMOVED isPrizeEligible check here
             $or: [
-                { 'scores.total': { $gt: userScore.scores.total } },
+                { adjustedTotalScore: { $gt: userScore.adjustedTotalScore } },
                 { 
-                    'scores.total': userScore.scores.total, 
+                    adjustedTotalScore: userScore.adjustedTotalScore, 
                     totalTimeSpent: { $lt: userScore.totalTimeSpent } 
                 }
             ]
@@ -571,7 +582,9 @@ router.get('/my-results', async (req, res) => {
                 correct,
                 incorrect,
                 accuracy,
-                rank: higherRankCount + 1
+                rank: higherRankCount + 1,
+                totalTime: finalTotalTime,
+                penalties: userScore.penalties
             }
         });
 
