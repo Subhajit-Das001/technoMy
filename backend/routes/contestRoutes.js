@@ -10,6 +10,7 @@ const offline26 = require('../models/offline26'); // Import Offline25 model
 const newStudent = require('../models/newStudent'); // Import newStudent model
 const cosStudent = require('../models/cos_student'); //COS Students
 const moment = require('moment-timezone');
+const nodemailer = require("nodemailer");
 
 const forceISTtoUTC = (dbDate) => {
     if (!dbDate) return null;
@@ -18,6 +19,54 @@ const forceISTtoUTC = (dbDate) => {
     // 2. Tell moment this raw time is specifically in Kolkata, then export as universal ISO
     return moment.tz(rawString, "Asia/Kolkata").toISOString();
 };
+
+//Mailing setup - for top-100
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, 
+    auth: {
+        user: process.env.SENDER_EMAIL, 
+        pass: process.env.SENDER_PASSWORD 
+    },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100 
+});
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// 2. Coupon Configuration
+const couponPools = {
+    tier1: { maxRank: 5, discount: 100, code: 'X7MQK2RVP9LDT4WN' }, // Everyone Rank 1-5 gets this
+    tier2: { maxRank: 20, discount: 75, code: 'N8ZTQ5KPM3VXR7DL' },  // Everyone Rank 6-20 gets this
+    tier3: { maxRank: 50, discount: 50, code: 'W4LPT9XNK2RQV8MD' },
+    tier4: { maxRank: 101, discount: 25, code: 'R6KVM2QPX9TNL4WD' }
+};
+const getPrizeDetails = (rank) => {
+    if (rank <= 5) return couponPools.tier1;
+    if (rank <= 20) return couponPools.tier2;
+    if (rank <= 50) return couponPools.tier3;
+    if (rank <= 101) return couponPools.tier4;
+    return null; // For anyone outside Top 100
+};
+
+async function sendPrizeEmail(email, name, rank, discount, couponCode) {
+    try {
+        await transporter.sendMail({
+            from: `"Technothlon Team" <${process.env.SENDER_EMAIL}>`,
+            to: email,
+            subject: `Results of Mega Contest, Technothlon-2026`,
+            html: `
+                <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 8px;"> <p>Dear ${name},</p> <p> Thank you for participating in the Technothlon 2026 Mega Contest held on 21st June. </p> <p> Based on your performance, you secured <strong>Rank #${rank}</strong>.</p> <p> As a participant benefit, you are eligible for a <strong>${discount}% discount on the Technothlon 2026 registration fee</strong>. </p> <div style="margin: 24px 0; padding: 18px; border: 1px solid #dbeafe; border-radius: 6px; background-color: #f8fafc; text-align: center;"> <p style="margin: 0 0 8px 0;"> <strong>Your Coupon Code</strong> </p> <p style="margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 2px;"> ${couponCode} </p> </div> <p> You can use this coupon while registering for Technothlon 2026. </p> <p style="text-align: center; margin: 24px 0;"> <a href="https://technothlon.techniche.org.in/TeamRegistration" style="display: inline-block; padding: 12px 24px; border-radius: 4px; background-color: #2563eb; color: #ffffff; text-decoration: none;"> Register Now </a> </p> <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;"> <p><strong>Important Information</strong></p> <ul style="padding-left: 20px; line-height: 1.6;"> <li>This coupon can be used only once.</li> <li>Registration must be completed using <strong>${email}</strong>.</li> <li>You must participate in a team of 2. Individual participation is not allowed.</li><li>The coupon is valid until <strong>27 June 2026, 11:59 PM IST</strong>.</li> <li>The discount will be applied during payment after clicking Pay Now.</li> </ul> <p> We encourage you to register soon and participate in Technothlon 2026 with a teammate from your city and squad. </p> <p> For any questions, contact <a href="mailto:technothlon.iitg@gmail.com">technothlon.iitg@gmail.com</a> </p> <p style="margin-top: 32px;"> Regards,<br> <strong>Team Technothlon</strong><br> IIT Guwahati </p> </div>
+            `
+        });
+        console.log(`✅ Prize Email sent to: ${email} | Rank: ${rank}`);
+        return true;
+    } catch (err) {
+        console.error(`❌ Prize Email failed for ${email}:`, err.message);
+        return false;
+    }
+}
 // Start contest
 router.post('/start', async (req, res) => {
     try {
@@ -94,6 +143,50 @@ router.post('/start', async (req, res) => {
         });
     }
 });
+// Ensure ContestScore is imported at the top of your file
+// const ContestScore = require('../models/contest-score');
+
+async function processPrizeEmailsInBackground(winners) {
+    const total = winners.length;
+    let counter = 0;
+
+    console.log(`\n📤 Starting prize email delivery for ${total} new students...`);
+
+    for (const winner of winners) {
+        counter++;
+        console.log(`[${counter}/${total}] Processing Rank ${winner.rank}: ${winner.name}`);
+
+        // 1. Check if they already got the mail to prevent duplicate sending
+        const dbRecord = await ContestScore.findOne({ phone: winner.phone });
+        if (dbRecord && dbRecord.prizeMailSent) {
+            console.log(`⏩ Skipping ${winner.email} (Mail already sent in previous run)`);
+            continue;
+        }
+
+        // 2. Get the specific tier code
+        const prize = getPrizeDetails(winner.rank);
+        if (!prize) {
+            console.log(`⚠️ Skipping ${winner.phone}: Rank ${winner.rank} does not qualify for a prize.`);
+            continue;
+        }
+
+        // 3. Send the email (using the sendPrizeEmail function from the previous step)
+        const success = await sendPrizeEmail(winner.email, winner.name, winner.rank, prize.discount, prize.code);
+
+        // 4. Update the database if successful
+        if (success) {
+            await ContestScore.updateOne(
+                { phone: winner.phone },
+                { $set: { prizeMailSent: true } }
+            );
+        }
+
+        // 5. Throttling to protect Gmail account
+        await delay(2500); 
+    }
+
+    console.log('\n🎉 All prize emails processed successfully!');
+}
 
 // Submit answer
 router.post('/submit', async (req, res) => {
@@ -648,6 +741,118 @@ router.post('/penalty', async (req, res) => {
     } catch (error) {
         console.error('Penalty error:', error);
         res.status(500).json({ message: 'Error recording penalty' });
+    }
+});
+router.get('/top-100-details', async (req, res) => {
+    try {
+        // 1. Get the Top 100 from ContestScore
+        // Assuming we are sorting by the 'adjustedTotalScore' from our previous updates
+        const top100Scores = await ContestScore.find({ 
+            isCompleted: true,
+            isPrizeEligible: true // Optional: Keeps out the cheaters
+        })
+        .sort({ adjustedTotalScore: -1, totalTimeSpent: 1 }) 
+        .limit(100)
+        .select('phone isNewStudent adjustedTotalScore'); // Only fetch what we need
+
+        // 2. Map through and resolve the conditional details concurrently
+        const detailedTop100 = await Promise.all(top100Scores.map(async (scoreDoc, index) => {
+            const rank = index + 1;
+            const phoneStr = scoreDoc.phone;
+            
+            // Base object with the minimum required details
+            let studentDetails = {
+                rank: rank,
+                phone: phoneStr,
+                isNewStudent: scoreDoc.isNewStudent,
+                score: scoreDoc.adjustedTotalScore
+            };
+
+            // 3. Conditional Data Fetching
+            if (scoreDoc.isNewStudent) {
+                // Fetch from newStudent model
+                const newData = await newStudent.findOne({ phone: phoneStr }).select('name email');
+                if (newData) {
+                    studentDetails.name = newData.name;
+                    studentDetails.email = newData.email;
+                } else {
+                    studentDetails.name = "Not Found";
+                    studentDetails.email = "Not Found";
+                }
+            } else {
+                // Fetch from old student models using contact1 OR contact2
+                const phoneQuery = { $or: [{ contact1: phoneStr }, { contact2: phoneStr }] };
+                
+                // Check Offline26 first
+                let oldData = await offline26.findOne(phoneQuery).select('name school rollnumber');
+                
+                // If not in Offline26, check Online26
+                if (!oldData) {
+                    oldData = await Online26.findOne(phoneQuery).select('name school rollnumber');
+                }
+                
+                // If not in Online26, check cos_students
+                if (!oldData) {
+                    oldData = await cosStudent.findOne(phoneQuery).select('name school rollnumber');
+                }
+
+                if (oldData) {
+                    studentDetails.name = oldData.name;
+                    studentDetails.school = oldData.school;
+                    studentDetails.rollnumber = oldData.rollnumber; 
+                } else {
+                    studentDetails.name = "Not Found";
+                    studentDetails.school = "Not Found";
+                    studentDetails.rollnumber = "Not Found";
+                }
+            }
+
+            return studentDetails;
+        }));
+
+        res.json({
+            success: true,
+            count: detailedTop100.length,
+            data: detailedTop100
+        });
+
+    } catch (error) {
+        console.error('Error fetching Top 100 details:', error);
+        res.status(500).json({ success: false, message: 'Server error fetching detailed leaderboard' });
+    }
+});
+// POST /api/contest/trigger-prize-emails
+router.post('/trigger-prize-emails', async (req, res) => {
+    try {
+        // We expect the JSON array from /top-100-details to be sent in the request body
+        const { winners } = req.body; 
+
+        if (!winners || !Array.isArray(winners)) {
+            return res.status(400).json({ message: "Invalid payload. Expected an array of 'winners'." });
+        }
+
+        // Filter the incoming JSON: We only want New Students who actually have an email address
+        const eligibleWinners = winners.filter(student => 
+            student.isNewStudent === true && 
+            student.email && 
+            student.email !== "Not Found"
+        );
+
+        if (eligibleWinners.length === 0) {
+            return res.json({ message: "No eligible new students found in the provided list." });
+        }
+
+        // Start background process instantly (Not awaiting it!)
+        processPrizeEmailsInBackground(eligibleWinners);
+
+        res.json({ 
+            success: true,
+            message: `Background email process started for ${eligibleWinners.length} eligible new students. Check server console for progress.` 
+        });
+
+    } catch (error) {
+        console.error('Error triggering prize emails:', error);
+        res.status(500).json({ message: 'Server error triggering emails' });
     }
 });
 module.exports = router;

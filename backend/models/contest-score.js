@@ -62,6 +62,7 @@ const ContestScoreSchema = new mongoose.Schema({
   }],
   adjustedTotalScore: { type: Number, default: 0 },
     isPrizeEligible: { type: Boolean, default: true },
+    prizeMailSent: { type: Boolean, default: false },
     
     // Session management
     sessionId: { type: String }

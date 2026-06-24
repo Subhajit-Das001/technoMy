@@ -8,6 +8,8 @@ function generateRollNumber(squad, language, city, studentCount) {
     const squadCode = (squad === "Hauts") ? "HE" : "JR";
     const year =26;
     const cityID = cityToID[city];
+    
+    /// Fix this code to take mode as F for offline, and C for cos if you need.
     const mode="N";
     // Format student count to always have 4 digits
     const paddedStudentCount = String(studentCount).padStart(5, '0');
