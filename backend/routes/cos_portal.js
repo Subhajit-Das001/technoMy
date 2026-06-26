@@ -508,40 +508,52 @@ router.post('/school-register',isAdmin, async (req, res) => {
     }
 });
 //COS- Payment 
-router.post('/cos-payment',isAdmin, async (req, res) => {
+router.post('/cos-payment', isAdmin, async (req, res) => {
     try {
         const { school_id, branch_id } = req.body;
         let query = {};
 
-        // 1. Determine the search criteria
+        // Branch ID(s)
         if (branch_id) {
-            query = { branch_id: branch_id };
-        } else if (school_id) {
-            query = { school_id: school_id };
-        } else {
-            return res.status(400).json({ 
-                status: false, 
-                message: "Please provide either a School ID or a Branch ID." 
+            query = {
+                branch_id: {
+                    $in: Array.isArray(branch_id) ? branch_id : [branch_id]
+                }
+            };
+        }
+        // School ID(s)
+        else if (school_id) {
+            query = {
+                school_id: {
+                    $in: Array.isArray(school_id) ? school_id : [school_id]
+                }
+            };
+        }
+        else {
+            return res.status(400).json({
+                status: false,
+                message: "Please provide either school_id or branch_id."
             });
         }
 
-        // 2. Update all matching students: set isPaid to true
-        // updateMany returns an object with modifiedCount
         const updateResult = await CosStudent.updateMany(
-            query, 
+            query,
             { $set: { isPaid: true } }
         );
 
-        // 3. Return the total count of updated students
         res.status(200).json({
             status: true,
-            message: `Payment status updated for all students in ${branch_id || school_id}`,
-            updatedCount: updateResult.modifiedCount,
-            totalFound: updateResult.matchedCount
+            message: "Payment status updated successfully.",
+            totalFound: updateResult.matchedCount,
+            updatedCount: updateResult.modifiedCount
         });
 
     } catch (err) {
-        res.status(500).json({ status: false, message: "Internal Server Error", error: err.message });
+        res.status(500).json({
+            status: false,
+            message: "Internal Server Error",
+            error: err.message
+        });
     }
 });
 
