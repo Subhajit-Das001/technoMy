@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>Online registrations will close in 3 days. Register before 30th June, 11:59 PM to avoid missing the deadline. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>Online registrations will close in 3 days. Register before 30th June, 11:59 PM to avoid missing the deadline.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
