@@ -908,7 +908,7 @@
   "Munger": "914",
   "Ishapore": "915",
   "Sonbhadra": "916",
-  "Anandpur": "917",
+  "Anandapur": "917",
   "Bahraich": "918",
   "Zaheerabad": "919",
   "Raninagar": "920",
@@ -937,5 +937,10 @@
   "Lakhnadon": "943",
   "Barapani": "944",
   "Siang": "945",
-  "Garhwa": "946"
+  "Garhwa": "946",
+  "Shravasti":"947",
+  "Narmada Nagar" :"948",
+  "Nongpoh":"949",
+  "Gauribidanur" :"950",
+  "Yingkiong" :"951"
 }
