@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.cc60914c.css",
-    "main.js": "/static/js/main.6d0d1023.js",
+    "main.css": "/static/css/main.90fcfc41.css",
+    "main.js": "/static/js/main.51199e65.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -122,10 +122,12 @@
     "static/media/Juniors Key 21.pdf": "/static/media/Juniors Key 21.75c8b1a1930b3956332c.pdf",
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
-    "index.html": "/index.html"
+    "index.html": "/index.html",
+    "main.90fcfc41.css.map": "/static/css/main.90fcfc41.css.map",
+    "main.51199e65.js.map": "/static/js/main.51199e65.js.map"
   },
   "entrypoints": [
-    "static/css/main.cc60914c.css",
-    "static/js/main.6d0d1023.js"
+    "static/css/main.90fcfc41.css",
+    "static/js/main.51199e65.js"
   ]
 }
