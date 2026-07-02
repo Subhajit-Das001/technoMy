@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>Online registrations will close on 2nd July, 11:59 PM.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>Prelims examination is on 12th July 2026. Admit cards will be released shortly.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>

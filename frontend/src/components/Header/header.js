@@ -131,13 +131,21 @@ function Header() {
           </Link> */}
         </div>
         <div className="regggg">
-         <Link
+          {/* <Link
           to="/TeamRegistration"
           className={`regist ${clickedLink === "register" ? "clicked" : ""}`}
           onClick={() => setClickedLink("register")}
         >
           <p className="registp">Register</p>
-        </Link>
+        </Link> */}
+        {/* uncomment above link when registration is opened. */}
+         <button
+          disabled
+          className={`regist ${clickedLink === "register" ? "clicked" : ""}`}
+          style={{cursor: 'not-allowed', opacity: 0.7}}
+        >
+          <p className="registp">Registration Closed</p>
+        </button>
 
         
         <Link

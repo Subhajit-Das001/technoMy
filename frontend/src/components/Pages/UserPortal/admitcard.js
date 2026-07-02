@@ -121,7 +121,7 @@ const AdmitCard = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
     fetchUserDetails();
   }, [baseURL]);
 

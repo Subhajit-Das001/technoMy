@@ -213,7 +213,6 @@ router.get('/user', verifyToken, async (req, res) => {
     // if (!user) {
     //   user = await Teams.findOne({ roll });
     // }
-
     // if (!user) {
     //   user = await UploadOffTeam.findOne({ roll });
     // }
