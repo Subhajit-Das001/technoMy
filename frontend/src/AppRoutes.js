@@ -128,7 +128,7 @@ const AppRoutes = () => {
         path="/technothlon2023-registerations"
         element={<Technothlon23Updates />}
       />
-      <Route path="/TeamRegistration" element={<Registration />} />
+      {/* <Route path="/TeamRegistration" element={<Registration />} /> */}
       <Route path="/dashboard" element={<Technothlon23Updates />} />
       <Route path="/teamverified" element={<TeamVerified />} />
       <Route path="/confirmPayment/:ciphertext" element={<PaymentConfirmed />} />
