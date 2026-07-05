@@ -37,8 +37,8 @@ function ContactUs() {
       role: "South Zone Head",
       img: sr,
       linkedin: "https://www.linkedin.com/in/shreshtha-rastogi-24422a313/",
-      email: "shreshtharastogi555@gmail.com",
-      contact: "7233951978",
+      email: "",
+      contact: "",
       position: "top center"
     },
     {
@@ -47,8 +47,8 @@ function ContactUs() {
       role: "North Zone Head",
       img: ri,
       linkedin: "https://www.linkedin.com/in/ritik-raj-0117b5338/",
-      email: "ritikraj620071@gmail.com",
-      contact: "6200716689",
+      email: "",
+      contact: "",
       position: "left center"
     },
 
@@ -58,8 +58,8 @@ function ContactUs() {
       role: "West Zone Head",
       img: dp,
       linkedin: "https://www.linkedin.com/in/deep-shah-b69b89312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      email: "deeps01122006@gmail.com",
-      contact: "8511107997",
+      email: "",
+      contact: "",
       position: "top center"
     },
     {
@@ -68,8 +68,8 @@ function ContactUs() {
       role: "South Zone Head",
       img: ud,
       linkedin: "https://www.linkedin.com/in/uday-kiran-battula-435054250?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      email: "k.battula@iitg.ac.in",
-      contact: "8978909914",
+      email: "",
+      contact: "",
       position: "center center"
     },
     {
@@ -78,8 +78,8 @@ function ContactUs() {
       role: "East Zone Head",
       img: po,
       linkedin: "https://www.linkedin.com/in/poulomi-chakraborty-76b97a322?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      email: "poulomichakraborty750@gmail.com",
-      contact: "9954704388",
+      email: "",
+      contact: "",
       position: "center center"
     },
     {
@@ -88,8 +88,8 @@ function ContactUs() {
       role: "West Zone Head",
       img: oh,
       linkedin: "https://www.linkedin.com/in/kbchaubey25/",
-      email: "kabya25ranjan@gmail.com",
-      contact: "6307043498",
+      email: "",
+      contact: "",
       position: "right center"
     },
 
