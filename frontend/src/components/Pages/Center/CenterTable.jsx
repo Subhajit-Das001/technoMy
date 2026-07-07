@@ -114,7 +114,7 @@ const TechnothonCenterList = () => {
                 <div className="content-wrapper">
                     <h1 className="page-title">Examination Centers</h1>
                     <p className="description">
-                        Below is the list of centers where Technothlon 2025 examination will be conducted.
+                        Below is the list of centers where Technothlon 2026 examination will be conducted.
                         <span className="important-note">
                              These are the centers finalized so far. Many more are yet to be confirmed.
                         </span>

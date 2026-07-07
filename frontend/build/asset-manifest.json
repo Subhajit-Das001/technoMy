@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.90fcfc41.css",
-    "main.js": "/static/js/main.a704843c.js",
+    "main.css": "/static/css/main.777f8b2a.css",
+    "main.js": "/static/js/main.ade11e43.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -58,6 +58,7 @@
     "static/media/t81.jpg": "/static/media/t81.1f093412915c3bc48ed9.jpg",
     "static/media/t21.jpg": "/static/media/t21.17c5cd5b4fd2448da1d9.jpg",
     "static/media/Hauts Hindi 22.pdf": "/static/media/Hauts Hindi 22.68f9cbf8dac569624cf1.pdf",
+    "static/media/admit-card.png": "/static/media/admit-card.11f9968608a6abaf9e1d.png",
     "static/media/po.jpg": "/static/media/po.a2366b4e3b2b70c398b8.jpg",
     "static/media/Technothlon_2009_Hauts.pdf": "/static/media/Technothlon_2009_Hauts.23ab5d710f48741e5837.pdf",
     "static/media/2019hautssolutions.pdf": "/static/media/2019hautssolutions.943b5afda58056856ab7.pdf",
@@ -81,7 +82,6 @@
     "static/media/Juniors English 20.pdf": "/static/media/Juniors English 20.d29933bdd3465f5c0123.pdf",
     "static/media/Hauts Key 23.pdf": "/static/media/Hauts Key 23.3f4818a96a56a5e24527.pdf",
     "static/media/Juniors Key 23.pdf": "/static/media/Juniors Key 23.8cf4964bbb8f977264a9.pdf",
-    "static/media/AC2.png": "/static/media/AC2.46badbf9cf427080d1c3.png",
     "static/media/2019JuniorSolutions.pdf": "/static/media/2019JuniorSolutions.19a8979ca241407f9fde.pdf",
     "static/media/t61.jpeg": "/static/media/t61.d04ee3c94a7f2e62338d.jpeg",
     "static/media/ednite.png": "/static/media/ednite.92d768842b4c6c7d5ed7.png",
@@ -98,7 +98,6 @@
     "static/media/techno1.png": "/static/media/techno1.e1d55409b17d83992178.png",
     "static/media/HeroImgD.png": "/static/media/HeroImgD.d5b42bf2bb0eb9db661b.png",
     "static/media/Juniors Key 22.pdf": "/static/media/Juniors Key 22.f73fe459ddac47d36d30.pdf",
-    "static/media/ains.png": "/static/media/ains.9beb1811232198411ff0.png",
     "static/media/logo.png": "/static/media/logo.44c3e5a082e0c63c8b6e.png",
     "static/media/techno_contest.png": "/static/media/techno_contest.79050a32848a78c66dc3.png",
     "static/media/coin.png": "/static/media/coin.fd61490a0d8f085f2c4e.png",
@@ -123,11 +122,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.90fcfc41.css.map": "/static/css/main.90fcfc41.css.map",
-    "main.a704843c.js.map": "/static/js/main.a704843c.js.map"
+    "main.777f8b2a.css.map": "/static/css/main.777f8b2a.css.map",
+    "main.ade11e43.js.map": "/static/js/main.ade11e43.js.map"
   },
   "entrypoints": [
-    "static/css/main.90fcfc41.css",
-    "static/js/main.a704843c.js"
+    "static/css/main.777f8b2a.css",
+    "static/js/main.ade11e43.js"
   ]
 }

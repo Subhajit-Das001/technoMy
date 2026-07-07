@@ -25,6 +25,7 @@ const Online25 = require('../models/online25');
 const Offline25 = require('../models/Offline25');
 const Online26 = require('../models/online26');
 const Offline26 = require('../models/offline26');
+const CentreInformation = require('../models/centreInformation.js');
 const { parse } = require('json2csv');
 const Cityrep_portal = require('../models/cityrep_portal.js');
 const CityRep_portal = require('../models/cityrep_portal.js');
@@ -189,39 +190,54 @@ const verifyToken = (req, res, next) => {
 
 
 
-
 router.get('/user', verifyToken, async (req, res) => {
   const { roll } = req;
 
   try {
-    let user = null;
-    // user = await Online25.findOne({ rollNumber: roll });
+    let user = await Online26.findOne({ rollNumber: roll }).lean();
+    let type = user ? 'online' : null;
 
-    // if (!user) {
-    //   user = await Offline25.findOne({ rollNumber: roll });
-    // }
     if (!user) {
-      user = await Online26.findOne({ rollNumber: roll });
-    }
-    if (!user) {
-      user = await Offline26.findOne({ rollNumber: roll });
-    }
-    if (!user) {
-      user = await cosStudent.findOne({ rollNumber: roll });
+      user = await Offline26.findOne({ rollNumber: roll }).lean();
+      if (user) type = 'offline';
     }
 
-    // if (!user) {
-    //   user = await Teams.findOne({ roll });
-    // }
-    // if (!user) {
-    //   user = await UploadOffTeam.findOne({ roll });
-    // }
+    if (!user) {
+      user = await cosStudent.findOne({ rollNumber: roll }).lean();
+      if (user) type = 'cos';
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.json({ user });
+    let centreInfo = null;
+    
+    // Safely check centreId (prevents crash if it's a Number)
+    const safeCentreId = user.centreId ? String(user.centreId).trim() : '';
+    const hasValidCentreId = safeCentreId !== '' && safeCentreId !== 'NA' && safeCentreId !== 'null';
+
+    if (hasValidCentreId) {
+      centreInfo = await CentreInformation.findOne({ centreId: user.centreId }).lean();
+      
+      if (centreInfo) {
+        // 👉 THE FIX: Catch alternative schema spellings and map them to 'centreName'
+        centreInfo.centreName = centreInfo.centreName || centreInfo.centerName || centreInfo.name || 'Centre Name Missing in DB';
+        // (Optional) Do the same for address if needed
+        centreInfo.centreAddress = centreInfo.centreAddress || centreInfo.centerAddress || '';
+      } else {
+        centreInfo = { centreName: 'Centre details unavailable' };
+      }
+    } else {
+      centreInfo = {
+        centreName: type === 'cos' 
+          ? (user.school1 || 'Your Institution through which you registered.')
+          : 'To be announced'
+      };
+    }
+
+    return res.json({ user, type, centreInfo });
+    
   } catch (err) {
     console.error("Error fetching user:", err);
     return res.status(500).json({ message: "Internal server error" });

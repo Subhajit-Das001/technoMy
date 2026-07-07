@@ -1,96 +1,142 @@
 const temporaryTechnopediaContest = {
-    contest: 'टेक्नोपीडिया प्रतियोगिता 2026',
-    year: '2026',
-    startTime: new Date('2026-06-10T00:00:00.000Z'),
-    endTime: new Date('2026-11-22T00:00:00.000Z'),    
-    questions: [
+  contest: 'TechnoQuest 2026',
+  year: 'TechnoQuest-2026',
+  startTime: new Date('2026-06-10T00:00:00.000Z'),
+  endTime: new Date('2026-11-22T00:00:00.000Z'),    
+  questions: [
     {
       "questionId": 1,
       "letter": "A",
-      "title": "बगीचे में तीन भाई",
-      "content": "तीन भाइयों के पास कुल मिलाकर 24 सेब हैं। शुरुआत में, प्रत्येक भाई को उसकी वर्तमान आयु से 3 कम सेब मिलते हैं।\nसबसे छोटे भाई से शुरू करते हुए, फिर मंझला, और अंत में सबसे बड़े भाई तक, प्रत्येक भाई यह प्रक्रिया ठीक एक बार करता है:\n* वह अपने पास मौजूद सेबों का आधा हिस्सा रख लेता है, और बाकी आधे हिस्से को अन्य दो भाइयों के बीच बराबर बांट देता है।\n\nइन तीनों प्रक्रियाओं के बाद, प्रत्येक भाई के पास 8 सेब बचते हैं।\nएक अतिरिक्त शर्त यह है:\nभाइयों की वर्तमान आयु का गुणनफल, पूरी प्रक्रिया के दौरान आदान-प्रदान किए गए कुल सेबों की संख्या के दोगुने के बराबर है।\nसबसे छोटे और सबसे बड़े भाई की आयु का योग क्या होगा? यदि आपको लगता है कि ऐसी कोई स्थिति संभव नहीं है, तो 0 टाइप करें।",
-      "answer": "0",
+      "title": "The General's Dilemma",
+      "content": `If the squared distance between some two soldiers equals to 5, then those soldiers will conflict with each other! The drill exercises are held on a rectangular n × m field, split into nm square 1 × 1 segments for each soldier. Thus, the square of the distance between the soldiers that stand on squares(x1, y1) and (x2, y2) equals exactly(x1-x2)^2 +(y1-y2)^2. Now not all nm squad soldiers can participate in the drill exercises as it was before the old witch curse. Unless, of course, the general wants the soldiers to fight with each other or even worse. For example, if he puts a soldier in the square (2, 2), then he cannot put soldiers in the squares (1, 4), (3, 4), (4, 1) and (4, 3) — each of them will conflict with the soldier in the square (2, 2). Find the sum of maximum number of soldiers that can be simultaneously positioned on this field for each of the following cases 
+I) 1002 2
+II) 451 2
+III) 780 2
+IV) 121 2 `,
+      "answer": "2358",
       "points": 100
     },
     {
       "questionId": 2,
       "letter": "B",
-      "title": "बिना कोनों वाला ग्रिड",
-      "content": "एक 10x10 के ग्रिड में कुछ खानों (सेल्स) को चिह्नित किया गया है।\nएक 1x1 आकार के डोमिनो को किन्हीं भी दो आसन्न (बगल वाले) खानों पर क्षैतिज या ऊर्ध्वाधर रूप से रखा जा सकता है।\nकम से कम कितने खानों को चिह्नित करना होगा ताकि:\n1. हर संभावित 1x1 डोमिनो कम से कम एक चिह्नित खाने को कवर करे।\n2. हर पंक्ति (row) में कम से कम 4 चिह्नित खाने हों।\n3. हर स्तंभ (column) में कम से कम 4 चिह्नित खाने हों।\n4. चारों कोनों में से किसी भी खाने को चिह्नित न किया गया हो।",
-      "answer": "52",
+      "title": "The game",
+      "content": `Poulomi and Uday devise a path to follow. Poulomi writes down the first six intervals for a break: 0 1 2 3 4 5
+Each subsequent interval is the last digit of the sum of the previous six intervals. Poulomi starts scribbling down the entire sequence of intervals. Help Uday find out which of the following subsequences will never occur.
+A) 1 3 5 7 9
+B) 9 7 5 3 1
+C) 3 1 5 9 7
+D) All
+Answer 1 for A, 2 for B, and so on`,
+      "answer": "1",
       "points": 100
     },
     {
       "questionId": 3,
       "letter": "C",
-      "title": "2556 अंकों का खेल",
-      "content": "एक खेल इस प्रकार खेला जाता है। हर कदम पर, आप बोर्ड से कोई भी संख्या (जाे एक से ज्यादा हो) चुनते हैं और उसे दो धनात्मक पूर्णांकों a और b से बदल देते हैं, जहाँ a+b=n हो, और उस चाल के लिए आपको ab अंक मिलते हैं।\nखेल तब समाप्त होता है जब बोर्ड पर हर संख्या 1 हो जाती है।\nएक खिलाड़ी यह खेल खेलता है और कुल 2556 अंक प्राप्त करता है। खिलाड़ी ने किस संख्या से शुरुआत की थी?",
-      "answer": "72",
+      "title": "Mr. and Mrs. Srivastava",
+      "content": `Mr. and Mrs. Srivastava threw a dinner party, and invited four other couples: the Shobhanes, the Patnis, the Mukherjees, and the Umbarkars. When all the guests had arrived there were ten people in the house. Some of these people had met before and some hadn't. All the people who had never met before shook hands. Then Mr. Srivastava asked every guest and his own wife how many hands
+each of them had shook. To his surprise every person gave a different answer. How many hands did Mrs. Srivastava shake?`,
+      "answer": "4",
       "points": 100
     },
     {
       "questionId": 4,
       "letter": "D",
-      "title": "संतरों की पहेली",
-      "content": "एक समिति त्योहार के जश्न के लिए उपहार के पैकेट तैयार कर रही थी।\nसंतरों को पैकेटों में बराबर बांटते समय उन्होंने एक अजीब बात देखी:\n* यदि वे प्रत्येक पैकेट में 10 संतरे रखने की कोशिश करते, तो एक पैकेट में केवल 9 संतरे ही बचते।\n* यदि वे प्रत्येक पैकेट में 9 संतरे रखने की कोशिश करते, तो एक पैकेट में केवल 8 संतरे बचते।\n* यही बात 8, 7, 6,... से लेकर 2 संतरे प्रति पैकेट तक दोहराई गई, जहाँ हमेशा एक पैकेट में केवल 1 संतरा बचता था।\n\nसंतरों की कुल संख्या ज्ञात कीजिए।",
-      "answer": "2519",
+      "title": "HANGMAN",
+      "content": `It is a leisure period in Kabya's school and he decides to play the word-guessing game, HANGMAN, with his friend Ritik.
+The rules of the game are:
+→ Kabya thinks of a word and tells Ritik the number of letters in the word.
+→ Ritik has to guess the letters in the word.
+→ At most, Kabya can guess incorrectly 7 times.
+→ If he guesses all the letters before getting 7 incorrect guesses, Ritik wins.
+→ Otherwise, Kabya wins.
+Kabya thinks of an 8-letter word. He further gives Revanth a hint as: If you guess correctly every time, you can win the game with 6 guesses.
+Ritik starts guessing alphabetically but loses. Among all his guesses, he could get only 2 guesses correct, 1 vowel and 1 consonant.
+Which of these vowels is definitely NOT present in the word?
+A) A (B) E (C) I (D) O
+Answer 1 for A, 2 for B, and so on`,
+      "answer": "3",
       "points": 100
     },
     {
       "questionId": 5,
       "letter": "E",
-      "title": "रिले रेस की उलझन",
-      "content": "एक रिले रेस में पांच धावक (R1-R5) बैटन (डंडा) लेकर दौड़ते हैं। प्रत्येक बैटन का एक रंग है: लाल (Re), हरा (Gr), या नीला (Bl)। धावक एक निश्चित कतार में खड़े हैं और केवल अपने एकदम बगल वाले धावक को ही बैटन पास कर सकते हैं।\n* जिसके हाथ में बैटन हो, उसे 'लोडेड' कहा जाता है।\n* जिसके हाथ में कोई बैटन न हो, उसे 'फ्री' कहा जाता है。\n\nशुरुआत में, लाल बैटन R1 के पास, हरा R3 के पास और नीला R5 के पास है।\n* नियम A - केवल बगल में पास: बैटन को केवल एकदम बगल वाले धावक (±1 स्थान) को ही दिया जा सकता है। बीच के धावकों को छोड़कर बैटन नहीं फेंका जा सकता।\n* नियम B - दोहरा बैटन नहीं: कोई भी धावक एक ही समय में दो बैटन नहीं पकड़ सकता। अगर कोई पास ऐसा करता है, तो वह चाल अमान्य है।\n* नियम C - रंगों का टकराव: लाल और हरे बैटन एक ही समय (किसी भी चाल के अंत में) आसन्न (बगल वाले) धावकों के पास नहीं हो सकते।\n* नियम D - नीला एंकर: नीला बैटन कभी भी अपने वर्तमान स्थान की संख्या से नीचे के स्थान पर नहीं जा सकता (यह केवल दाईं ओर जा सकता है या वहीं रुक सकता है)।\n\nवर्तमान में नीला R4 पर है, हरा R3 पर है, और लाल R1 पर है। कुछ चालों के बाद हरा बैटन R5 तक पहुँच जाता है। इस स्थिति में नीले बैटन की स्थिति के बारे में निम्नलिखित में से कौन सा कथन निश्चित रूप से सत्य है? यदि विकल्प A सही है तो 1 टाइप करें, विकल्प B के लिए 2 टाइप करें, इत्यादि।\n(A) हरे के पहुँचने से पहले ही नीला R5 पर चला गया होगा, जिससे टकराव की स्थिति उत्पन्न हुई।\n(B) नीला अभी भी R4 पर हो सकता है, क्योंकि R5 पर मौजूद हरा किसी भी नियम के तहत नीले को प्रभावित नहीं करता।\n(C) नीला फंस गया है - वह R5 पर नहीं जा सकता (वहाँ हरा है) और नियम D उसे वापस R3 पर जाने से रोकता है।\n(D) जब हरा R4 से हटेगा, तो नीला अपने आप R5 पर चला जाएगा।\n(E) प्रारंभिक स्थिति से शुरू करते हुए, हरे का R5 पर होना और नीले का R4 पर होना एक अमान्य स्थिति है।",
-      "answer": "5",
+      "title": "Deep's cubes",
+      "content": `Deep has been given 2 cubes, using which he has to represent all the months and dates. Each face of a cube bears different digits (from 0-9), but the digits on the two cubes can be the same. He does that first assuming that ‘5’ will be represented as ‘5’ and not ‘05’. He then repeats the same for the the case where ‘5’ is represented as ‘05’. What’s the minimum number of common faces the two cubes can have, with first cube faces adding up to give the least sum, in the two cases. Answer 1 for A, 2 for B, and so on  
+1) 2,2
+2) 2,3
+3) 3,3
+4) 3,2`,
+      "answer": "2",
       "points": 100
     },
     {
       "questionId": 6,
       "letter": "F",
-      "title": "कमरों का वफादारी तर्क",
-      "content": "एक क्लिनिक में एक दिन के लिए तीन कमरों (कमरा X, कमरा Y, कमरा Z) में अपॉइंटमेंट तय किए जाते हैं। दिन को चार समय स्लॉट (स्लॉट 1 से 4, क्रम में) में बांटा गया है। प्रत्येक कमरा एक स्लॉट में अधिकतम एक मरीज को देखता है। मरीजों को प्रकारों में बांटा गया है: सामान्य (G), विशेषज्ञ (Sp), या आपातकालीन (Em)। प्रत्येक मरीज का केवल एक ही प्रकार होता है।\n* नियम 1 - आपातकालीन प्राथमिकता: आपातकालीन मरीजों को हमेशा स्लॉट 1 या स्लॉट 2 में रखा जाना चाहिए। वे स्लॉट 3 या 4 में नहीं आ सकते।\n* नियम 2 - विशेषज्ञों का अलगाव: किन्हीं भी दो विशेषज्ञ मरीजों को किसी भी कमरे के एक ही समय स्लॉट में नहीं रखा जा सकता।\n* नियम 3 - कमरे की वफादारी: एक बार जब किसी कमरे में एक सामान्य मरीज को देखा जाता है, तो वह कमरा पूरे दिन केवल सामान्य मरीजों को ही देख सकता है।\n* नियम 4 - स्लॉट का बढ़ना: किसी कमरे में स्लॉट 3 और स्लॉट 4 का उपयोग तब तक नहीं किया जा सकता, जब तक कि उसी कमरे के स्लॉट 1 और 2 पहले से ही भरे न हों।\n\nयदि शेड्यूलिंग बोर्ड दिखाता है कि एक विशेषज्ञ (Sp) मरीज को स्लॉट 4 में कमरे Y में बुक किया गया है, तो उस दिन कमरे Y में कम से कम कुल कितने मरीजों का शेड्यूल होना चाहिए?",
-      "answer": "3",
+      "title": "IIT Guwahati's tunnel",
+      "content": `The instructions read as follows:
+Every person entering IIT Guwahati will be given a bowl with 15 red flowers and 12 yellow flowers. Each time the Gong of Time rings, he/she must do one of two things:
+1. Exchange: If he has at least 3 red flowers in his bowl, then he may exchange 3 red flowers for 2 yellow flowers.
+2. Swap: He may replace each yellow flowers in his bowl with a red flowers and replace each red flowers in his bowl with a yellow flowers. That is, if he starts with i red flowers and j yellow flowers, then after he performs this operation, he will have j red flowers and i yellow flowers. [You can leave the tunnel only when you make all the combinations (no. of red, no. of yellow) of flowers that are possible].
+What is the number of combinations you need to make to leave the tunnel? `,
+      "answer": "52",
       "points": 100
     },
     {
       "questionId": 7,
       "letter": "G",
-      "title": "लक्ष्य 555",
-      "content": "तीन खिलाड़ी A, B, और C एक अनंत संख्या रेखा (number line) पर एक खेल खेलते हैं।\nशुरुआत में स्थिति 0 पर एक सिक्का रखा है।\nहर बारी में, कोई एक खिलाड़ी एक सिक्का चुनता है और ठीक एक प्रक्रिया करता है:\n1. दोगुना: सिक्के को n से हटाकर 2n पर रख दें।\n2. विभाजन: n पर रखे सिक्के को हटाकर दो सिक्के n-1 और n+1 पर रख दें।\n\nजो खिलाड़ी सबसे पहले स्थिति 555 पर एक सिक्का बनाता है, वह जीत जाता है। यह खेल कौन सा खिलाड़ी जीतेगा? खिलाड़ी A के लिए 10 टाइप करें, खिलाड़ी B के लिए 20 टाइप करें और खिलाड़ी C के लिए 30 टाइप करें। यदि उनमें से कोई नहीं जीतता है तो 0 टाइप करें।",
-      "answer": "0",
+      "title": "Mario's Dilemma",
+      "content": "Mario visits a chocolate store nearby where the shopkeeper has 9 jars filled with 4,2,6,7,3,4,5,8,3 jellyfishes respectively. Each second he is allowed to either double the content of one jar, or eat 9 jellyfishes (one from each jar). Can Mario always empty all the jars using these moves?If yes, then give the minimum time required to empty the jars ? (Answer 0 if no)",
+      "answer": "19",
       "points": 100
     },
     {
       "questionId": 8,
       "letter": "H",
-      "title": "सिलसिलेवार बंदी",
-      "content": "एक द्वीपसमूह में 6 द्वीप (I1 से I6) हैं। कुछ द्वीप पुलों से जुड़े हुए हैं। प्रत्येक पुल या तो खुला है या बंद है। यात्री द्वीपों के बीच यात्रा करना चाहते हैं। पुल का वॉर्डन द्वीपों को या तो पोर्ट (समुद्र द्वारा पहुँचा जा सकने वाला) या इनलैंड (समुद्र द्वारा न पहुँचा जा सकने वाला) के रूप में बांटता है। I1 और I6 पोर्ट हैं। I2, I3, I4, I5 इनलैंड (भीतरी) द्वीप हैं।\n* नियम 1 - पुल पर निर्भरता: एक इनलैंड द्वीप केवल तभी 'पहुँच योग्य' (Accessible) होता है जब उससे जुड़े कम से कम दो पुल खुले हों।\n* नियम 2 - पोर्ट की स्वतंत्रता: पुलों की स्थिति चाहे जो भी हो, पोर्ट द्वीपों तक हमेशा पहुँचा जा सकता है।\n* नियम 3 - सिलसिलेवार बंदी: यदि कोई इनलैंड द्वीप अपनी पहुँच खो देता है (खुले पुलों की संख्या 2 से कम हो जाती है), तो सुरक्षा उपाय के तौर पर उससे जुड़े सभी पुल तुरंत बंद कर दिए जाते हैं।\n* नियम 4 - यात्री प्रतिबंध: एक यात्री किसी पुल को केवल तभी पार कर सकता है जब पार करते समय उस पुल के दोनों सिरों वाले द्वीप 'पहुँच योग्य' हों।\n\nवर्तमान में I3 की ओर जाने वाले सभी पुल बंद हैं। I2 के पुल केवल I1 (पोर्ट) और I3 की ओर हैं। I4 के पुल केवल I3 और I6 (पोर्ट) की ओर हैं। I1 पर मौजूद एक यात्री I6 तक पहुँचना चाहता है। निम्नलिखित में से कौन सा कथन निश्चित रूप से सत्य है? यदि विकल्प A सही है तो 1 टाइप करें, विकल्प B के लिए 2 टाइप करें, इत्यादि।\n(A) यात्री सीधे I6 तक पहुँच सकता है क्योंकि दोनों पोर्ट हैं।\n(B) यात्री I6 तक नहीं पहुँच सकता; इसके अलावा, केवल एक पुल खुला होने के कारण I2 तक पहुँच खत्म हो जाती है, और नियम 3 के तहत I1-I2 पुल भी बंद हो जाता है।\n(C) I2 अपनी पहुँच खो देता है क्योंकि उसका केवल एक पुल (I1 की ओर) खुला है, इसलिए नियम 3 उस पुल को भी बंद कर देता है, जिससे I1 अलग-थलग हो जाता है।\n(D) यदि I3 के कम से कम दो पुल फिर से खोल दिए जाएं, तो यात्री I2->I3->I4->I6 के रास्ते I6 तक पहुँच सकता है।\n(E) यात्री I6 तक नहीं पहुँच सकता क्योंकि I3 के बंद होने से I2 और I4 के लिए भी नियम 3 लागू हो जाता है।",
-      "answer": "2",
+      "title": "Chess game",
+      "content": `Shreshtha is given a 3x3 chessboard. Shreshtha is asked to place 2 black rooks, 2 white knights and 1 white bishop on this board in such a way that:
+a. each piece threatens one or more pieces of the opponent
+b. each piece is protected by another piece of its own colour
+c. each piece (except the black queen) is under attack by some opponent piece
+
+Let the pieces be assigned numbers as follows: Queen=9, Knight=3, Bishop=3, Rook=5 on black squares and respective negative values on white squares. Find out the ‘sum’ of all pieces in the arranged position.`,
+      "answer": "1",
       "points": 100
     },
     {
       "questionId": 9,
       "letter": "I",
-      "title": "कॉम्बिनेशन लॉक - साइड चैनल की समस्या",
-      "content": "एक कॉम्बिनेशन लॉक में 3 डायल हैं, जिनमें से प्रत्येक पर 0-9 तक के अंक हैं। एक साइड चैनल यह बताता है कि आपके द्वारा अनुमान लगाया गया प्रत्येक डायल का अंक सही मान के 1 के अंतर के भीतर (चक्रीय रूप से) है या नहीं। खराब से खराब स्थिति (worst case) में सही कोड खोजने की गारंटी के लिए न्यूनतम कितने परीक्षणों (tests) की आवश्यकता होगी?",
-      "answer": "5",
+      "title": "Cards on table",
+      "content": `There are 20 cards arranged in a row on the table. Each card is showing a positive integer. On each player's turn, he allowed to take either the left most or right most card. This is done until all the cards are taken. The winner is the player who has the greatest sum of numbers on his/her cards. What should be your first move so that he can win the game?
+The sequences are: A -> 2 11 13 8 12 5 6 8 9 21 10 7 15 17 18 4 16 18 19 1
+ B ->12 18 13 4 8 16 17 5 3 19 21 1 6 11 12 18 14 15 6 9
+a. 1 from A and 9 from B
+b. 2 from A and 12 from B
+c. 2 from A and 9 from B
+d. he cannot win in any case
+Answer 1 for A, 2 for B, and so on`,
+      "answer": "3",
       "points": 100
     },
     {
       "questionId": 10,
       "letter": "J",
-      "title": "डिनर पार्टी की दुविधा",
-      "content": "आपने टेक्नोपीडिया के सभी प्रश्नों को पूरा करने का जश्न मनाने के लिए 52 लोगों की एक डिनर पार्टी आयोजित की है, जहाँ इस अध्याय के अंत का जश्न मनाने के लिए 'लेफ्ट' और 'राइट' नाम के दो खिलाड़ी बारी-बारी से जोड़ों (couples) को बैठा रहे हैं।\n'लेफ्ट' खिलाड़ी किसी भी महिला को उसके पार्टनर के बाईं ओर बैठाना पसंद करता है, जबकि 'राइट' का मानना है कि महिला को उसके पार्टनर के दाईं ओर बैठाना ही सही है। किसी भी पुरुष को उसकी अपनी पार्टनर के अलावा किसी अन्य महिला के बगल में नहीं बैठाया जा सकता। जो भी खिलाड़ी (लेफ्ट या राइट) सबसे पहले किसी जोड़े को बैठाने में असमर्थ होता है, उसे बचे हुए मेहमानों को वापस भेजने का शर्मनाक काम करना पड़ता है, और इसलिए उसे हारा हुआ माना जा सकता है।\n\nशाम के बीच में, लेफ्ट और राइट प्रतिस्पर्धा बंद करने का फैसला करते हैं। इसके बजाय, वे एक नए लक्ष्य के साथ सहयोग करने का निर्णय लेते हैं: वे एक 'डेडलॉक' (गतिरोध) तक पहुँचना चाहते हैं। यह एक ऐसी स्थिति है जहाँ न तो लेफ्ट और न ही राइट मेज पर कहीं भी किसी और जोड़े को बैठा सकें, और इसके लिए वे कम से कम संभव जोड़ों का उपयोग करना चाहते हैं। 52-सीटों वाली मेज पर खेल को पूरी तरह से डेडलॉक करने के लिए कम से कम कितने जोड़ों को बैठाया जाना चाहिए?",
-      "answer": "14",
+      "title": "IO language",
+      "content": ` Shifu explains that there are only 2 letters in the alphabet of the IO language I and O and for Po to understand better, he substitutes I for the riceball and O for dumpling. Shifu says any dish will consist of combinations of riceball or dumplings lined together.If he removes two neighbouring components ,”riceball and dumpling” from any plate then he will get a dish with the same meaning. Similarly, the dish will not change if he inserts combinations of “dumpling,riceball” or “riceball, riceball, dumpling, dumpling”. Po has been given a word having a combination of IOOIIIOIIOOOIOIOIIO, and has to pick tiles having words of the same meaning so as to win the game of MahJong. Help Po to find the number of words from the given list that have the same meaning as that of IOOIIIOIIOOOIOIOIIO
+1. IIOIIOOOIIOIOOIOIOII
+2. OIOIOIOIOIOIOIOIOIOI
+3. OIIOIOOIOOOOIIOIIII
+4. OOOIOOIOIOIOIIIOIII
+5. IOIOIOOIIOIOOIIOIIOIO
+6. IIIOOIOOIIOIOOIOIOOOI`,
+      "answer": "2",
       "points": 100
     }
   ]
 };
 
-
 module.exports = {
-    temporaryTechnopediaContest,
-    questions: temporaryTechnopediaContest.questions,
-    answers: temporaryTechnopediaContest.questions.map((question) => question.answer)
+  temporaryTechnopediaContest,
+  questions: temporaryTechnopediaContest.questions,
+  answers: temporaryTechnopediaContest.questions.map((question) => question.answer)
 };
-
