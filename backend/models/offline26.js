@@ -24,7 +24,10 @@ const offlineTeamSchema = new mongoose.Schema(
         city: { type: String, required: true },
         view: { type: String, required: true, default: 'school' },
         center: { type: String ,default: 'NA' },
-        
+        centreId: {
+  type: String,
+  default: "NA"
+,},
         rollNumber: { type: String,default: 'NA' },
         password: { type: String, default: 'NA'},
         Rank: { type: String, default: 'NA' },

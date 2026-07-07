@@ -39,7 +39,10 @@ const OnlineteamModel = new mongoose.Schema(
         // --- Marketing ---
         view: { type: String, required: true },
         // cityrepID: { type: String },
-
+        centreId: {
+  type: String,
+  default: "NA"
+},
         // --- Auth & Identification (Generated AFTER Payment) ---
         // CRITICAL: These must NOT be required, or the first save will fail.
         rollNumber: { type: String },

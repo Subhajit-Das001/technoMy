@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>Prelims examination is on 12th July 2026. Admit cards will be released shortly.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>Admit Cards are released. Please login through the credentials and download them. No centre change request will be entertained. All the best for the prelims.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
@@ -139,7 +139,7 @@ prizeImages.forEach(img => {
     {/* <a href="https://www.trexonline.com/" target="_blank" rel="noopener noreferrer" className="partner-card"> */}
       <img src={TREX} alt="TReX Logo" className="partner-logo" />
       <div className="partner-info">
-        <div className="partner-role">Organising Partner</div>
+        <div className="partner-role">Presenting Sponsor and Title Sponsor</div>
       </div>
     {/* </a> */}
   </div>
@@ -153,7 +153,7 @@ prizeImages.forEach(img => {
             <img src={IITG} alt="IIT Guwahati Icon" />
           </div>
           <div className="update-card-content">
-            <div style={{fontWeight: 'bold'}}>Certificates are out!</div>
+            <div style={{fontWeight: 'bold'}}>Admit Cards are out!</div>
             <div>Download now </div>
           </div>
         </a>

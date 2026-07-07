@@ -96,7 +96,7 @@ const UserPortal = () => {
         { title: 'Updates', img: add }, 
         // { title: 'Results', img: hat }, 
         { title: 'Pawn Gambit', img: Chess }, 
-        // { title: 'AdmitCard', img: Ac }
+        { title: 'AdmitCard', img: Ac }
     ];
 
     return (
@@ -199,7 +199,7 @@ const User = ({ selectedSection, onChessFullscreenToggle, isChessFullscreen }) =
                     isFullscreen={isChessFullscreen}
                 />
             )}
-            {/* {selectedSection === 'AdmitCard' && <AdmitCard />} */}
+            {selectedSection === 'AdmitCard' && <AdmitCard />}
         </div>
     );
 };
