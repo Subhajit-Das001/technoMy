@@ -951,19 +951,83 @@ console.log(`📍 Attempting to lock branch: ${branch_id}`)
 });
 
 // 2. The Telemetry Route (For React Polling)
-router.get("/upload/status/:jobId", verifyToken, async (req, res) => {
+router.get("/credentials/download", async (req, res) => {
   try {
-    const job = await csvProcessingQueue.getJob(req.params.jobId);
-    if (!job) return res.status(404).json({ error: "Job not found" });
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ status: false, message: "Unauthorized: No token provided" });
+    }
 
-    const state = await job.getState();
-    const progress = job.progress;
-    const result = job.returnvalue;
-    const failedReason = job.failedReason;
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.KEY);
+    } catch (err) {
+      return res.status(401).json({ status: false, message: "Unauthorized: Invalid or expired token" });
+    }
 
-    res.json({ state, progress, result, failedReason });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch job status" });
+    const branch_id = decoded.branch_id;
+    if (!branch_id) {
+      return res.status(400).json({ status: false, message: "Branch ID missing in token" });
+    }
+
+    // Initialize the CSV string with headers
+    let rawCsvString = "name1,dob1,email1,contact1,class1,name2,dob2,email2,contact2,class2,squad,language,rollNumber,password\n";
+    let recordCount = 0;
+
+    const formatOutDate = (d) => {
+      if (!d) return '';
+      const date = new Date(d);
+      return `${String(date.getUTCDate()).padStart(2, '0')}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCFullYear())}`;
+    };
+
+    // 🚀 USE A CURSOR: This fetches data in batches, preventing Event Loop blocking
+    // It allows multiple admins to download 25k records simultaneously without crashing the server.
+    const cursor = CosStudent.find({ branch_id: branch_id }).lean().cursor();
+
+    for await (const row of cursor) {
+      recordCount++;
+      
+      // Format the password safely for Excel (e.g., ="04052006")
+      const formattedPassword = `="${row.password || ''}"`;
+
+      // Construct the row array
+      const rowData = [
+        row.name1 || '',
+        formatOutDate(row.dob1),
+        row.email1 || '',
+        row.contact1 || '',
+        row.class1 || '',
+        row.name2 || '',
+        formatOutDate(row.dob2),
+        row.email2 || '',
+        row.contact2 || '',
+        row.class2 || '',
+        row.squad || '',
+        row.language || '',
+        row.rollNumber || '',
+        formattedPassword
+      ];
+
+      // Escape quotes and join with commas
+      const csvRow = rowData.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+      rawCsvString += csvRow + '\n';
+    }
+
+    if (recordCount === 0) {
+      return res.status(404).json({ status: false, message: "No student records found to download." });
+    }
+
+    const fileName = `${branch_id}_all_credentials_${Date.now()}.csv`;
+
+    return res.json({
+      status: true,
+      csvData: rawCsvString,
+      fileName: fileName
+    });
+
+  } catch (error) {
+    console.error("Download All Credentials Error:", error);
+    res.status(500).json({ status: false, message: "Internal server error while generating CSV." });
   }
 });
 
@@ -994,6 +1058,155 @@ router.get("/upload/status/:jobId", verifyToken, async (req, res) => {
 //   }
 // });
 
+//Credentials Download 
+// Add this to your routes file (e.g., routes/cos_portal.js)
+// Make sure to require CosStudent at the top: const CosStudent = require("../models/cos_student");
+
+router.get("/credentials/download", async (req, res) => {
+  try {
+    // Assuming you have a JWT middleware that populates req.user
+    // If your auth middleware sets req.branch_id, adjust accordingly.
+    const branch_id = req.user.branch_id; 
+
+    // 1. Fetch all students for this branch quickly using .lean()
+    const students = await CosStudent.find({ branch_id: branch_id }).lean();
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({ status: false, message: "No student records found to download." });
+    }
+
+    // 2. Format data EXACTLY like the CSV worker
+    const outputData = students.map(row => {
+      const formatOutDate = (d) => {
+        if (!d) return '';
+        const date = new Date(d);
+        return `${String(date.getUTCDate()).padStart(2, '0')}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCFullYear())}`;
+      };
+      
+      return {
+        name1: row.name1 || '',
+        dob1: formatOutDate(row.dob1),
+        email1: row.email1 || '',
+        contact1: row.contact1 || '',
+        school1: row.school1 || '',
+        school2: row.school2 || '',
+        class1: row.class1 || '',
+        name2: row.name2 || '',
+        dob2: formatOutDate(row.dob2),
+        email2: row.email2 || '',
+        contact2: row.contact2 || '',
+        class2: row.class2 || '',
+        squad: row.squad || '',
+        language: row.language || '',
+        rollNumber: row.rollNumber || '',
+        password: `="${row.password || ''}"` // String formatting preserved
+      };
+    });
+
+    // 3. Construct CSV String
+    const csvHeader = Object.keys(outputData[0]).join(',');
+    const csvRows = outputData.map(row => 
+      Object.values(row).map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
+    );
+    const rawCsvString = [csvHeader, ...csvRows].join('\n');
+
+    const fileName = `${branch_id}_all_credentials_${Date.now()}.csv`;
+
+    return res.json({
+      status: true,
+      csvData: rawCsvString,
+      fileName: fileName
+    });
+
+  } catch (error) {
+    console.error("Download All Credentials Error:", error);
+    res.status(500).json({ status: false, message: "Internal server error while generating CSV." });
+  }
+});
+// Add this route to your cos_portal.js file
+// Ensure you have: const CosBranch = require("../models/cos_branch"); 
+// Ensure you have: const CosStudent = require("../models/cos_student");
+
+router.get("/attendance/download", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ status: false, message: "Unauthorized" });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.KEY);
+    } catch (err) {
+      return res.status(401).json({ status: false, message: "Invalid token" });
+    }
+
+    const branch_id = decoded.branch_id;
+
+    // 1. Fetch branch details ONLY for the School Name
+    const branch = await CosBranch.findOne({ branch_id: branch_id }).lean();
+    if (!branch) {
+      return res.status(404).json({ status: false, message: "Branch not found" });
+    }
+
+    // 2. Dynamically calculate accurate counts directly from cos_students
+    // Using countDocuments is lightning fast and uses virtually zero RAM
+    const totalTeams = await CosStudent.countDocuments({ branch_id: branch_id });
+    const juniorsCount = await CosStudent.countDocuments({ branch_id: branch_id, squad: 'Juniors' });
+    const hautsCount = totalTeams - juniorsCount; // Everything else falls into Hauts
+
+    // If there are no students, exit early
+    if (totalTeams === 0) {
+      return res.status(404).json({ status: false, message: "No students found to generate attendance." });
+    }
+
+    // 3. Build the top "Header" section for the CSV
+    // We add extra commas so it aligns with the 6 columns of the main table
+    let csvString = 
+      `"Technothlon 2026 Prelims - School Attendance Sheet",,,,,\n` +
+      `,,,,,\n` +
+      `"School: ${branch.branch_name}",,,,,\n` +
+      `"Branch Id: ${branch.branch_id}",,,,,\n` +
+      `"Total Teams: ${totalTeams}",,,,,\n` +
+      `"Total Hauts: ${hautsCount}",,,,,\n` +
+      `"Total Juniors: ${juniorsCount}",,,,,\n` +
+      `,,,,,\n` +
+      `"Reporting Time: 10:30 AM",,,,,,,\n` +  `"Exam Timing: 11:00 AM to 1:00 PM",,,,,,\n` +`"Students Present: _______",,,,,\n` +
+       `"Hauts Present: _______",,,,,\n` +
+      `,"Juniors Present: _______",,,,\n` +
+      `,,,,,\n` +
+      // The actual table headers
+      `"Name 1","Name 2","Roll Number","Password","Student Signature 1","Student Signature 2"\n`;
+
+    // 4. Stream the student data using a Cursor (Crash-proof for large data)
+    const cursor = CosStudent.find({ branch_id: branch_id }).lean().cursor();
+
+    for await (const row of cursor) {
+      const rowData = [
+        row.name1 || '',
+        row.name2 || '',
+        row.rollNumber || '',
+        `="${row.password || ''}"`, // String formatting for password
+        "", // Blank space for Signature 1
+        ""  // Blank space for Signature 2
+      ];
+
+      // Escape quotes and join with commas
+      const csvRow = rowData.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+      csvString += csvRow + '\n';
+    }
+
+    const fileName = `${branch_id}_attendance_sheet_${Date.now()}.csv`;
+
+    return res.json({
+      status: true,
+      csvData: csvString,
+      fileName: fileName
+    });
+
+  } catch (error) {
+    console.error("Attendance Download Error:", error);
+    res.status(500).json({ status: false, message: "Internal server error." });
+  }
+});
 // Logout Route
 router.get('/logout', (req, res) => {
   res.clearCookie('token');

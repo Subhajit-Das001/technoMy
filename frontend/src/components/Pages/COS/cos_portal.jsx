@@ -30,6 +30,8 @@ function COSPortal() {
   const [failedFileName, setFailedFileName] = useState(null);
   const [sendingReport, setSendingReport] = useState(false);
   const [fileHash, setFileHash] = useState("");
+  const [downloadingCreds, setDownloadingCreds] = useState(false);
+  const [downloadingAttendance, setDownloadingAttendance] = useState(false);
 useEffect(() => {
     fetchDashboardData();
     // Show guidelines once per session
@@ -58,7 +60,74 @@ useEffect(() => {
       }
     }
   };
+  const handleDownloadAttendance = async () => {
+    if (!dashboardData) return;
+    
+    setDownloadingAttendance(true);
+    try {
+      const response = await axios.get(`${baseURL}cos_portal/attendance/download`, {
+        withCredentials: true,
+      });
 
+      const { csvData, fileName } = response.data;
+
+      // Use the existing trigger helper to download
+      triggerCsvDownload(csvData, fileName);
+      toast.success("Attendance sheet downloaded successfully!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to download attendance sheet.");
+    } finally {
+      setDownloadingAttendance(false);
+    }
+  };
+  // Reusable helper to trigger browser download
+  const triggerCsvDownload = (csvData, fileName) => {
+    const encodedUri = `data:text/csv;charset=utf-8,${encodeURIComponent(csvData)}`;
+    const link = document.createElement('a');
+    link.href = encodedUri;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  // Main Download Handler
+  const handleDownloadAllCredentials = async () => {
+    if (!dashboardData) return;
+    
+    // Check localStorage cache first
+    const cacheKey = `cos_all_creds_${dashboardData.branch_id}`;
+    const cachedData = localStorage.getItem(cacheKey);
+
+    if (cachedData) {
+      try {
+        const { csvData, fileName } = JSON.parse(cachedData);
+        triggerCsvDownload(csvData, fileName);
+        toast.success("Credentials downloaded from local cache!");
+        return;
+      } catch (e) {
+        localStorage.removeItem(cacheKey); // Clear if corrupted
+      }
+    }
+
+    setDownloadingCreds(true);
+    try {
+      const response = await axios.get(`${baseURL}cos_portal/credentials/download`, {
+        withCredentials: true,
+      });
+
+      const { csvData, fileName } = response.data;
+
+      // Save to localStorage for future clicks
+      localStorage.setItem(cacheKey, JSON.stringify({ csvData, fileName }));
+
+      triggerCsvDownload(csvData, fileName);
+      toast.success("All credentials fetched and downloaded successfully!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to download credentials.");
+    } finally {
+      setDownloadingCreds(false);
+    }
+  };
   // HnadleFileChange function with Redis Enabled
   // 1. The Gateway Handoff
   const handleFileChange = async (e) => {
@@ -152,9 +221,13 @@ useEffect(() => {
   const handleUploadSuccess = (data) => {
     toast.success(`Successfully processed ${data.processedCount} teams!`);
     setFileHash(data.fileHash);
-
+// --- ADD THIS LINE TO WIPE STALE CACHE ---
+    if (dashboardData) {
+      localStorage.removeItem(`cos_all_creds_${dashboardData.branch_id}`);
+    }
     // 1. Convert the raw text string into a downloadable file in the browser
     const encodedUri = `data:text/csv;charset=utf-8,${encodeURIComponent(data.csvData)}`;
+    
     // 2. Trigger auto-download instantly
     const link = document.createElement('a');
     link.href = encodedUri;
@@ -420,7 +493,35 @@ const handleSendReport = async (e) => {
 
       <div className="cos_kv_main_container">
         <div className="cos_kv_dashboard">
-          <h2 className="cos_kv_dashboard_title">Dashboard</h2>
+          {/* --- NEW HEADER FLEX CONTAINER --- */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+            <h2 className="cos_kv_dashboard_title" style={{ margin: 0 }}>Dashboard</h2>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {/* Existing Credentials Button */}
+              <button 
+                onClick={handleDownloadAllCredentials}
+                disabled={downloadingCreds || dashboardData?.total_registered_students === 0}
+                className={`cos_kv_btn_outline_blue ${downloadingCreds ? 'disabled' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+              >
+                <Download size={18} /> 
+                <span>{downloadingCreds ? "Generating CSV..." : "Download Credentials"}</span>
+              </button>
+
+              {/* NEW Attendance Button */}
+              <button 
+                onClick={handleDownloadAttendance}
+                disabled={downloadingAttendance || dashboardData?.total_registered_students === 0}
+                className={`cos_kv_btn_outline_blue ${downloadingAttendance ? 'disabled' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+              >
+                <Download size={18} /> 
+                <span>{downloadingAttendance ? "Generating Sheet..." : "Attendance Sheet"}</span>
+              </button>         
+            </div>
+          </div>
+          {/* --- END NEW HEADER --- */}
           
           <div className="cos_kv_stats_grid">
             <div className="cos_kv_stat_card">
