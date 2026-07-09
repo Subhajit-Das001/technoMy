@@ -1164,12 +1164,13 @@ router.get("/attendance/download", async (req, res) => {
       `"Technothlon 2026 Prelims - School Attendance Sheet",,,,,\n` +
       `,,,,,\n` +
       `"School: ${branch.branch_name}",,,,,\n` +
+      `"Branch Id: ${branch.branch_id}",,,,,\n` +
       `"Total Teams: ${totalTeams}",,,,,\n` +
       `"Total Hauts: ${hautsCount}",,,,,\n` +
       `"Total Juniors: ${juniorsCount}",,,,,\n` +
       `,,,,,\n` +
-      `"Reporting Time: 10:30 AM","Students Present: _______",,,,\n` +
-      `"Exam Timing: 11:00 AM to 1:00 PM","Hauts Present: _______",,,,\n` +
+      `"Reporting Time: 10:30 AM",,,,,,,\n` +  `"Exam Timing: 11:00 AM to 1:00 PM",,,,,,\n` +`"Students Present: _______",,,,,\n` +
+       `"Hauts Present: _______",,,,,\n` +
       `,"Juniors Present: _______",,,,\n` +
       `,,,,,\n` +
       // The actual table headers

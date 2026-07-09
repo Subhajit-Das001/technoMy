@@ -518,7 +518,7 @@ const handleSendReport = async (e) => {
               >
                 <Download size={18} /> 
                 <span>{downloadingAttendance ? "Generating Sheet..." : "Attendance Sheet"}</span>
-              </button>
+              </button>         
             </div>
           </div>
           {/* --- END NEW HEADER --- */}
