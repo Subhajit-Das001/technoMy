@@ -1123,7 +1123,89 @@ router.get("/credentials/download", async (req, res) => {
     res.status(500).json({ status: false, message: "Internal server error while generating CSV." });
   }
 });
+// Add this route to your cos_portal.js file
+// Ensure you have: const CosBranch = require("../models/cos_branch"); 
+// Ensure you have: const CosStudent = require("../models/cos_student");
 
+router.get("/attendance/download", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ status: false, message: "Unauthorized" });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.KEY);
+    } catch (err) {
+      return res.status(401).json({ status: false, message: "Invalid token" });
+    }
+
+    const branch_id = decoded.branch_id;
+
+    // 1. Fetch branch details ONLY for the School Name
+    const branch = await CosBranch.findOne({ branch_id: branch_id }).lean();
+    if (!branch) {
+      return res.status(404).json({ status: false, message: "Branch not found" });
+    }
+
+    // 2. Dynamically calculate accurate counts directly from cos_students
+    // Using countDocuments is lightning fast and uses virtually zero RAM
+    const totalTeams = await CosStudent.countDocuments({ branch_id: branch_id });
+    const juniorsCount = await CosStudent.countDocuments({ branch_id: branch_id, squad: 'Juniors' });
+    const hautsCount = totalTeams - juniorsCount; // Everything else falls into Hauts
+
+    // If there are no students, exit early
+    if (totalTeams === 0) {
+      return res.status(404).json({ status: false, message: "No students found to generate attendance." });
+    }
+
+    // 3. Build the top "Header" section for the CSV
+    // We add extra commas so it aligns with the 6 columns of the main table
+    let csvString = 
+      `"Technothlon 2026 Prelims - School Attendance Sheet",,,,,\n` +
+      `,,,,,\n` +
+      `"School: ${branch.branch_name}",,,,,\n` +
+      `"Total Teams: ${totalTeams}",,,,,\n` +
+      `"Total Hauts: ${hautsCount}",,,,,\n` +
+      `"Total Juniors: ${juniorsCount}",,,,,\n` +
+      `,,,,,\n` +
+      `"Reporting Time: 10:30 AM","Students Present: _______",,,,\n` +
+      `"Exam Timing: 11:00 AM to 1:00 PM","Hauts Present: _______",,,,\n` +
+      `,"Juniors Present: _______",,,,\n` +
+      `,,,,,\n` +
+      // The actual table headers
+      `"Name 1","Name 2","Roll Number","Password","Student Signature 1","Student Signature 2"\n`;
+
+    // 4. Stream the student data using a Cursor (Crash-proof for large data)
+    const cursor = CosStudent.find({ branch_id: branch_id }).lean().cursor();
+
+    for await (const row of cursor) {
+      const rowData = [
+        row.name1 || '',
+        row.name2 || '',
+        row.rollNumber || '',
+        `="${row.password || ''}"`, // String formatting for password
+        "", // Blank space for Signature 1
+        ""  // Blank space for Signature 2
+      ];
+
+      // Escape quotes and join with commas
+      const csvRow = rowData.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+      csvString += csvRow + '\n';
+    }
+
+    const fileName = `${branch_id}_attendance_sheet_${Date.now()}.csv`;
+
+    return res.json({
+      status: true,
+      csvData: csvString,
+      fileName: fileName
+    });
+
+  } catch (error) {
+    console.error("Attendance Download Error:", error);
+    res.status(500).json({ status: false, message: "Internal server error." });
+  }
+});
 // Logout Route
 router.get('/logout', (req, res) => {
   res.clearCookie('token');

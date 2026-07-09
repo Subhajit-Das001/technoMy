@@ -31,6 +31,7 @@ function COSPortal() {
   const [sendingReport, setSendingReport] = useState(false);
   const [fileHash, setFileHash] = useState("");
   const [downloadingCreds, setDownloadingCreds] = useState(false);
+  const [downloadingAttendance, setDownloadingAttendance] = useState(false);
 useEffect(() => {
     fetchDashboardData();
     // Show guidelines once per session
@@ -57,6 +58,26 @@ useEffect(() => {
           ? "https://technothlon.techniche.org.in/school-registration"
           : "http://localhost:3000/school-registration";
       }
+    }
+  };
+  const handleDownloadAttendance = async () => {
+    if (!dashboardData) return;
+    
+    setDownloadingAttendance(true);
+    try {
+      const response = await axios.get(`${baseURL}cos_portal/attendance/download`, {
+        withCredentials: true,
+      });
+
+      const { csvData, fileName } = response.data;
+
+      // Use the existing trigger helper to download
+      triggerCsvDownload(csvData, fileName);
+      toast.success("Attendance sheet downloaded successfully!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to download attendance sheet.");
+    } finally {
+      setDownloadingAttendance(false);
     }
   };
   // Reusable helper to trigger browser download
@@ -472,19 +493,35 @@ const handleSendReport = async (e) => {
 
       <div className="cos_kv_main_container">
         <div className="cos_kv_dashboard">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          {/* --- NEW HEADER FLEX CONTAINER --- */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
             <h2 className="cos_kv_dashboard_title" style={{ margin: 0 }}>Dashboard</h2>
             
-            <button 
-              onClick={handleDownloadAllCredentials}
-              disabled={downloadingCreds || dashboardData?.total_registered_students === 0}
-              className={`cos_kv_btn_outline_blue ${downloadingCreds ? 'disabled' : ''}`}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-            >
-              <Download size={18} /> 
-              <span>{downloadingCreds ? "Generating CSV..." : "Download All Credentials"}</span>
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {/* Existing Credentials Button */}
+              <button 
+                onClick={handleDownloadAllCredentials}
+                disabled={downloadingCreds || dashboardData?.total_registered_students === 0}
+                className={`cos_kv_btn_outline_blue ${downloadingCreds ? 'disabled' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+              >
+                <Download size={18} /> 
+                <span>{downloadingCreds ? "Generating CSV..." : "Download Credentials"}</span>
+              </button>
+
+              {/* NEW Attendance Button */}
+              <button 
+                onClick={handleDownloadAttendance}
+                disabled={downloadingAttendance || dashboardData?.total_registered_students === 0}
+                className={`cos_kv_btn_outline_blue ${downloadingAttendance ? 'disabled' : ''}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', backgroundColor: '#f8f9fa' }}
+              >
+                <Download size={18} /> 
+                <span>{downloadingAttendance ? "Generating Sheet..." : "Attendance Sheet"}</span>
+              </button>
+            </div>
           </div>
+          {/* --- END NEW HEADER --- */}
           
           <div className="cos_kv_stats_grid">
             <div className="cos_kv_stat_card">
