@@ -950,6 +950,23 @@ console.log(`📍 Attempting to lock branch: ${branch_id}`)
   }
 });
 
+
+router.get("/upload/status/:jobId", verifyToken, async (req, res) => {
+  try {
+    const job = await csvProcessingQueue.getJob(req.params.jobId);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+
+    const state = await job.getState();
+    const progress = job.progress;
+    const result = job.returnvalue;
+    const failedReason = job.failedReason;
+
+    res.json({ state, progress, result, failedReason });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch job status" });
+  }
+});
+
 // 2. The Telemetry Route (For React Polling)
 router.get("/credentials/download", async (req, res) => {
   try {
