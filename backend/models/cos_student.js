@@ -34,7 +34,7 @@ const cosStudentsSchema = new mongoose.Schema({
   type: String,
   default: "NA"
 },
-    rank: { type: String ,default: 'NA'},
+    Rank: { type: Number ,default: 'NA'},
     isPaid: {type : Boolean, default : false},
     mailSent: {type : Boolean, default : false},
 

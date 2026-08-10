@@ -58,7 +58,7 @@ prizeImages.forEach(img => {
       <Header />
       <div className="floating-notice" style={{backgroundColor: "yellow"}}>
       <marquee behavior="scroll" direction="left" onMouseOver={stopMarquee} onMouseOut={startMarquee} >
-  <p>Admit Cards are released. Please login through the credentials and download them. No centre change request will be entertained. All the best for the prelims.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+  <p>Technothlon Prelims Results are live now — check your rank & download certificates&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
   
 
 </marquee>
@@ -136,12 +136,12 @@ prizeImages.forEach(img => {
         <div className="partner-role">Academic Partner</div>
       </div>
     </a> */}
-    {/* <a href="https://www.trexonline.com/" target="_blank" rel="noopener noreferrer" className="partner-card"> */}
+    <a href="https://www.trexed.com/" target="_blank" rel="noopener noreferrer" className="partner-card">
       <img src={TREX} alt="TReX Logo" className="partner-logo" />
       <div className="partner-info">
         <div className="partner-role">Presenting Sponsor and Title Sponsor</div>
       </div>
-    {/* </a> */}
+    </a>
   </div>
 </div>
 

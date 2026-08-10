@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.777f8b2a.css",
-    "main.js": "/static/js/main.4c8a492e.js",
+    "main.css": "/static/css/main.71cb6ca6.css",
+    "main.js": "/static/js/main.9732710d.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -64,22 +64,24 @@
     "static/media/2019hautssolutions.pdf": "/static/media/2019hautssolutions.943b5afda58056856ab7.pdf",
     "static/media/Juniors 22 English.pdf": "/static/media/Juniors 22 English.50a801349e6bb33c69dc.pdf",
     "static/media/Technothlon_2010_Hauts.pdf": "/static/media/Technothlon_2010_Hauts.69bb28342f6131a34474.pdf",
-    "static/media/CITY_TOPPER_Juniors.png": "/static/media/CITY_TOPPER_Juniors.dd120192f1f2b9742cef.png",
-    "static/media/CITY_TOPPER_Hauts.png": "/static/media/CITY_TOPPER_Hauts.5850cecd75bb9e241fe8.png",
-    "static/media/Gold_Juniors.png": "/static/media/Gold_Juniors.da3b5cd4fe6cb4ba8b90.png",
-    "static/media/Gold_Hauts.png": "/static/media/Gold_Hauts.dbe08e7686ea63c2c67e.png",
     "static/media/prizes3.png": "/static/media/prizes3.c935c68b29f0b31ef4f3.png",
     "static/media/Technothlon_2010_Juniors.pdf": "/static/media/Technothlon_2010_Juniors.bd10f6649ae825b457b3.pdf",
     "static/media/Technothlon_2009_Juniors.pdf": "/static/media/Technothlon_2009_Juniors.cece57a63c98cddc2ecc.pdf",
     "static/media/prizes2.png": "/static/media/prizes2.af2131e690c7d1ab0a0a.png",
+    "static/media/Certificate_Techno_Gold_Juniors.png": "/static/media/Certificate_Techno_Gold_Juniors.a2951b86f17762c4cceb.png",
+    "static/media/Certificate_Techno_Gold_Hauts.png": "/static/media/Certificate_Techno_Gold_Hauts.ab82c6db63007ccf5ba8.png",
     "static/media/logo2.png": "/static/media/logo2.365368fcbab10ddc673b.png",
-    "static/media/Silver_Juniors.png": "/static/media/Silver_Juniors.e6ae0b3c5f5d8b79e100.png",
-    "static/media/Silver_Hauts.png": "/static/media/Silver_Hauts.81a3c23bfda726463f3a.png",
+    "static/media/Certificate_Techno_Bronze_Juniors.png": "/static/media/Certificate_Techno_Bronze_Juniors.1da5f0925e4db74a7a9f.png",
+    "static/media/Certificate_Techno_Bronze_Hauts.png": "/static/media/Certificate_Techno_Bronze_Hauts.2697f9e26ba491adf546.png",
     "static/media/oh.JPG": "/static/media/oh.cb4f4625f8fed206d066.JPG",
-    "static/media/participation_Juniors.png": "/static/media/participation_Juniors.21b9fcea7e834edbbbfb.png",
-    "static/media/participation_Hauts.png": "/static/media/participation_Hauts.7462dec5aa552d58d0fb.png",
     "static/media/Hauts English 20.pdf": "/static/media/Hauts English 20.0988b7ce3bfbd88275d4.pdf",
     "static/media/Juniors English 20.pdf": "/static/media/Juniors English 20.d29933bdd3465f5c0123.pdf",
+    "static/media/Certificate_Techno_Silver_Juniors.png": "/static/media/Certificate_Techno_Silver_Juniors.93818c9448595bff96ec.png",
+    "static/media/Certificate_Techno_Silver_Hauts.png": "/static/media/Certificate_Techno_Silver_Hauts.6c9477dc632b6744cd3a.png",
+    "static/media/Certificate_Techno_participation_Juniors.png": "/static/media/Certificate_Techno_participation_Juniors.6cd2b348da0ebcd8f4c0.png",
+    "static/media/Certificate_Techno_participation_Hauts.png": "/static/media/Certificate_Techno_participation_Hauts.1291bae4f82547bd52b4.png",
+    "static/media/State-Toppers-Hauts.png": "/static/media/State-Toppers-Hauts.ad55ef42873d648b858e.png",
+    "static/media/State-Toppers-Juniors.png": "/static/media/State-Toppers-Juniors.ad55ef42873d648b858e.png",
     "static/media/Hauts Key 23.pdf": "/static/media/Hauts Key 23.3f4818a96a56a5e24527.pdf",
     "static/media/Juniors Key 23.pdf": "/static/media/Juniors Key 23.8cf4964bbb8f977264a9.pdf",
     "static/media/2019JuniorSolutions.pdf": "/static/media/2019JuniorSolutions.19a8979ca241407f9fde.pdf",
@@ -122,11 +124,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.777f8b2a.css.map": "/static/css/main.777f8b2a.css.map",
-    "main.4c8a492e.js.map": "/static/js/main.4c8a492e.js.map"
+    "main.71cb6ca6.css.map": "/static/css/main.71cb6ca6.css.map",
+    "main.9732710d.js.map": "/static/js/main.9732710d.js.map"
   },
   "entrypoints": [
-    "static/css/main.777f8b2a.css",
-    "static/js/main.4c8a492e.js"
+    "static/css/main.71cb6ca6.css",
+    "static/js/main.9732710d.js"
   ]
 }

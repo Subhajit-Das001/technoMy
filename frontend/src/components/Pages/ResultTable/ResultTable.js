@@ -15,8 +15,8 @@ import './result_table.css';
 const ResultTable = () => {
   const [top25Juniors, setTop25Juniors] = useState([]);
   const [top25Hauts, setTop25Hauts] = useState([]);
-  const [cityToppersJuniors, setCityToppersJuniors] = useState([]);
-  const [cityToppersHauts, setCityToppersHauts] = useState([]);
+  const [stateToppersJuniors, setStateToppersJuniors] = useState([]);
+  const [stateToppersHauts, setStateToppersHauts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('top25');
@@ -35,7 +35,7 @@ const ResultTable = () => {
   const fetchResults = async () => {
     try {
       setLoading(true);
-      setError(null);
+      setError(null); 
       
       const response = await axios.get(`${baseURL}uploadcsv/results-table`, {
         withCredentials: true,
@@ -45,8 +45,8 @@ const ResultTable = () => {
       if (response.data.success) {
         setTop25Juniors(response.data.top25Juniors || []);
         setTop25Hauts(response.data.top25Hauts || []);
-        setCityToppersJuniors(response.data.cityToppersJuniors || []);
-        setCityToppersHauts(response.data.cityToppersHauts || []);
+        setStateToppersJuniors(response.data.stateToppersJuniors || []);
+        setStateToppersHauts(response.data.stateToppersHauts || []);
       } else {
         throw new Error(response.data.message || 'Failed to fetch results');
       }
@@ -85,7 +85,7 @@ const ResultTable = () => {
       (item.name1 && item.name1.toLowerCase().includes(lowerSearch)) ||
       (item.name2 && item.name2.toLowerCase().includes(lowerSearch)) ||
       (item.rollNumber && item.rollNumber.toLowerCase().includes(lowerSearch)) ||
-      (item.city && item.city.toLowerCase().includes(lowerSearch))
+      (item.state && item.state.toLowerCase().includes(lowerSearch))
     );
   };
 
@@ -118,13 +118,13 @@ const ResultTable = () => {
               <div className="name-secondary">{formatName(team.name2)}</div>
           </td>
           <td className="resulttable-roll-col">{team.rollNumber || 'N/A'}</td>
-          <td className="resulttable-city-col">{team.city || 'N/A'}</td>
+          <td className="resulttable-city-col">{team.state || 'N/A'}</td>
         </tr>
       );
     });
   };
 
-  const renderCitySection = (data, title) => {
+  const renderStateSection  = (data, title) => {
     const filteredData = filterData(data);
 
     if (filteredData.length === 0) {
@@ -142,11 +142,11 @@ const ResultTable = () => {
           {filteredData.map((topper, index) => {
              const rankEmoji = getRankEmoji(topper.Rank);
              return (
-              <div key={topper.city || index} className="city-card">
-                <div className="city-card-header">
-                  <span className="city-icon">📍</span>
-                  <span className="city-name">{topper.city || 'Unknown'}</span>
-                </div>
+              <div key={topper.state || index} className="city-card">
+  <div className="city-card-header">
+    <span className="city-icon">📍</span>
+    <span className="city-name">{topper.state || 'Unknown'}</span>
+  </div>
                 <div className="city-card-body">
                   <div className="team-names">
                     {formatName(topper.name1)} <span className="amp">&</span> {formatName(topper.name2)}
@@ -192,9 +192,9 @@ const ResultTable = () => {
       <div className="containe">
         {/* Compact Header */}
         <div className="page-header-section-compact">
-            <h1 className="official-results-title-compact">Technothlon 2025 Official Results</h1>
+            <h1 className="official-results-title-compact">Technothlon 2026 Prelims Results</h1>
         </div>
-
+    
         {loading ? (
           <div className="loader-container">
             <div className="spinner"></div>
@@ -211,31 +211,43 @@ const ResultTable = () => {
             
             {/* Toolbar: Search + Toggles */}
             <div className="results-toolbar">
-                <div className="search-wrapper">
-                    <MdSearch className="search-icon" />
-                    <input
-                      type="text"
-                      placeholder="Search Name, Roll No, or City..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
+  {/* Search */}
+  <div className="search-wrapper">
+    <MdSearch className="search-icon" />
+    <input
+      type="text"
+      placeholder="Search Name, Roll Number, or State..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
 
-                <div className="toggle-container">
-                    <button 
-                        className={`toggle-btn ${activeTab === 'top25' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('top25')}
-                    >
-                        Top 25 Teams
-                    </button>
-                    <button 
-                        className={`toggle-btn ${activeTab === 'cityToppers' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('cityToppers')}
-                    >
-                        City Toppers
-                    </button>
-                </div>
-            </div>
+  {/* Actions */}
+  <div className="toolbar-actions">
+    <button
+      onClick={() => navigate('/userportal')}
+      className="check-result-btn"
+    >
+      Check Your Result
+    </button>
+
+    <div className="toggle-container">
+      <button
+        className={`toggle-btn ${activeTab === 'top25' ? 'active' : ''}`}
+        onClick={() => setActiveTab('top25')}
+      >
+        Top 25 Teams
+      </button>
+
+      <button
+        className={`toggle-btn ${activeTab === 'stateToppers' ? 'active' : ''}`}
+        onClick={() => setActiveTab('stateToppers')}
+      >
+        State Toppers
+      </button>
+    </div>
+  </div>
+</div>
 
             {/* Tables / Grid */}
             <div className="content-area">
@@ -254,7 +266,7 @@ const ResultTable = () => {
                                         <th style={{width: '24%'}}>Name 1</th>
                                         <th style={{width: '24%'}}>Name 2</th>
                                         <th style={{width: '20%'}}>Roll No.</th>
-                                        <th style={{width: '20%'}}>City</th>
+                                        <th style={{width: '20%'}}>State</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -289,10 +301,10 @@ const ResultTable = () => {
                 </div>
               )}
 
-              {activeTab === 'cityToppers' && (
+              {activeTab === 'stateToppers' && (
                 <div className="city-grid">
-                    {renderCitySection(cityToppersJuniors, 'Juniors')}
-                    {renderCitySection(cityToppersHauts, 'Hauts')}
+                    {renderStateSection(stateToppersJuniors, 'Juniors')}
+                    {renderStateSection(stateToppersHauts, 'Hauts')}
                 </div>
               )}
             </div>

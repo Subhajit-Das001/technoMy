@@ -334,15 +334,22 @@ router.get('/results', async (req, res) => {
 
   try {
     // First try to find in Offline25 database
-    let user = await Offline25.findOne({ rollNumber: roll });
+    let user = await Offline26.findOne({ rollNumber: roll });
     console.log('Offline25 search result:', user ? 'Found' : 'Not found');
 
     // If not found in Offline25, try Online25 database
     if (!user) {
-      user = await Online25.findOne({ rollNumber: roll });
-      console.log('Online25 search result:', user ? 'Found' : 'Not found');
+      user = await Offline26.findOne({ rollNumber: roll });
+      console.log('Offline26 search result:', user ? 'Found' : 'Not found');
     }
-
+    if (!user) {
+      user = await Online26.findOne({ rollNumber: roll });
+      console.log('Online26 search result:', user ? 'Found' : 'Not found');
+    }
+    if (!user) {
+      user = await cosStudent.findOne({ rollNumber: roll });
+      console.log('cosStudent search result:', user ? 'Found' : 'Not found');
+    }
     if (user) {
       console.log('User found with Rank:', user.Rank);
       console.log('Full user object:', JSON.stringify(user, null, 2));
@@ -412,181 +419,436 @@ router.post('/set-test-rank', isAdmin, async (req, res) => {
 });
 
 // Route to get results table data
+// router.get('/results-table', async (req, res) => {
+//   try {
+//     // Get Top 25 Juniors (squad: 'Juniors')
+//     const top25Juniors = await Offline26.find({
+//       squad: 'Juniors',
+//       Rank: { $exists: true, $ne: null}
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+
+//     // Get Top 25 Hauts (squad: 'Hauts')
+//     const top25Hauts = await Offline26.find({
+//       squad: 'Hauts',
+//       Rank: { $exists: true, $ne: null }
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+
+//     // Also check online registrations for both squads
+//     const onlineTop25Juniors = await Online26.find({
+//       squad: 'Juniors',
+//       Rank: { $exists: true, $ne: null }
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+
+//     const onlineTop25Hauts = await Online26.find({
+//       squad: 'Hauts',
+//       Rank: { $exists: true, $ne: null }
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+//       const cosTop25Juniors = await cosStudent.find({
+//       squad: 'Juniors',
+//       Rank: { $exists: true, $ne: null }
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+
+//     const cosTop25Hauts = await cosStudent.find({
+//       squad: 'Hauts',
+//       Rank: { $exists: true, $ne: null }
+//     })
+//       .sort({ Rank: 1 })
+//       .limit(25)
+//       .select('name1 name2 rollNumber Rank city squad')
+//       .lean();
+
+//     // Combine offline and online results and get top 25 for each squad
+//     const allJuniors = [...top25Juniors, ...onlineTop25Juniors, ...cosTop25Juniors]
+//       .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+//       .slice(0, 25);
+
+//     const allHauts = [...top25Hauts, ...onlineTop25Hauts,...cosTop25Hauts]
+//       .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+//       .slice(0, 25);
+
+//     // Get City Toppers for Juniors (top rank from each city)
+//     const cityToppersJuniors = await Offline26.aggregate([
+//       {
+//         $match: {
+//           squad: 'Juniors',
+//           Rank: { $exists: true, $ne: null }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     // Get City Toppers for Hauts (top rank from each city)
+//     const cityToppersHauts = await Offline26.aggregate([
+//       {
+//         $match: {
+//           squad: 'Hauts',
+//           Rank: { $exists: true, $ne: null}
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     // Also get city toppers from online registrations
+//     const onlineCityToppersJuniors = await Online26.aggregate([
+//       {
+//         $match: {
+//           squad: 'Juniors',
+//           Rank: { $exists: true, $ne: null }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     const onlineCityToppersHauts = await Online26.aggregate([
+//       {
+//         $match: {
+//           squad: 'Hauts',
+//           Rank: { $exists: true, $ne: null }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     const cosCityToppersJuniors = await cosStudent.aggregate([
+//       {
+//         $match: {
+//           squad: 'Juniors',
+//           Rank: { $exists: true, $ne: null}
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     const cosCityToppersHauts = await cosStudent.aggregate([
+//       {
+//         $match: {
+//           squad: 'Hauts',
+//           Rank: { $exists: true, $ne: null }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       {
+//         $group: {
+//           _id: '$state',
+//           name1: { $first: '$name1' },
+//           name2: { $first: '$name2' },
+//           rollNumber: { $first: '$rollNumber' },
+//           Rank: { $first: '$Rank' },
+//           city: { $first: '$state' }
+//         }
+//       },
+//       { $sort: { Rank: 1 } },
+//       { $limit: 50 }
+//     ]);
+
+//     // Combine offline and online city toppers and get the best from each city
+//     const allCityToppersJuniors = [...cityToppersJuniors, ...onlineCityToppersJuniors,...cosCityToppersJuniors]
+//       .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+//       .filter((item, index, self) =>
+//         index === self.findIndex(t => t.city === item.city)
+//       )
+//       .slice(0, 50);
+
+//     const allCityToppersHauts = [...cityToppersHauts, ...onlineCityToppersHauts,...cosCityToppersHauts]
+//       .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
+//       .filter((item, index, self) =>
+//         index === self.findIndex(t => t.city === item.city)
+//       )
+//       .slice(0, 50);
+
+//     res.json({
+//       success: true,
+//       top25Juniors: allJuniors,
+//       top25Hauts: allHauts,
+//       cityToppersJuniors: allCityToppersJuniors,
+//       cityToppersHauts: allCityToppersHauts
+//     });
+
+//   } catch (err) {
+//     console.error('Error fetching results table:', err);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Server error',
+//       error: err.message
+//     });
+//   }
+// });
 router.get('/results-table', async (req, res) => {
   try {
-    // Get Top 25 Juniors (squad: 'Juniors')
-    const top25Juniors = await Offline25.find({
-      squad: 'Juniors',
-      Rank: { $exists: true, $ne: null, $ne: 'NA' }
-    })
-      .sort({ Rank: 1 })
-      .limit(25)
-      .select('name1 name2 rollNumber Rank city squad')
-      .lean();
+    // ---------- GLOBAL TOP 25 (UNIQUE AIR RANKS ACROSS ALL COLLECTIONS) ----------
 
-    // Get Top 25 Hauts (squad: 'Hauts')
-    const top25Hauts = await Offline25.find({
-      squad: 'Hauts',
-      Rank: { $exists: true, $ne: null, $ne: 'NA' }
-    })
-      .sort({ Rank: 1 })
-      .limit(25)
-      .select('name1 name2 rollNumber Rank city squad')
-      .lean();
+const top25Pipeline = (squad) => [
+  {
+    $match: {
+      squad,
+      Rank: { $exists: true, $ne: null }
+    }
+  },
+  {
+    $project: {
+      name1: 1,
+      name2: 1,
+      rollNumber: 1,
+      Rank: 1,
+      state: 1,
+      squad: 1
+    }
+  },
 
-    // Also check online registrations for both squads
-    const onlineTop25Juniors = await Online25.find({
-      squad: 'Juniors',
-      Rank: { $exists: true, $ne: null, $ne: 'NA' }
-    })
-      .sort({ Rank: 1 })
-      .limit(25)
-      .select('name1 name2 rollNumber Rank city squad')
-      .lean();
+  // Merge online26
+  {
+    $unionWith: {
+      coll: 'online26',
+      pipeline: [
+        {
+          $match: {
+            squad,
+            Rank: { $exists: true, $ne: null }
+          }
+        },
+        {
+          $project: {
+            name1: 1,
+            name2: 1,
+            rollNumber: 1,
+            Rank: 1,
+            state: 1,
+            squad: 1
+          }
+        }
+      ]
+    }
+  },
 
-    const onlineTop25Hauts = await Online25.find({
-      squad: 'Hauts',
-      Rank: { $exists: true, $ne: null, $ne: 'NA' }
-    })
-      .sort({ Rank: 1 })
-      .limit(25)
-      .select('name1 name2 rollNumber Rank city squad')
-      .lean();
+  // Merge cos_students
+  {
+    $unionWith: {
+      coll: 'cos_students',
+      pipeline: [
+        {
+          $match: {
+            squad,
+            Rank: { $exists: true, $ne: null }
+          }
+        },
+        {
+          $project: {
+            name1: 1,
+            name2: 1,
+            rollNumber: 1,
+            Rank: 1,
+            state: 1,
+            squad: 1
+          }
+        }
+      ]
+    }
+  },
 
-    // Combine offline and online results and get top 25 for each squad
-    const allJuniors = [...top25Juniors, ...onlineTop25Juniors]
-      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
-      .slice(0, 25);
+  // Sort globally by AIR
+  { $sort: { Rank: 1 } },
 
-    const allHauts = [...top25Hauts, ...onlineTop25Hauts]
-      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
-      .slice(0, 25);
+  // Keep only one record per AIR
+  {
+    $group: {
+      _id: '$Rank',
+      name1: { $first: '$name1' },
+      name2: { $first: '$name2' },
+      rollNumber: { $first: '$rollNumber' },
+      Rank: { $first: '$Rank' },
+      state: { $first: '$state' },
+      squad: { $first: '$squad' }
+    }
+  },
 
-    // Get City Toppers for Juniors (top rank from each city)
-    const cityToppersJuniors = await Offline25.aggregate([
+  { $sort: { Rank: 1 } },
+  { $limit: 25 }
+];
+
+const [allJuniors, allHauts] = await Promise.all([
+  Offline26.aggregate(top25Pipeline('Juniors')),
+  Offline26.aggregate(top25Pipeline('Hauts'))
+]);
+
+console.log('Junior AIRs:', allJuniors.map(x => x.Rank));
+console.log('Hauts AIRs:', allHauts.map(x => x.Rank));
+    // ---------- STATE TOPPERS PIPELINE ----------
+
+    const statePipeline = (squad) => [
       {
         $match: {
-          squad: 'Juniors',
-          Rank: { $exists: true, $ne: null, $ne: 'NA' }
+          squad,
+          state: { $exists: true, $ne: null, $ne: '' },
+          Rank: { $exists: true, $ne: null }
         }
       },
       { $sort: { Rank: 1 } },
       {
         $group: {
-          _id: '$city',
+          _id: '$state',
           name1: { $first: '$name1' },
           name2: { $first: '$name2' },
           rollNumber: { $first: '$rollNumber' },
           Rank: { $first: '$Rank' },
-          city: { $first: '$city' }
+          state: { $first: '$state' }
         }
       },
-      { $sort: { Rank: 1 } },
-      { $limit: 50 }
+      { $sort: { Rank: 1 } }
+    ];
+
+    const [
+      offlineStateJuniors,
+      offlineStateHauts,
+      onlineStateJuniors,
+      onlineStateHauts,
+      cosStateJuniors,
+      cosStateHauts
+    ] = await Promise.all([
+      Offline26.aggregate(statePipeline('Juniors')),
+      Offline26.aggregate(statePipeline('Hauts')),
+      Online26.aggregate(statePipeline('Juniors')),
+      Online26.aggregate(statePipeline('Hauts')),
+      cosStudent.aggregate(statePipeline('Juniors')),
+      cosStudent.aggregate(statePipeline('Hauts'))
     ]);
 
-    // Get City Toppers for Hauts (top rank from each city)
-    const cityToppersHauts = await Offline25.aggregate([
-      {
-        $match: {
-          squad: 'Hauts',
-          Rank: { $exists: true, $ne: null, $ne: 'NA' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      {
-        $group: {
-          _id: '$city',
-          name1: { $first: '$name1' },
-          name2: { $first: '$name2' },
-          rollNumber: { $first: '$rollNumber' },
-          Rank: { $first: '$Rank' },
-          city: { $first: '$city' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      { $limit: 50 }
-    ]);
+    // ---------- COMBINE STATE TOPPERS ----------
 
-    // Also get city toppers from online registrations
-    const onlineCityToppersJuniors = await Online25.aggregate([
-      {
-        $match: {
-          squad: 'Juniors',
-          Rank: { $exists: true, $ne: null, $ne: 'NA' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      {
-        $group: {
-          _id: '$city',
-          name1: { $first: '$name1' },
-          name2: { $first: '$name2' },
-          rollNumber: { $first: '$rollNumber' },
-          Rank: { $first: '$Rank' },
-          city: { $first: '$city' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      { $limit: 50 }
-    ]);
+    const allStateToppersJuniors = [
+      ...offlineStateJuniors,
+      ...onlineStateJuniors,
+      ...cosStateJuniors
+    ]
+      .sort((a, b) => a.Rank - b.Rank)
+      .filter((item, index, self) => {
+        const current = item.state?.trim().toLowerCase();
+        return (
+          index ===
+          self.findIndex(
+            t => t.state?.trim().toLowerCase() === current
+          )
+        );
+      })
+      .slice(0, 28);
 
-    const onlineCityToppersHauts = await Online25.aggregate([
-      {
-        $match: {
-          squad: 'Hauts',
-          Rank: { $exists: true, $ne: null, $ne: 'NA' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      {
-        $group: {
-          _id: '$city',
-          name1: { $first: '$name1' },
-          name2: { $first: '$name2' },
-          rollNumber: { $first: '$rollNumber' },
-          Rank: { $first: '$Rank' },
-          city: { $first: '$city' }
-        }
-      },
-      { $sort: { Rank: 1 } },
-      { $limit: 50 }
-    ]);
+    const allStateToppersHauts = [
+      ...offlineStateHauts,
+      ...onlineStateHauts,
+      ...cosStateHauts
+    ]
+      .sort((a, b) => a.Rank - b.Rank)
+      .filter((item, index, self) => {
+        const current = item.state?.trim().toLowerCase();
+        return (
+          index ===
+          self.findIndex(
+            t => t.state?.trim().toLowerCase() === current
+          )
+        );
+      })
+      .slice(0, 28);
 
-    // Combine offline and online city toppers and get the best from each city
-    const allCityToppersJuniors = [...cityToppersJuniors, ...onlineCityToppersJuniors]
-      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
-      .filter((item, index, self) =>
-        index === self.findIndex(t => t.city === item.city)
-      )
-      .slice(0, 50);
+    // ---------- RESPONSE ----------
 
-    const allCityToppersHauts = [...cityToppersHauts, ...onlineCityToppersHauts]
-      .sort((a, b) => parseInt(a.Rank) - parseInt(b.Rank))
-      .filter((item, index, self) =>
-        index === self.findIndex(t => t.city === item.city)
-      )
-      .slice(0, 50);
-
-    res.json({
+    return res.json({
       success: true,
       top25Juniors: allJuniors,
       top25Hauts: allHauts,
-      cityToppersJuniors: allCityToppersJuniors,
-      cityToppersHauts: allCityToppersHauts
+      stateToppersJuniors: allStateToppersJuniors,
+      stateToppersHauts: allStateToppersHauts
     });
 
   } catch (err) {
     console.error('Error fetching results table:', err);
-    res.status(500).json({
+
+    return res.status(500).json({
       success: false,
       message: 'Server error',
       error: err.message
     });
   }
 });
-
-const XLSX = require('xlsx');
+const XLSX = require('xlsx'); 
 const getZone = require('../utils/getZone');
 
 // 🚀 Upload CSV and process data (Protected by Shared Secret)
