@@ -351,8 +351,8 @@ router.get('/results', async (req, res) => {
       console.log('cosStudent search result:', user ? 'Found' : 'Not found');
     }
     if (user) {
-      console.log('User found with Rank:', user.Rank);
-      console.log('Full user object:', JSON.stringify(user, null, 2));
+      // console.log('User found with Rank:', user.Rank);
+      // console.log('Full user object:', JSON.stringify(user, null, 2));
       res.status(200).json({ user: user });
     } else {
       console.log('No user found for rollNumber:', roll);

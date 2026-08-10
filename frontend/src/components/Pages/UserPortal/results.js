@@ -20,8 +20,9 @@ import CityTopperJuniors from '../../Assets/certificate/State-Toppers-Juniors.pn
 const standardStyles = StyleSheet.create({
   page: { position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, margin: 0 },
   image: { width: '100%', height: 'auto' },
-  name: { position: 'absolute', top: '48.5%', transform: 'translate(-50%, -50%)', fontSize: 48, color: '#000', textAlign: 'center', fontWeight: 'bold' },
-  rank: { position: 'absolute', top: '64.5%', left: '47.7%', transform: 'translate(-50%, -50%)', fontSize: 40, color: '#000', textAlign: 'center', fontWeight: 'bold' },
+  name: { position: 'absolute', top: '48.5%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 48, color: '#000', textAlign: 'center', fontWeight: 'bold' },
+  // Adjusted left from 47.7% to 46% to shift 5-digit ranks to the left
+  rank: { position: 'absolute', top: '64.5%', left: '46.3%', transform: 'translate(-50%, -50%)', fontSize: 40, color: '#000', textAlign: 'center', fontWeight: 'bold' },
 });
 
 const cityTopperStyles = StyleSheet.create({
@@ -31,11 +32,21 @@ const cityTopperStyles = StyleSheet.create({
   cityName: { position: 'absolute', top: '65%', left: '40%', transform: 'translate(-50%, -50%)', fontSize: 35, fontWeight: 'bold', color: '#000', textTransform: 'uppercase' }
 });
 
+// Helper function to robustly check if a rank is valid
+const getValidRank = (rank) => {
+  if (rank === null || rank === undefined) return null;
+  const strRank = String(rank).trim().toLowerCase();
+  if (strRank === 'null' || strRank === 'na' || strRank === 'disqualify' || strRank === '') return null;
+  
+  const parsed = parseInt(rank, 10);
+  return (isNaN(parsed) || parsed <= 0) ? null : parsed;
+};
+
 const Results = () => {
   const [displayedName, setDisplayedName] = useState('');
-  const [results, setResults] = useState('');
+  const [results, setResults] = useState(null);
   const [user, setUser] = useState(null);
-  const [certificateImage, setCertificateImage] = useState(GoldHaut);
+  const [certificateImage, setCertificateImage] = useState(null);
   const [certCategory, setCertCategory] = useState('Participation');
   const [isCityTopper, setIsCityTopper] = useState(false);
   const [cityTopperImage, setCityTopperImage] = useState(null);
@@ -79,16 +90,19 @@ const Results = () => {
         const fetchResults = async () => {
             try {
                 const response = await axios.get(`${baseURL}uploadcsv/results?rollNumber=${commonRoll}`, { withCredentials: true });
-                const userData = response.data.user || { Rank: 'NA' };
+                const userData = response.data.user || { Rank: null };
                 setResults(userData);
                 
-                if (userData.Rank && userData.Rank !== 'NA' && userData.Rank !== 'Disqualify') {
+                const validRank = getValidRank(userData.Rank);
+                
+                // Trigger confetti only if the rank is a valid number
+                if (validRank) {
                     setShowConfetti(true);
                     setTimeout(() => setShowConfetti(false), 8000); 
                 }
             } catch (err) {
                 console.log('Error fetching results:', err);
-                setResults({ Rank: 'Not Announced' });
+                setResults({ Rank: null });
             }
         };
         fetchResults();
@@ -98,19 +112,33 @@ const Results = () => {
   // 3. Determine Standard Certificate Image & Category
   useEffect(() => {
     if (results && user) {
-      const { Rank } = results;
-      const rollNumber = user.rollNumber || user.roll;
+      const validRank = getValidRank(results.Rank);
+      
+      // Ensure we have a string to check against, fallback to empty string
+      const rollNumber = String(user.rollNumber || user.roll || '').toUpperCase();
 
-      if (rollNumber.startsWith('JR')) {
-        if (Rank <= 50) { setCertificateImage(GoldJunior); setCertCategory('Gold'); }
-        else if (Rank > 50 && Rank <= 250) { setCertificateImage(SilverJunior); setCertCategory('Silver'); }
-        else if (Rank > 250 && Rank <= 500) { setCertificateImage(BronzeJunior); setCertCategory('Bronze'); }
-        else { setCertificateImage(ParticipationJunior); setCertCategory('Participation'); }
-      } else if (rollNumber.startsWith('HE')) {
-        if (Rank <= 50) { setCertificateImage(GoldHaut); setCertCategory('Gold'); }
-        else if (Rank > 50 && Rank <= 250) { setCertificateImage(SilverHaut); setCertCategory('Silver'); }
-        else if (Rank > 250 && Rank <= 500) { setCertificateImage(BronzeHaut); setCertCategory('Bronze'); }
-        else { setCertificateImage(ParticipantHaut); setCertCategory('Participation'); }
+      if (validRank) {
+        // If it starts with JR, they are Junior. Otherwise, default to Hauts.
+        const isJunior = rollNumber.startsWith('JR');
+
+        if (validRank <= 50) { 
+          setCertificateImage(isJunior ? GoldJunior : GoldHaut); 
+          setCertCategory('Gold'); 
+        }
+        else if (validRank <= 250) { 
+          setCertificateImage(isJunior ? SilverJunior : SilverHaut); 
+          setCertCategory('Silver'); 
+        }
+        else if (validRank <= 500) { 
+          setCertificateImage(isJunior ? BronzeJunior : BronzeHaut); 
+          setCertCategory('Bronze'); 
+        }
+        else { 
+          setCertificateImage(isJunior ? ParticipationJunior : ParticipantHaut); 
+          setCertCategory('Participation'); 
+        }
+      } else {
+        setCertificateImage(null);
       }
     }
   }, [results, user]);
@@ -126,13 +154,13 @@ const Results = () => {
             if (response.data.success) {
                 const { stateToppersJuniors, stateToppersHauts } = response.data;
 
-const juniorStudent = stateToppersJuniors?.find(
-  student => student.rollNumber === rollNumber
-);
+                const juniorStudent = stateToppersJuniors?.find(
+                  student => student.rollNumber === rollNumber
+                );
 
-const hautStudent = stateToppersHauts?.find(
-  student => student.rollNumber === rollNumber
-);
+                const hautStudent = stateToppersHauts?.find(
+                  student => student.rollNumber === rollNumber
+                );
 
                 if (juniorStudent) {
                     setIsCityTopper(true);
@@ -151,22 +179,33 @@ const hautStudent = stateToppersHauts?.find(
     checkCityTopper();
   }, [user, baseURL]);
 
-  if (!results || results.Rank === 'NA' || results.Rank === 'Disqualify') return null;
+  // Prevent page completely blowing up if results are fetching
+  if (!results) return null;
+
+  // Derive final rank status for rendering
+  const validRank = getValidRank(results.Rank);
+  const hasValidRank = validRank !== null;
 
   // --- PDF COMPONENTS ---
   const StandardCertificatePDF = ({ name, rank, bgImage }) => (
-    <Document><Page size={{ width: 1849, height: 1307 }} style={standardStyles.page}><Image src={bgImage} style={standardStyles.image} /><Text style={standardStyles.name}>{name}</Text>{rank && <Text style={standardStyles.rank}>{rank}</Text>}</Page></Document>
+    <Document>
+      <Page size={{ width: 1849, height: 1307 }} style={standardStyles.page}>
+        <Image src={bgImage} style={standardStyles.image} />
+        <Text style={standardStyles.name}>{name}</Text>
+        {rank && <Text style={standardStyles.rank}>{rank}</Text>}
+      </Page>
+    </Document>
   );
 
- const CityTopperCertificatePDF = ({ name, state, bgImage }) => (
-  <Document>
-    <Page size={{ width: 1849, height: 1307 }} style={cityTopperStyles.page}>
-      <Image src={bgImage} style={cityTopperStyles.image} />
-      <Text style={cityTopperStyles.name}>{name}</Text>
-      <Text style={cityTopperStyles.cityName}>{state}</Text>
-    </Page>
-  </Document>
-);
+  const CityTopperCertificatePDF = ({ name, state, bgImage }) => (
+    <Document>
+      <Page size={{ width: 1849, height: 1307 }} style={cityTopperStyles.page}>
+        <Image src={bgImage} style={cityTopperStyles.image} />
+        <Text style={cityTopperStyles.name}>{name}</Text>
+        <Text style={cityTopperStyles.cityName}>{state}</Text>
+      </Page>
+    </Document>
+  );
 
   const handleButtonClick = (name) => setDisplayedName(name);
 
@@ -176,26 +215,21 @@ const hautStudent = stateToppersHauts?.find(
 
   const getCertMessage = () => {
      if (certCategory === 'Gold')
-  return 'You have been awarded the prestigious Gold Merit Certificate. This recognizes your exceptional logical aptitude and top-tier performance.';
+       return 'You have been awarded the prestigious Gold Merit Certificate. This recognizes your exceptional logical aptitude and top-tier performance.';
 
-if (certCategory === 'Silver')
-  return 'You have earned the Silver Merit Certificate for your remarkable performance. This validates your strong critical thinking skills.';
+     if (certCategory === 'Silver')
+       return 'You have earned the Silver Merit Certificate for your remarkable performance. This validates your strong critical thinking skills.';
 
-if (certCategory === 'Bronze')
-  return 'You have been awarded the Bronze Merit Certificate in recognition of your commendable performance. This reflects your strong problem-solving ability and promising analytical potential.';
+     if (certCategory === 'Bronze')
+       return 'You have been awarded the Bronze Merit Certificate in recognition of your commendable performance. This reflects your strong problem-solving ability and promising analytical potential.';
 
-return 'You have received the official Certificate of Participation. Keep honing your logical skills and never stop aiming high!';
+     return 'You have received the official Certificate of Participation. Keep honing your logical skills and never stop aiming high!';
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 p-6 md:p-12 font-sans relative">
+    // Changed padding to px-4 py-8 md:px-8 md:py-12 to minimize dead space on the sides
+    <div className="w-full min-h-screen bg-[#F8FAFC] text-slate-800 px-4 py-8 md:px-8 md:py-12 font-sans relative">
       
-      {/* 
-        Fix applied here: 
-        1. zIndex: 9999 ensures it's above all standard UI elements.
-        2. position: 'fixed' ensures the confetti stays over the viewport even if the user scrolls.
-        3. pointerEvents: 'none' ensures it won't block clicks to the buttons behind it.
-      */}
       {showConfetti && (
         <Confetti 
             width={windowDimension.width} 
@@ -208,10 +242,11 @@ return 'You have received the official Certificate of Participation. Keep honing
         />
       )}
 
-      <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+      {/* Main wrapper stretches fully */}
+      <div className="w-full mx-auto space-y-12 relative z-10">
         
-        {/* Header Section with Scroll Action */}
-        <div className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8">
+        {/* Header Section */}
+        <div className="w-full flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8">
             <div className="text-center md:text-left mb-4 md:mb-0">
                 <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide text-[#01523d] whitespace-nowrap">
                     Technothlon'26 Result
@@ -220,110 +255,118 @@ return 'You have received the official Certificate of Participation. Keep honing
                     Roll Number: {user?.roll || user?.rollNumber}
                 </p>
             </div>
-            <button 
-                onClick={scrollToCertificates}
-                className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-[#064E3B] rounded-full font-bold text-sm transition-colors duration-300"
-            >
-                View Certificates
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            </button>
+            
+            {/* View certificates button only displayed if they have a valid rank */}
+            {hasValidRank && (
+                <button 
+                    onClick={scrollToCertificates}
+                    className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-[#064E3B] rounded-full font-bold text-sm transition-colors duration-300"
+                >
+                    View Certificates
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </button>
+            )}
         </div>
 
         {/* --- ORGANIC AIR DISPLAY --- */}
         <div className="w-full bg-white py-16 px-6 flex flex-col items-center justify-center rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
             <p className="text-[#014431] font-bold tracking-widest uppercase text-lg mb-2 text-center">
-              Congratulations! You have secured
+              {hasValidRank ? "Congratulations! You have secured" : "Results Status"}
             </p>
             
             <div className="text-7xl md:text-8xl bg-clip-text bg-[#024735] mb-6 pop-animation drop-shadow-sm text-center">
-              All India Rank {results.Rank}
+              {hasValidRank ? `All India Rank ${validRank}` : 'AIR (Not Announced)'}
             </div>
 
-            {/* Special IITG Message for Rank <= 25 */}
-            {results.Rank <= 25 && (
+            {hasValidRank && validRank <= 25 && (
                 <div className="mt-4 max-w-2xl text-center bg-[#edf3f0] border border-[#A7F3D0] rounded-2xl p-5 shadow-sm">
                     <p className="text-[#065F46] font-semibold text-lg leading-relaxed">
                         Congratulations on qualifying for the Prelims Round of Technothlon 2026.
-The Prelims Round is scheduled from 28th–30th August 2026 at IIT Guwahati. Team Technothlon will contact you shortly with further details.
+                        The Prelims Round is scheduled from 28th–30th August 2026 at IIT Guwahati. Team Technothlon will contact you shortly with further details.
                     </p>
                 </div>
             )}
         </div>
 
         {/* --- AWARDS & RECOGNITION SECTION --- */}
-        <div ref={certificateRef} className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-12 w-full flex flex-col items-center scroll-mt-8">
-          
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-extrabold text-[#064E3B] mb-3">Achievements & Certifications</h2>
-            <p className="text-slate-500 text-base max-w-xl mx-auto">Choose a team member below to display their name accurately on the certificate.</p>
+        {/* Hide entirely if the rank is null/not announced */}
+        {hasValidRank && (
+            <div ref={certificateRef} className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-12 flex flex-col items-center scroll-mt-8">
             
-            {/* Name Toggle */}
-            <div className="mt-6 inline-flex bg-slate-100 rounded-xl p-1.5 border border-slate-200">
-              <button 
-                onClick={() => handleButtonClick(user.name1)} 
-                className={`px-8 py-2.5 rounded-lg font-bold text-sm transition-colors duration-75 ${displayedName === user.name1 ? 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                {user.name1}
-              </button>
-              <button 
-                onClick={() => handleButtonClick(user.name2)} 
-                className={`px-8 py-2.5 rounded-lg font-bold text-sm transition-colors duration-75 ${displayedName === user.name2 ? 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                {user.name2}
-              </button>
-            </div>
-          </div>
-
-          {/* Cards Container */}
-          <div className="w-full flex flex-col md:flex-row justify-center items-stretch gap-8">
-            
-            {/* Standard Certificate Card */}
-            <div className={`bg-slate-50 rounded-2xl border ${certCategory === 'Gold' ? 'border-yellow-400/50' : certCategory === 'Silver' ? 'border-slate-300' : 'border-slate-200'} p-8 flex flex-col items-start justify-between w-full flex-1 shadow-sm`}>
-              <div className="w-full">
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
-                    {certCategory === 'Gold' && '🥇'}
-                    {certCategory === 'Silver' && '🥈'}
-                    {certCategory === 'Participation' && '📜'}
-                    {certCategory} Certificate
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed mb-8">
-                    {getCertMessage()}
-                  </p>
-              </div>
-              
-              <PDFDownloadLink
-                document={<StandardCertificatePDF name={displayedName} rank={results.Rank} bgImage={certificateImage} />}
-                fileName={`Certificate_${displayedName}.pdf`}
-                className="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm text-center transition shadow-md"
-              >
-                {({ loading }) => (loading ? 'Generating Document...' : 'Download Certificate')}
-              </PDFDownloadLink>
+            <div className="text-center mb-10 w-full">
+                <h2 className="text-3xl font-extrabold text-[#064E3B] mb-3">Achievements & Certifications</h2>
+                <p className="text-slate-500 text-base max-w-xl mx-auto">Choose a team member below to display their name accurately on the certificate.</p>
+                
+                {/* Name Toggle */}
+                <div className="mt-6 inline-flex bg-slate-100 rounded-xl p-1.5 border border-slate-200">
+                <button 
+                    onClick={() => handleButtonClick(user.name1)} 
+                    className={`px-8 py-2.5 rounded-lg font-bold text-sm transition-colors duration-75 ${displayedName === user.name1 ? 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
+                >
+                    {user.name1}
+                </button>
+                <button 
+                    onClick={() => handleButtonClick(user.name2)} 
+                    className={`px-8 py-2.5 rounded-lg font-bold text-sm transition-colors duration-75 ${displayedName === user.name2 ? 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
+                >
+                    {user.name2}
+                </button>
+                </div>
             </div>
 
-            {/* City Topper Certificate Card */}
-            {isCityTopper && cityTopperDetails.state && (
-              <div className="bg-[#F0FDF4] rounded-2xl border border-[#86EFAC] p-8 flex flex-col items-start justify-between w-full flex-1 shadow-sm">
+            {/* Cards Container */}
+            <div className="w-full flex flex-col lg:flex-row justify-center items-stretch gap-8">
+                
+                {/* Standard Certificate Card */}
+                <div className={`bg-slate-50 rounded-2xl border ${certCategory === 'Gold' ? 'border-yellow-400/50' : certCategory === 'Silver' ? 'border-slate-300' : 'border-slate-200'} p-8 flex flex-col items-start justify-between w-full flex-1 shadow-sm`}>
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold text-[#065F46] mb-3 flex items-center gap-2">
-                       🌟 State Topper
+                    <h3 className="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        {certCategory === 'Gold' && '🥇'}
+                        {certCategory === 'Silver' && '🥈'}
+                        {certCategory === 'Participation' && '📜'}
+                        {certCategory} Certificate
                     </h3>
-                    <p className="text-[#047857] text-sm leading-relaxed mb-8">
-                     An exclusive honor for achieving the highest rank in <strong>{cityTopperDetails.state}</strong>. Your exceptional performance has made your state proud.
+                    <p className="text-slate-600 text-sm leading-relaxed mb-8">
+                        {getCertMessage()}
                     </p>
                 </div>
                 
-                <PDFDownloadLink
-                 document={<CityTopperCertificatePDF name={displayedName || 'Student'} state={cityTopperDetails.state} bgImage={cityTopperImage} />}
-                  fileName={`CityTopper_${displayedName}.pdf`}
-                  className="w-full py-3.5 bg-gradient-to-r from-[#059669] to-[#10B981] hover:from-[#047857] hover:to-[#059669] text-white rounded-xl font-bold text-sm text-center transition shadow-md"
-                >
-                  {({ loading }) => (loading ? 'Generating Document...' : 'Download Certificate')}
-                </PDFDownloadLink>
-              </div>
-            )}
-            
-          </div>
-        </div>
+                {certificateImage && (
+                    <PDFDownloadLink
+                        document={<StandardCertificatePDF name={displayedName} rank={validRank} bgImage={certificateImage} />}
+                        fileName={`Certificate_${displayedName}.pdf`}
+                        className="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm text-center transition shadow-md"
+                    >
+                        {({ loading }) => (loading ? 'Generating Document...' : 'Download Certificate')}
+                    </PDFDownloadLink>
+                )}
+                </div>
+
+                {/* City Topper Certificate Card */}
+                {isCityTopper && cityTopperDetails.state && (
+                <div className="bg-[#F0FDF4] rounded-2xl border border-[#86EFAC] p-8 flex flex-col items-start justify-between w-full flex-1 shadow-sm">
+                    <div className="w-full">
+                        <h3 className="text-2xl font-bold text-[#065F46] mb-3 flex items-center gap-2">
+                            🌟 State Topper
+                        </h3>
+                        <p className="text-[#047857] text-sm leading-relaxed mb-8">
+                        An exclusive honor for achieving the highest rank in <strong>{cityTopperDetails.state}</strong>. Your exceptional performance has made your state proud.
+                        </p>
+                    </div>
+                    
+                    <PDFDownloadLink
+                    document={<CityTopperCertificatePDF name={displayedName || 'Student'} state={cityTopperDetails.state} bgImage={cityTopperImage} />}
+                    fileName={`CityTopper_${displayedName}.pdf`}
+                    className="w-full py-3.5 bg-gradient-to-r from-[#059669] to-[#10B981] hover:from-[#047857] hover:to-[#059669] text-white rounded-xl font-bold text-sm text-center transition shadow-md"
+                    >
+                    {({ loading }) => (loading ? 'Generating Document...' : 'Download Certificate')}
+                    </PDFDownloadLink>
+                </div>
+                )}
+                
+            </div>
+            </div>
+        )}
 
       </div>
     </div>

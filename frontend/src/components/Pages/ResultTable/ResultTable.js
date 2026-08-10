@@ -225,7 +225,7 @@ const ResultTable = () => {
   {/* Actions */}
   <div className="toolbar-actions">
     <button
-      onClick={() => navigate('/userportal')}
+      onClick={() => navigate('/login')}
       className="check-result-btn"
     >
       Check Your Result
