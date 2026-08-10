@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.71cb6ca6.css",
-    "main.js": "/static/js/main.9732710d.js",
+    "main.css": "/static/css/main.945deca7.css",
+    "main.js": "/static/js/main.9780d30e.js",
     "static/media/Hauts English 25.pdf": "/static/media/Hauts English 25.c384bc21430df4370506.pdf",
     "static/media/Juniors Hindi 25.pdf": "/static/media/Juniors Hindi 25.1f9274a0ebb5fad2d531.pdf",
     "static/media/Hauts Hindi 25.pdf": "/static/media/Hauts Hindi 25.7cd1864df5c43b936077.pdf",
@@ -124,11 +124,11 @@
     "static/media/Hauts Key 21.pdf": "/static/media/Hauts Key 21.8fb782a14c985982fcd8.pdf",
     "static/media/social.png": "/static/media/social.16911adb36e92af2a52d.png",
     "index.html": "/index.html",
-    "main.71cb6ca6.css.map": "/static/css/main.71cb6ca6.css.map",
-    "main.9732710d.js.map": "/static/js/main.9732710d.js.map"
+    "main.945deca7.css.map": "/static/css/main.945deca7.css.map",
+    "main.9780d30e.js.map": "/static/js/main.9780d30e.js.map"
   },
   "entrypoints": [
-    "static/css/main.71cb6ca6.css",
-    "static/js/main.9732710d.js"
+    "static/css/main.945deca7.css",
+    "static/js/main.9780d30e.js"
   ]
 }
