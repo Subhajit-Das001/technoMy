@@ -45,7 +45,7 @@ const resendMailRoutes = require('./routes/resendMailingRoutes');
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
 
-const uploadDir = path.join('uploads', 'cos');
+const uploadDir = path.resolve(__dirname, 'uploads', 'cos');
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
