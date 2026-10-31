@@ -45,11 +45,15 @@ const resendMailRoutes = require('./routes/resendMailingRoutes');
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
 
-//const uploadDir = path.resolve(__dirname, 'uploads', 'cos');
-const uploadDir = path.resolve(__dirname, 'uploads', 'cos');
+const writableRoot = fs.existsSync('/tmp') ? '/tmp' : process.cwd();
+const uploadDir = path.resolve(writableRoot, 'uploads', 'cos');
 
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  } catch (error) {
+    console.warn('Could not create upload directory at', uploadDir, error.message);
+  }
 }
 
 const app = express();
