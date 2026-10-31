@@ -19,9 +19,22 @@ const EventEmitter = require('events');
 const helmet = require('helmet');
 const { globalLimiter } = require('./middleware/auth');
 // --- BULL-BOARD DASHBOARD SETUP ---
-const { createBullBoard } = require('@bull-board/api');
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
-const { ExpressAdapter } = require('@bull-board/express');
+let createBullBoard;
+let BullMQAdapter;
+let ExpressAdapter;
+let serverAdapter = null;
+
+try {
+  const bullApi = require('@bull-board/api');
+  const bullMqAdapter = require('@bull-board/api/bullMQAdapter');
+  const bullExpress = require('@bull-board/express');
+  createBullBoard = bullApi.createBullBoard;
+  BullMQAdapter = bullMqAdapter.BullMQAdapter;
+  ExpressAdapter = bullExpress.ExpressAdapter;
+} catch (error) {
+  console.warn('Bull Board dashboard disabled because the package is unavailable in this environment:', error.message);
+}
+
 const basicAuth = require('express-basic-auth');
 const { testQueue, csvProcessingQueue, resendMailingQueue,smtpMailingQueue } = require("./config/queue")
 // Connect to MongoDB
@@ -71,20 +84,22 @@ require('./workers/csvWorker');
 require('./workers/smtpWorker');
 require('./workers/emailWorker');
 
-// Initialize the Express Adapter
-const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/api/admin/queues');
+// Initialize the Express Adapter only if the dashboard package is available
+if (createBullBoard && BullMQAdapter && ExpressAdapter) {
+  serverAdapter = new ExpressAdapter();
+  serverAdapter.setBasePath('/api/admin/queues');
 
-// Attach your queues to the board
-createBullBoard({
-  queues: [
-    new BullMQAdapter(testQueue),
-    new BullMQAdapter(csvProcessingQueue),
-    new BullMQAdapter(resendMailingQueue),
-    new BullMQAdapter(smtpMailingQueue)
-  ],
-  serverAdapter: serverAdapter,
-});
+  // Attach your queues to the board
+  createBullBoard({
+    queues: [
+      new BullMQAdapter(testQueue),
+      new BullMQAdapter(csvProcessingQueue),
+      new BullMQAdapter(resendMailingQueue),
+      new BullMQAdapter(smtpMailingQueue)
+    ],
+    serverAdapter: serverAdapter,
+  });
+}
 
 //Bull-Dashboard Auth
 const adminAuth = basicAuth({
@@ -98,7 +113,9 @@ const adminAuth = basicAuth({
 
 app.use(express.json({ limit: '50mb' }))
 
-app.use('/api/admin/queues', adminAuth, serverAdapter.getRouter());
+if (serverAdapter) {
+  app.use('/api/admin/queues', adminAuth, serverAdapter.getRouter());
+}
 // ==========================================
 // 1. SECURITY & CORS (MUST BE FIRST)
 // ==========================================
