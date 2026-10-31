@@ -1,13 +1,26 @@
 const { Worker } = require('bullmq');
 const { Resend } = require('resend');
+const path = require('path');
+const dotenv = require('dotenv');
 const { redisConnection, resendMailingQueue } = require('../config/queue');
-require('dotenv').config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const envPath = path.resolve(__dirname, '../.env');
+const envResult = dotenv.config({ path: envPath });
+if (envResult && envResult.error) {
+  dotenv.config();
+}
+
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 const unsubscribeUrl =  "https://docs.google.com/forms/d/e/1FAIpQLSfP9botmSTj_Vly-nVpzhuRX3462p8e2NISnVq_6_wL9r6zcg/viewform?usp=dialog"
 const emailWorker = new Worker(
   'Resend-Queue',
   async (job) => {
+    if (!resend) {
+      console.warn(`⚠️ Job ${job.id} skipped: RESEND_API_KEY is missing.`);
+      return { skipped: true, reason: 'missing RESEND_API_KEY' };
+    }
+
     // Extract the dynamic data passed from the JSON route
     const { batch, subject, title,replyTo } = job.data;
     // console.log(`📦 Processing Job ${job.id}: Sending ${batch.length} emails.`);
