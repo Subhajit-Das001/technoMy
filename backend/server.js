@@ -45,7 +45,8 @@ const resendMailRoutes = require('./routes/resendMailingRoutes');
 EventEmitter.defaultMaxListeners = 20;
 process.setMaxListeners(20);
 
-const uploadDir = path.join('uploads', 'cos');
+//const uploadDir = path.resolve(__dirname, 'uploads', 'cos');
+const uploadDir = path.resolve(__dirname, 'uploads', 'cos');
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -172,6 +173,13 @@ app.get('/health', (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
+});
+//test
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Technothlon Backend is running!"
+  });
 });
 //Test- route for Redis 
 app.get('/api/test-redis', async (req, res) => {
