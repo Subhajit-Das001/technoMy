@@ -1,12 +1,17 @@
+const fs = require('fs');
+const path = require('path');
 const dotenv = require('dotenv');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables explicitly from the backend folder.
+const envPath = path.resolve(__dirname, '.env');
+const fallbackEnvPath = path.resolve(__dirname, '..', '.env');
+const envResult = dotenv.config({ path: envPath });
+if (envResult && envResult.error && fs.existsSync(fallbackEnvPath)) {
+  dotenv.config({ path: fallbackEnvPath });
+}
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
-const fs = require('fs');
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const connectDB = require('./config/db');
