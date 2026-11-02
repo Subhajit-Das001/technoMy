@@ -126,7 +126,8 @@ const allowedOrigins = [
   'http://localhost:5173',  // Vite default
   'https://technothlon.techniche.org.in',
   'https://www.technothlon.techniche.org.in',
-  'https://technothlon-25.vercel.app' //testing website
+  'https://technothlon-25.vercel.app' ,
+  'https://technomy.vercel.app' //testing website
 ];
 const corsOptions = {
   origin: function (origin, callback) {
